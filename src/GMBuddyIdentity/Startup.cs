@@ -36,12 +36,33 @@ namespace GMBuddyIdentity
 
         public IConfigurationRoot Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        // This method gets called by the runtime in development
+        public void ConfigureDevelopmentServices(IServiceCollection services)
         {
-            // Add framework services.
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("DevelopmentDatabase")));
 
+            ConfigureCommonServices(services);
+
+            services.AddDeveloperIdentityServer()
+                .AddInMemoryClients(IdentityConfig.GetClients())
+                .AddInMemoryScopes(IdentityConfig.GetScopes())
+                .AddAspNetIdentity<ApplicationUser>();
+        }
+
+        public void ConfigureProductionServices(IServiceCollection services)
+        {
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration["GMBuddyAzureSql"]));
+
+            ConfigureCommonServices(services);
+
+            services.AddIdentityServer()
+                .AddInMemoryClients(IdentityConfig.GetClients())
+                .AddInMemoryScopes(IdentityConfig.GetScopes())
+                .AddAspNetIdentity<ApplicationUser>();
+        }
+
+        public void ConfigureCommonServices(IServiceCollection services)
+        {
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
@@ -51,11 +72,6 @@ namespace GMBuddyIdentity
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
-
-            services.AddDeveloperIdentityServer()
-                .AddInMemoryClients(IdentityConfig.GetClients())
-                .AddInMemoryScopes(IdentityConfig.GetScopes())
-                .AddAspNetIdentity<ApplicationUser>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
