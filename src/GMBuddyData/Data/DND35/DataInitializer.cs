@@ -22,7 +22,7 @@ namespace GMBuddyData.Data.DND35
 
             var character = new Character
             {
-                UserEmail = "oldmanhorton@gmail.com",
+                UserEmail = "testing@user.com",
                 Name = "Generic Fantasy Character Name",
                 Bio = "Was a program once, until he took an error to the runtime"
             };

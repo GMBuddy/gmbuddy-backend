@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,11 +33,17 @@ namespace GMBuddyData
         // This method gets called by the runtime in development
         public void ConfigureDevelopmentServices(IServiceCollection services)
         {
-            services.AddDbContext<Data.DND35.GameContext>((options) => options.UseSqlite("Filename=./dnd35.sqlite"));
+            services.AddDbContext<Data.DND35.GameContext>((options) => options.UseSqlite(Configuration.GetConnectionString("DND35")));
             
             services.AddApplicationInsightsTelemetry(Configuration);
 
-            services.AddMvc();
+            services.AddMvc(config =>
+            {
+                config.Filters.Add(new AuthorizeFilter(
+                    new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build()));
+            });
         }
 
         // This method gets called by the runtime in development

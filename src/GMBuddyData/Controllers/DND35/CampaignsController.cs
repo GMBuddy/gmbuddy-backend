@@ -20,24 +20,27 @@ namespace GMBuddyData.Controllers.DND35
             this.db = db;
         }
 
-        // GET: dnd35/campaigns/list/{user}
+        // GET: dnd35/campaigns/list
         [HttpGet]
-        public async Task<IActionResult> List(string email)
+        public async Task<IActionResult> List(string email = null)
         {
-
-            var characters = await db.Characters
-                .Include((character) => character.CampaignCharacters)
-                .ThenInclude((cc) => cc.Campaign)
-                .Where((character) => character.UserEmail == email)
+            var campaigns = await db.Campaigns
+                .Include(campaign => campaign.CampaignCharacters)
+                .ThenInclude(cc => cc.Character)
                 .ToListAsync();
 
-            return Json(characters.Select((c) => new
+            var filtered = email == null
+                ? campaigns
+                : campaigns.Where(c => c.CampaignCharacters.Any(cc => cc.Character.UserEmail == email));
+
+            return Json(filtered.Select(c => new
             {
-                Name = c.Name,
-                Bio = c.Bio,
-                Campaigns = c.CampaignCharacters.Select((cc) => new
+                c.Name,
+                Characters = c.CampaignCharacters.Select(cc => new
                 {
-                    Name = cc.Campaign.Name
+                    cc.Character.Name,
+                    cc.Character.Bio,
+                    Email = cc.Character.UserEmail
                 })
             }));
         }

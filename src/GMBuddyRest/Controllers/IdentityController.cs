@@ -23,13 +23,13 @@ namespace GMBuddyRest.Controllers
 
         // GET: api/identity
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> Get()
         {
             return new JsonResult(await gameData.GetCampaignsAsync("dnd35"));
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Post(string username, string password)
         {
             var disco = await DiscoveryClient.GetAsync("http://localhost:5000");
