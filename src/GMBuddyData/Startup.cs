@@ -65,6 +65,13 @@ namespace GMBuddyData
 
             app.UseApplicationInsightsExceptionTelemetry();
 
+            app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
+            {
+                Authority = "http://localhost:5000",
+                ScopeName = "GMBuddyData",
+                RequireHttpsMetadata = false
+            });
+
             app.UseMvc((routes) =>
             {
                 routes.MapRoute("default", "{area}/{controller}/{action}");

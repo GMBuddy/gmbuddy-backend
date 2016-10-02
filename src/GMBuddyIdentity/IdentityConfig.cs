@@ -12,10 +12,16 @@ namespace GMBuddyIdentity
             {
                 StandardScopes.OpenId,
                 StandardScopes.Profile,
+                StandardScopes.Email,
                 new Scope
                 {
                     Name = "GMBuddyApi",
                     Description = "GMBuddy Front-end API Access"
+                },
+                new Scope
+                {
+                    Name = "GMBuddyData",
+                    Description = "GMBuddy Back-end data services"
                 }
             };
         }
@@ -42,13 +48,13 @@ namespace GMBuddyIdentity
                     {
                         StandardScopes.OpenId.Name,
                         StandardScopes.Profile.Name,
-                        StandardScopes.OfflineAccess.Name,
+                        StandardScopes.Email.Name,
                         "GMBuddyApi"
                     }
                 },
                 new Client
                 {
-                    ClientId = "GMBuddyRest",
+                    ClientId = "GMBuddyRestTesting",
                     ClientName = "GMBuddy Rest API",
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     ClientSecrets = new List<Secret>
@@ -61,6 +67,20 @@ namespace GMBuddyIdentity
                         StandardScopes.Profile.Name,
                         StandardScopes.Email.Name,
                         "GMBuddyApi"
+                    }
+                },
+                new Client
+                {
+                    ClientId = "GMBuddyApi",
+                    ClientName = "GMBuddy API Layer",
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    ClientSecrets = new List<Secret>
+                    {
+                        new Secret("secret".Sha256())
+                    },
+                    AllowedScopes = new List<string>
+                    {
+                        "GMBuddyData"
                     }
                 }
             };

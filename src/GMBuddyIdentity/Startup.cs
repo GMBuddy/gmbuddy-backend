@@ -12,6 +12,8 @@ using Microsoft.Extensions.Logging;
 using GMBuddyIdentity.Data;
 using GMBuddyIdentity.Models;
 using GMBuddyIdentity.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace GMBuddyIdentity
 {
@@ -75,7 +77,7 @@ namespace GMBuddyIdentity
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, UserManager<ApplicationUser> userManager)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -103,6 +105,8 @@ namespace GMBuddyIdentity
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            DataInitializer.Init(userManager).GetAwaiter().GetResult();
         }
     }
 }
