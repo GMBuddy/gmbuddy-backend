@@ -18,7 +18,6 @@
     },
     "GMBuddyData": {
       "commandName": "Project",
-      "launchUrl": "http://localhost:5000/api/values",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
