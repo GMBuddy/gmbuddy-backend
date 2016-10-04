@@ -6,17 +6,21 @@ using System.Threading.Tasks;
 
 namespace GMBuddyData.Models.DND35
 {
-    public class Item : CharacterAttributes
+    public class Item : ICharacterAttributes
     {
+        public Guid ItemId { get; set; }
         [Required]
         public string ItemName { get; set; }
-
         [Required]
         public ItemType ItemType { get; set; }
-
         public string ItemDescription { get; set; }
 
-        public Guid CampaignCharacterId { get; set; }
+        public Guid SheetId { get; set; }
+        public Sheet Sheet { get; set; }
+        
+        public int Strength { get; set; }
+        public int Charisma { get; set; }
+        public int Endurance { get; set; }
     }
 
     public enum ItemType

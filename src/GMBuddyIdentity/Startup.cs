@@ -41,7 +41,11 @@ namespace GMBuddyIdentity
         // This method gets called by the runtime in development
         public void ConfigureDevelopmentServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("DevelopmentDatabase")));
+            // services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("DevelopmentDatabase")));
+
+            // Update 10.3.2016 -- Using SQL Express because its easier to work with while model states are in flux than sqlite.
+            // may switch back in the future if Mac/Linux support is needed again
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DevelopmentSQLExpress")));
 
             ConfigureCommonServices(services);
 

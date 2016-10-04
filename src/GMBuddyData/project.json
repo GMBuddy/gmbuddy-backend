@@ -12,6 +12,7 @@
       "type": "build"
     },
     "Microsoft.EntityFrameworkCore.Sqlite": "1.0.1",
+    "Microsoft.EntityFrameworkCore.SqlServer": "1.0.1",
     "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0",
     "Microsoft.Extensions.Configuration.FileExtensions": "1.0.0",
     "Microsoft.Extensions.Configuration.Json": "1.0.0",

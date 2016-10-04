@@ -16,8 +16,6 @@ namespace GMBuddyData.Models.DND35
         public Guid CampaignId { get; set; }
         public Campaign Campaign { get; set; }
         
-        public ICollection<Item> Items { get; set; }
-        public Guid SheetId { get; set; }
         public Sheet Sheet { get; set; }
      }
 }

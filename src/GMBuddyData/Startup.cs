@@ -33,8 +33,11 @@ namespace GMBuddyData
         // This method gets called by the runtime in development
         public void ConfigureDevelopmentServices(IServiceCollection services)
         {
-            services.AddDbContext<Data.DND35.GameContext>((options) => options.UseSqlite(Configuration.GetConnectionString("DND35")));
-            
+            // services.AddDbContext<Data.DND35.GameContext>((options) => options.UseSqlite(Configuration.GetConnectionString("DND35")));
+
+            // Use sqlserver at least while model state is in flux, because what are ALTER statements and why doesnt sqlite support them
+            services.AddDbContext<Data.DND35.GameContext>((options) => options.UseSqlServer(Configuration.GetConnectionString("DevelopmentSQLExpress-DND35")));
+
             services.AddApplicationInsightsTelemetry(Configuration);
 
             services.AddMvc(config =>
@@ -82,7 +85,7 @@ namespace GMBuddyData
 
             app.UseMvc((routes) =>
             {
-                routes.MapRoute("default", "{area}/{controller}/{action}");
+                routes.MapRoute("default", "{area}/{controller}/{action=Index}");
             });
         }
     }

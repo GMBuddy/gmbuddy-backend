@@ -5,11 +5,21 @@ using System.Threading.Tasks;
 
 namespace GMBuddyData.Models.DND35
 {
-    public abstract class CharacterAttributes
+    //public abstract class CharacterAttributes
+    //{
+    //    public Guid CharacterAttributesId { get; set; }
+    //    public int Stength { get; set; }
+    //    public int Charisma { get; set; }
+    //    public int Endurance { get; set; }
+
+    //    //public Guid CampaignCharacterId { get; set; }
+    //    //public CampaignCharacter CampaignCharacter { get; set; }
+    //}
+
+    public interface ICharacterAttributes
     {
-        public Guid CharacterAttributesId { get; set; }
-        public uint Stength { get; set; }
-        public uint Charisma { get; set; }
-        public uint Endurance { get; set; }
+        int Strength { get; set; }
+        int Charisma { get; set; }
+        int Endurance { get; set; }
     }
 }

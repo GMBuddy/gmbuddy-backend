@@ -47,7 +47,7 @@ namespace GMBuddyData.Data.DND35
                 CampaignCharacterId = campaignCharacter.CampaignCharacterId,
                 Charisma = 5,
                 Endurance = 5,
-                Stength = 5
+                Strength = 5
             };
             
             context.Sheets.Add(sheet);

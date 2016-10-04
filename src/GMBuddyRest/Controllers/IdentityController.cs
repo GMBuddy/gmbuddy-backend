@@ -25,7 +25,7 @@ namespace GMBuddyRest.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            return new JsonResult(await gameData.GetCampaignsAsync("dnd35"));
+            return new JsonResult(await gameData.GetCampaignsAsync(GameType.DND35));
         }
 
         [HttpPost]

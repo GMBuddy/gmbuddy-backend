@@ -13,7 +13,6 @@ namespace GMBuddyData.Data.DND35
         public DbSet<Campaign> Campaigns { get; set; }
         public DbSet<Character> Characters { get; set; }
         public DbSet<CampaignCharacter> CampaignCharacters { get; set; }
-        public DbSet<CharacterAttributes> CharacterAttributes { get; set; }
         public DbSet<Sheet> Sheets { get; set; }
         public DbSet<Item> Items { get; set; }
     }
