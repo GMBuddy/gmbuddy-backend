@@ -36,7 +36,7 @@ namespace GMBuddyData.Controllers.DND35
             // Add conditional where if we have filter criteria
             var filtered = email == null
                 ? await campaigns.ToListAsync()
-                : await campaigns.Where(c => c.CampaignCharacters.Any(cc => cc.Character.UserEmail == email)).ToListAsync();
+                : await campaigns.Where(c => c.CampaignCharacters.Any(cc => cc.Character.UserEmail == email) || c.GmEmail == email).ToListAsync();
 
             // return a pretty version of the campaigns
             // TODO: Return actual serializable models
