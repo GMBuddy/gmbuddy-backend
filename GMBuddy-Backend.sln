@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		create-sqlite.sh = create-sqlite.sh
 		create-sqlserver.ps1 = create-sqlserver.ps1
 		global.json = global.json
+		launch-identity.ps1 = launch-identity.ps1
 		README.md = README.md
 	EndProjectSection
 EndProject
