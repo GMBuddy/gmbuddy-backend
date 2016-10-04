@@ -4,18 +4,14 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GMBuddyData.Models.DND35
+namespace GMBuddyData.Models.DND35.CampaignViewModels
 {
-    public class Campaign
+    public class CreateCampaignVM
     {
-        public Guid CampaignId { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]
         [EmailAddress]
-        public string GmEmail { get; set; }
-
-        // relationships
-        public ICollection<CampaignCharacter> CampaignCharacters { get; set; }
+        public string GameMaster { get; set; }
     }
 }

@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using GMBuddyData.Data.DND35;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using GMBuddyData.Models.DND35;
+using GMBuddyData.Models.DND35.CampaignViewModels;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -41,6 +43,7 @@ namespace GMBuddyData.Controllers.DND35
             return Json(filtered.Select(c => new
             {
                 c.Name,
+                GameMaster = c.GmEmail,
                 Characters = c.CampaignCharacters.Select(cc => new
                 {
                     cc.Character.Name,
@@ -48,6 +51,33 @@ namespace GMBuddyData.Controllers.DND35
                     Email = cc.Character.UserEmail
                 })
             }));
+        }
+
+        // POST: dnd35/campaigns
+        // POST: dnd35/campaigns/index
+        [HttpPost]
+        public async Task<IActionResult> Index([FromBody] CreateCampaignVM model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var campaign = new Campaign
+            {
+                Name = model.Name,
+                GmEmail = model.GameMaster
+            };
+
+            db.Campaigns.Add(campaign);
+
+            var changes = await db.SaveChangesAsync();
+            if (changes != 1)
+            {
+                return BadRequest();
+            }
+
+            return new CreatedResult($"/dnd35/campaigns/{campaign.CampaignId}", null);
         }
     }
 }

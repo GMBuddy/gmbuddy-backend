@@ -57,7 +57,9 @@ namespace GMBuddyRest
                 RequireHttpsMetadata = false
             });
 
-            app.UseMvc();
+            app.UseMvc(routes => {
+                routes.MapRoute("default", "api/{controller}/{action=Index}");
+            });
         }
     }
 }

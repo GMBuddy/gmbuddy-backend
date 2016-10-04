@@ -12,25 +12,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GMBuddyRest.Controllers
 {
-    [Route("api/[controller]")]
     public class IdentityController : Controller
     {
-        private readonly IGameDataService gameData;
-        public IdentityController(IGameDataService gameData)
-        {
-            this.gameData = gameData;
-        }
-
-        // GET: api/identity
-        [HttpGet]
-        public async Task<IActionResult> Get()
-        {
-            return new JsonResult(await gameData.GetCampaignsAsync(GameType.DND35));
-        }
-
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Post(string username, string password)
+        public async Task<IActionResult> Index(string username, string password)
         {
             var disco = await DiscoveryClient.GetAsync("http://localhost:5000");
             var tokenClient = new TokenClient(disco.TokenEndpoint, "GMBuddyRestTesting", "secret");

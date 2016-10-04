@@ -17,7 +17,8 @@ namespace GMBuddyData.Data.DND35
 
             var campaign = new Campaign
             {
-                Name = "My Awesome Campaign"
+                Name = "My Awesome Campaign",
+                GmEmail = "testing@user.com"
             };
 
             var character = new Character
@@ -35,8 +36,7 @@ namespace GMBuddyData.Data.DND35
             {
                 CampaignCharacterId = new Guid(),
                 CharacterId = character.CharacterId,
-                CampaignId = campaign.CampaignId,
-                IsGameMaster = true
+                CampaignId = campaign.CampaignId
             };
 
             context.CampaignCharacters.Add(campaignCharacter);

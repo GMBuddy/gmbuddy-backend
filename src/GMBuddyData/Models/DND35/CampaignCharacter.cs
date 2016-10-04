@@ -8,7 +8,6 @@ namespace GMBuddyData.Models.DND35
     public class CampaignCharacter
     {
         public Guid CampaignCharacterId { get; set; }
-        public bool IsGameMaster { get; set; }
 
         public Guid CharacterId { get; set; }
         public Character Character { get; set; }

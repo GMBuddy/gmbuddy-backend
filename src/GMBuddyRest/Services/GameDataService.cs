@@ -8,6 +8,7 @@ using IdentityModel.Client;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 
 namespace GMBuddyRest.Services
 {
@@ -19,6 +20,14 @@ namespace GMBuddyRest.Services
         /// <param name="gameType">The type of game being played, like DND35 or DND5</param>
         /// <returns>JArray containing an array of the user's Characters, each of which has an array of campaigns that they are in</returns>
         Task<JArray> GetCampaignsAsync(GameType gameType);
+
+        /// <summary>
+        /// Creates a new campaign with the given name and game master
+        /// </summary>
+        /// <param name="type">The type of game being played, like DND35 or DND5</param>
+        /// <param name="name">The name of the campaign being created</param>
+        /// <returns></returns>
+        Task CreateCampaignAsync(GameType type, string name);
     }
 
     public enum GameType
@@ -67,11 +76,13 @@ namespace GMBuddyRest.Services
         private readonly HttpClient httpClient;
         private readonly IUserService userService;
         private readonly Dictionary<GameType, string> gameTypes;
+        private readonly ILogger<GameDataService> logger;
 
-        public GameDataService(IUserService userService)
+        public GameDataService(IUserService userService, ILogger<GameDataService> logger)
         {
             httpClient = new HttpClient();
             this.userService = userService;
+            this.logger = logger;
             this.gameTypes = new Dictionary<GameType, string>
             {
                 [GameType.DND35] = "dnd35",
@@ -132,6 +143,27 @@ namespace GMBuddyRest.Services
             return JArray.Parse(response);
         }
 
-        
+        public async Task CreateCampaignAsync(GameType type, string name)
+        {
+            var userEmail = await userService.GetUserAsync();
+            var uri = BuildURI(type, "campaigns", null, null);
+
+            await httpClient.EnsureAuthenticated();
+            var reqBody = new StringContent(JObject.FromObject(new {
+                GameMaster = userEmail,
+                Name = name
+            }).ToString(), Encoding.UTF8, "application/json");
+
+            logger.LogWarning("Sending create campaign request to GameData API");
+            var response = await httpClient.PostAsync(uri, reqBody);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                logger.LogWarning("GameData API could not complete request");
+                throw new Exception("Could not create campaign");
+            }
+
+            logger.LogInformation("Successfully created campaign with GameData API");
+        }
     }
 }
