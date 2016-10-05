@@ -88,6 +88,7 @@
       "wwwroot",
       "**/*.cshtml",
       "appsettings.json",
+      "project.json",
       "web.config"
     ]
   },
