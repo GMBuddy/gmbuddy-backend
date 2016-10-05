@@ -9,6 +9,6 @@ deployment:
     production:
         branch: master
         commands:
-            - cd src/GMBuddyIdentity && dotnet restore && dotnet publish -c Release && cd bin/Release/netcoreapp1.0/publish && dpl --provider=AzureWebApps --site=GMBuddyIdentity
+            - cd src/GMBuddyIdentity && dotnet restore && dotnet publish -c Debug && dpl --provider=AzureWebApps --site=GMBuddyIdentity
             - cd src/GMBuddyRest && dotnet restore && dotnet publish -c Release && cd bin/Release/netcoreapp1.0/publish && dpl --provider=AzureWebApps --site=GMBuddyRest
             - cd src/GMBuddyData && dotnet restore && dotnet publish -c Release && cd bin/Release/netcoreapp1.0/publish && dpl --provider=AzureWebApps --site=GMBuddyData
