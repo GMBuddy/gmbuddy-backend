@@ -1,3 +1,5 @@
+$env:ASPNETCORE_ENVIRONMENT = "Development"
+
 sqllocaldb stop GMBuddy
 sqllocaldb delete GMBuddy
 sqllocaldb create GMBuddy

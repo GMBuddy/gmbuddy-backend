@@ -26,11 +26,13 @@ namespace GMBuddyIdentity
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 
-            if (env.IsDevelopment())
-            {
-                // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
-                builder.AddUserSecrets();
-            }
+            //if (env.IsDevelopment())
+            //{
+            //    // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
+            //    builder.AddUserSecrets();
+            //}
+
+            builder.AddUserSecrets();
 
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
@@ -58,10 +60,10 @@ namespace GMBuddyIdentity
         public void ConfigureProductionServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration["GMBuddyAzureSql"]));
-
+           
             ConfigureCommonServices(services);
-
-            services.AddIdentityServer()
+           
+            services.AddDeveloperIdentityServer()
                 .AddInMemoryClients(IdentityConfig.GetClients())
                 .AddInMemoryScopes(IdentityConfig.GetScopes())
                 .AddAspNetIdentity<ApplicationUser>();

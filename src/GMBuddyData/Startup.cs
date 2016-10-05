@@ -24,13 +24,17 @@ namespace GMBuddyData
                 builder.AddApplicationInsightsSettings(developerMode: true);
             }
 
+            builder.AddUserSecrets();
+
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
         }
 
         public IConfigurationRoot Configuration { get; }
 
-        // This method gets called by the runtime in development
+        /// <summary>
+        /// This method gets called by the runtime when ASPNETCORE_ENVIRONMENT = Development
+        /// </summary>
         public void ConfigureDevelopmentServices(IServiceCollection services)
         {
             // Use sqlite when youre fine with losing your database a lot
@@ -39,6 +43,24 @@ namespace GMBuddyData
             // Use sqlserver at least while model state is in flux, because what are ALTER statements and why doesnt sqlite support them
             // services.AddDbContext<Data.DND35.GameContext>((options) => options.UseSqlServer(Configuration.GetConnectionString("DevelopmentSQLExpress-DND35")));
 
+            ConfigureCommonServices(services);
+        }
+
+        /// <summary>
+        /// This method gets called by the runtime when ASPNETCORE_ENVIRONMENT = Production
+        /// </summary>
+        public void ConfigureProductionServices(IServiceCollection services)
+        {
+            services.AddDbContext<Data.DND35.GameContext>(options => options.UseSqlServer(Configuration["AzureSqlDND35"]));
+
+            ConfigureCommonServices(services);
+        }
+
+        /// <summary>
+        /// Called by ConfigureProductionServices and ConfigureDevelopmentServices to do common service setup logic
+        /// </summary>
+        private void ConfigureCommonServices(IServiceCollection services)
+        {
             services.AddApplicationInsightsTelemetry(Configuration);
 
             services.AddMvc(config =>
@@ -50,7 +72,9 @@ namespace GMBuddyData
             });
         }
 
-        // This method gets called by the runtime in development
+        /// <summary>
+        /// This method gets called by the runtime when ASPNETCORE_ENVIRONMENT = Development
+        /// </summary>
         public void ConfigureDevelopment(
             IApplicationBuilder app,
             IHostingEnvironment env,
@@ -59,16 +83,22 @@ namespace GMBuddyData
         {
             ConfigureCommon(app, env, loggerFactory);
 
+            // seed the database with some initial values in development
             Data.DND35.DataInitializer.Init(dnd35Context);
         }
 
-        // This method gets called by the runtime in production
+        /// <summary>
+        /// This method gets called by the runtime when ASPNETCORE_ENVIRONMENT = Production
+        /// </summary>
         public void ConfigureProduction(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             ConfigureCommon(app, env, loggerFactory);
         }
 
-        public void ConfigureCommon(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        /// <summary>
+        /// This method gets called by ConfigureProduction and ConfigureDevelopment to do common setup
+        /// </summary>
+        private void ConfigureCommon(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
