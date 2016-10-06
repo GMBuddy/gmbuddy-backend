@@ -2,4 +2,4 @@ deployment:
     production:
         branch: master
         commands:
-            - git remote add digitalocean ssh://root:$DO_PASSWORD@$DO_GIT_PATH && git push digitalocean master --force
+            - git remote add digitalocean ssh://root@$DO_GIT_PATH && git push digitalocean master --force
