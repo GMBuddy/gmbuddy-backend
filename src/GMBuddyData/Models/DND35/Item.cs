@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GMBuddyData.Models.DND35
 {
-    public class Item : ICharacterAttributes
+    public class Item : ICharacterAbilities
     {
         public Guid ItemId { get; set; }
         [Required]

@@ -10,6 +10,12 @@ namespace GMBuddyData.Data.DND35
             
         }
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<Campaign>().HasAlternateKey(c => new { c.GmEmail, c.Name });
+            builder.Entity<Character>().HasAlternateKey(c => new { c.UserEmail, c.Name });
+        }
+
         public DbSet<Campaign> Campaigns { get; set; }
         public DbSet<Character> Characters { get; set; }
         public DbSet<CampaignCharacter> CampaignCharacters { get; set; }

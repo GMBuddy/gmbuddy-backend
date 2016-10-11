@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GMBuddyData.Models.DND35
 {
-    public class Sheet : ICharacterAttributes
+    public class Sheet : ICharacterAbilities
     {
         public Guid SheetId { get; set; }
         public Guid CampaignCharacterId { get; set; }
@@ -14,9 +14,62 @@ namespace GMBuddyData.Models.DND35
 
         public ICollection<Item> Items { get; set; }
 
-        // Implement character attributes
         public int Strength { get; set; }
-        public int Charisma { get; set; }
-        public int Endurance { get; set; }
+
+        public int Dexterity { get; set; }
+
+        public int Constitution
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public int Intelligence
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public int Wisdom
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public int Charisma
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        // Implement character attributes
     }
 }
