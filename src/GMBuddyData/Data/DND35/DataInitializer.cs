@@ -25,7 +25,23 @@ namespace GMBuddyData.Data.DND35
             {
                 UserEmail = "testing@user.com",
                 Name = "Generic Fantasy Character Name",
-                Bio = "Was a program once, until he took an error to the runtime"
+                Bio = "Was a program once, until he took an error to the runtime",
+                Age = 50,
+                Alignment = "Chaotic Neutral",
+                Charisma = 5,
+                Constitution = 5,
+                Strength = 5,
+                Wisdom = 5,
+                Size = "Large",
+                Class = "Paladin",
+                Deity = "Yogg Saron",
+                Dexterity = 5,
+                Eyes = "Brown",
+                Gender = "Foxkin",
+                Height = 70,
+                Intelligence = 5,
+                Skin = "Red",
+                Weight = 200
             };
 
             context.Campaigns.Add(campaign);
@@ -42,18 +58,7 @@ namespace GMBuddyData.Data.DND35
             context.CampaignCharacters.Add(campaignCharacter);
             changes += context.SaveChanges();
 
-            var sheet = new Sheet
-            {
-                CampaignCharacterId = campaignCharacter.CampaignCharacterId,
-                Charisma = 5,
-                Endurance = 5,
-                Strength = 5
-            };
-            
-            context.Sheets.Add(sheet);
-            changes += context.SaveChanges();
-
-            if (changes != 4)
+            if (changes != 3)
             {
                 Console.Error.WriteLine("Did not save initialization data correctly");
                 Environment.Exit(1);

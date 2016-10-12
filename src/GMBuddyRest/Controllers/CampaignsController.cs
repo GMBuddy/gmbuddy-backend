@@ -17,9 +17,12 @@ namespace GMBuddyRest.Controllers
 
         // GET: api/Campaigns
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(
+            IEnumerable<string> gameTypes,
+            string campaignId,
+            string characterId)
         {
-            return new JsonResult(await games.GetCampaignsAsync(GameType.DND35));
+            return new JsonResult(await games.GetCampaignsAsync(gameTypes, campaignId, characterId));
         }
 
         [HttpPost]
@@ -32,7 +35,7 @@ namespace GMBuddyRest.Controllers
 
             try
             {
-                await games.CreateCampaignAsync(GameType.DND35, name);
+                await games.CreateCampaignAsync("dnd35", name);
                 return Created("idkyet", null);
             }
             catch (Exception)
