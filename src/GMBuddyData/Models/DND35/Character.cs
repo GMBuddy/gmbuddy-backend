@@ -74,8 +74,19 @@ namespace GMBuddyData.Models.DND35
         {
             get
             {
-                var items = new List<Item>(StartingItems);
-                items.AddRange(CampaignCharacters.SelectMany(cc => cc.Items));
+                List<Item> items = null;
+
+                if (StartingItems != null)
+                {
+                    items.AddRange(StartingItems);
+                }
+
+                var playerItems = CampaignCharacters?.Where(cc => cc.Items != null).SelectMany(cc => cc.Items);
+                if (playerItems != null)
+                {
+                    items.AddRange(playerItems);
+                }
+
                 return items;
             }
             set { throw new NotSupportedException(); }

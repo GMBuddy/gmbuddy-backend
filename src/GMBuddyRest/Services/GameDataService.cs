@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Linq;
 using System.Net.Http;
-using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using IdentityModel.Client;
-using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace GMBuddyRest.Services
 {
+    /// <summary>
+    /// Defines the characteristics of game data service
+    /// </summary>
     public interface IGameDataService
     {
         /// <summary>
@@ -21,8 +21,8 @@ namespace GMBuddyRest.Services
         /// <param name="gameTypes">The types of game being requested, like DND35 or DND5</param>
         /// <param name="campaignId">The id of a specific campaign</param>
         /// <param name="characterId">The id of a specific character</param>
-        /// <returns>JArray containing an array of the user's Characters, each of which has an array of campaigns that they are in</returns>
-        Task<string> GetCampaignsAsync(IEnumerable<string> gameTypes, string campaignId, string characterId);
+        /// <returns></returns>
+        Task<HttpResponseMessage> GetCampaignsAsync(IEnumerable<string> gameTypes, string campaignId, string characterId);
 
         /// <summary>
         /// Creates a new campaign with the given name and game master
@@ -30,12 +30,7 @@ namespace GMBuddyRest.Services
         /// <param name="type">The type of game being played, like DND35 or DND5</param>
         /// <param name="name">The name of the campaign being created</param>
         /// <returns></returns>
-        Task<JObject> CreateCampaignAsync(string type, string name);
-    }
-
-    public interface derp
-    {
-        string merp { get; set; }
+        Task<HttpResponseMessage> CreateCampaignAsync(string type, string name);
     }
 
     /// <summary>
@@ -121,14 +116,19 @@ namespace GMBuddyRest.Services
         }
         #endregion
 
-        public async Task<string> GetCampaignsAsync(
+        public async Task<HttpResponseMessage> GetCampaignsAsync(
             IEnumerable<string> gameTypes,
             string campaignId,
             string characterId)
         {
+            if (gameTypes == null || gameTypes.Count() != 1)
+            {
+                logger.LogWarning("GetCampaigns called with unsupported gameTypes");
+                throw new NotImplementedException();
+            }
+
             await httpClient.EnsureAuthenticated();
             var query = new Dictionary<string, string>();
-            bool isSingleResponse = false;
 
             if (characterId != null)
             {
@@ -137,57 +137,30 @@ namespace GMBuddyRest.Services
             else if (campaignId != null)
             {
                 query.Add("campaignId", campaignId);
-                isSingleResponse = true;
             }
             else
             {
                 query.Add("email", await userService.GetUserAsync());
             }
 
-            var campaigns = new List<derp>();
-
-            foreach (var type in gameTypes)
-            {
-                var uri = BuildUri(type, "campaigns", null, query);
-
-                var response = await httpClient.GetStringAsync(uri);
-
-                if (isSingleResponse)
-                {
-                    campaigns.Add(JsonConvert.DeserializeObject<derp>(response));
-                }
-                else
-                {
-                    campaigns.AddRange(JsonConvert.DeserializeObject<IEnumerable<derp>>(response));
-                }
-            }
-
-            return JsonConvert.SerializeObject(campaigns);
+            logger.LogInformation("Sending get campaign request to GameData API");
+            var uri = BuildUri(gameTypes.Single(), "campaigns", null, query);
+            return await httpClient.GetAsync(uri);
         }
 
-        public async Task<JObject> CreateCampaignAsync(string type, string name)
+        public async Task<HttpResponseMessage> CreateCampaignAsync(string type, string name)
         {
             var userEmail = await userService.GetUserAsync();
             var uri = BuildUri(type, "campaigns");
 
             await httpClient.EnsureAuthenticated();
-            var reqBody = new StringContent(JObject.FromObject(new {
+            var reqBody = new StringContent(JsonConvert.SerializeObject(new {
                 GameMaster = userEmail,
                 Name = name
-            }).ToString(), Encoding.UTF8, "application/json");
+            }), Encoding.UTF8, "application/json");
 
             logger.LogInformation("Sending create campaign request to GameData API");
-            var response = await httpClient.PostAsync(uri, reqBody);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                logger.LogWarning("GameData API could not complete request");
-                throw new Exception("Could not create campaign");
-            }
-
-            logger.LogInformation("Successfully created campaign with GameData API");
-
-            return JObject.Parse(await response.Content.ReadAsStringAsync());
+            return await httpClient.PostAsync(uri, reqBody);
         }
     }
 }

@@ -23,7 +23,7 @@ namespace GMBuddyData.Controllers.DND35
         // GET: dnd35/campaigns
         // GET: dnd35/campaigns/index
         [HttpGet]
-        public async Task<IActionResult> Index(string email = null, string campaignId = null, string characterId = null)
+        public async Task<IActionResult> Index(string email, string campaignId, string characterId)
         {
             if (!ModelState.IsValid)
             {
