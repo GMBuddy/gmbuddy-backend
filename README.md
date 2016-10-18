@@ -12,6 +12,7 @@
   - cd into src/GMBuddyData, src/GMBuddyIdentity, and src/GMBuddyRest and run `dotnet restore` in each
   - cd back into the solution root and run create-sqlite.ps1 in PowerShell or create-sqlite.sh in Bash
   - cd into each of the three project directories and type `dotnet run`
+  - if you get an error trying to dotnet run GMBuddyIdentity, enter the command `$env:ASPNETCORE_ENVIRONMENT="Development"` using PowerShell in that directory, then try again.
 - From visual studio
   - open the .sln file in the project root
   - Wait for projects to "restore" (dependency installation). This should happen automatically.
