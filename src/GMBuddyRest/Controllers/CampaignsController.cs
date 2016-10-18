@@ -22,9 +22,35 @@ namespace GMBuddyRest.Controllers
             string campaignId,
             string characterId)
         {
-            return new JsonResult(await games.GetCampaignsAsync(gameTypes, campaignId, characterId));
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                var response = await games.GetCampaignsAsync(gameTypes, campaignId, characterId);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return Ok(await response.Content.ReadAsStringAsync());
+                }
+                else
+                {
+                    return NotFound(await response.Content.ReadAsStringAsync());
+                }
+            }
+            catch (NotImplementedException)
+            {
+                return BadRequest(new { Error = "We do not support the request that you're trying to make. Bug Jack or Mason to fix this." });
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
 
+        // POST: api/Campaigns
         [HttpPost]
         public async Task<IActionResult> Index(string name)
         {
@@ -35,8 +61,8 @@ namespace GMBuddyRest.Controllers
 
             try
             {
-                await games.CreateCampaignAsync("dnd35", name);
-                return Created("idkyet", null);
+                var response = await games.CreateCampaignAsync("dnd35", name);
+                return Created("idkyet", await response.Content.ReadAsStringAsync());
             }
             catch (Exception)
             {
