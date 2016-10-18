@@ -40,8 +40,8 @@ namespace GMBuddyData
             // Use sqlite when youre fine with losing your database a lot
             services.AddDbContext<Data.DND35.GameContext>((options) => options.UseSqlite(Configuration.GetConnectionString("DevelopmentSQLite-DND35")));
 
-            // Use sqlserver at least while model state is in flux, because what are ALTER statements and why doesnt sqlite support them
-            // services.AddDbContext<Data.DND35.GameContext>((options) => options.UseSqlServer(Configuration.GetConnectionString("DevelopmentSQLExpress-DND35")));
+            // Do not require authentication in development
+            services.AddMvc();
 
             ConfigureCommonServices(services);
         }
@@ -53,7 +53,7 @@ namespace GMBuddyData
         {
             services.AddDbContext<Data.DND35.GameContext>(options => options.UseSqlServer(Configuration["AzureSqlDND35"]));
 
-            // only *require* authentication in production
+            // Only *require* authentication in production
             services.AddMvc(config =>
             {
                 config.Filters.Add(new AuthorizeFilter(
