@@ -53,6 +53,15 @@ namespace GMBuddyData
         {
             services.AddDbContext<Data.DND35.GameContext>(options => options.UseSqlServer(Configuration["AzureSqlDND35"]));
 
+            // only *require* authentication in production
+            services.AddMvc(config =>
+            {
+                config.Filters.Add(new AuthorizeFilter(
+                    new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build()));
+            });
+
             ConfigureCommonServices(services);
         }
 
@@ -62,14 +71,6 @@ namespace GMBuddyData
         private void ConfigureCommonServices(IServiceCollection services)
         {
             services.AddApplicationInsightsTelemetry(Configuration);
-
-            services.AddMvc(config =>
-            {
-                config.Filters.Add(new AuthorizeFilter(
-                    new AuthorizationPolicyBuilder()
-                    .RequireAuthenticatedUser()
-                    .Build()));
-            });
         }
 
         /// <summary>
