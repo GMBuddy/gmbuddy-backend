@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		create-sqlite.sh = create-sqlite.sh
 		create-sqlserver-prod.ps1 = create-sqlserver-prod.ps1
 		global.json = global.json
-		launch-identity.ps1 = launch-identity.ps1
+		launch.ps1 = launch.ps1
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -22,6 +22,8 @@ EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "GMBuddyIdentity", "src\GMBuddyIdentity\GMBuddyIdentity.xproj", "{2948FBFF-BDEB-4FC8-B2B6-918C2ACEAAF8}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "GMBuddyData", "src\GMBuddyData\GMBuddyData.xproj", "{C5863D26-B3B5-483F-8CD2-ACA943ECE8A6}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "GMBuddy.Games", "src\GMBuddy.Games\GMBuddy.Games.xproj", "{C80DF74C-AED9-4C90-9A58-82EC404F9736}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,10 @@ Global
 		{C5863D26-B3B5-483F-8CD2-ACA943ECE8A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5863D26-B3B5-483F-8CD2-ACA943ECE8A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5863D26-B3B5-483F-8CD2-ACA943ECE8A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C80DF74C-AED9-4C90-9A58-82EC404F9736}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C80DF74C-AED9-4C90-9A58-82EC404F9736}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C80DF74C-AED9-4C90-9A58-82EC404F9736}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C80DF74C-AED9-4C90-9A58-82EC404F9736}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,5 +55,6 @@ Global
 		{D5C36754-B521-43AF-8C50-4E3F1639899D} = {B022C03B-51EB-4D3C-A12E-1443FCAD8DCA}
 		{2948FBFF-BDEB-4FC8-B2B6-918C2ACEAAF8} = {B022C03B-51EB-4D3C-A12E-1443FCAD8DCA}
 		{C5863D26-B3B5-483F-8CD2-ACA943ECE8A6} = {B022C03B-51EB-4D3C-A12E-1443FCAD8DCA}
+		{C80DF74C-AED9-4C90-9A58-82EC404F9736} = {B022C03B-51EB-4D3C-A12E-1443FCAD8DCA}
 	EndGlobalSection
 EndGlobal

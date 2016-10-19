@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using GMBuddyRest.Services;
+﻿using GMBuddyRest.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -34,6 +30,7 @@ namespace GMBuddyRest
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IGameDataService, GameDataService>();
+            services.AddTransient<GMBuddy.Games.Dnd35.GameService>();
 
             services.AddMvc(config =>
             {

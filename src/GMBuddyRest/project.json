@@ -16,7 +16,8 @@
     "Microsoft.Extensions.Logging.Debug": "1.0.0",
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0",
     "IdentityServer4.AccessTokenValidation": "1.0.1-rc1",
-    "IdentityModel": "2.0.0-rc3"
+    "IdentityModel": "2.0.0-rc3",
+    "GMBuddy.Games": "1.0.0-*"
   },
 
   "tools": {
