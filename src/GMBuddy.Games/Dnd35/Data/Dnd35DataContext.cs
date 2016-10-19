@@ -19,6 +19,6 @@ namespace GMBuddy.Games.Dnd35.Data
             builder.UseSqlite($"Filename={Utils.GetDatabasePath("dnd35")}");
         }
 
-        public DbSet<Campaign> Campaigns { get; set; }
+        public DbSet<Dnd35Campaign> Campaigns { get; set; }
     }
 }

@@ -10,4 +10,8 @@ cd .\src\GMBuddy.Games
 dotnet ef migrations add InitialMigration -c GMBuddy.Games.Dnd35.Data.Dnd35DataContext -o .\Dnd35\Data\Migrations
 dotnet ef database update
 
+cd ..\GMBuddy.Identity
+dotnet ef migrations add InitialMigration -c GMBuddy.Identity.Data.IdentityContext -o .\Data\Migrations
+dotnet ef database update
+
 cd ..\..
