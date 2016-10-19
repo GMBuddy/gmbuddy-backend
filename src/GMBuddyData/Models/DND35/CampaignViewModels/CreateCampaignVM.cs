@@ -13,5 +13,6 @@ namespace GMBuddyData.Models.DND35.CampaignViewModels
         [Required]
         [EmailAddress]
         public string GameMaster { get; set; }
+        //TODO: Modify this to return an invite code unique to campaign
     }
 }

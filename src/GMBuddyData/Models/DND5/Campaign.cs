@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GMBuddyData.Models.DND35
+namespace GMBuddyData.Models.DND5
 {
     public class Campaign
     {
