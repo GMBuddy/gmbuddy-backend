@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using GMBuddy.Games.Dnd35.Data;
 using GMBuddy.Games.Dnd35.Models;
@@ -21,26 +22,31 @@ namespace GMBuddy.Games.Dnd35
         }
 
         /// <summary>
-        /// Adds a campaign with the given campaign name and GM's email to the database
+        /// Adds a campaign with the given campaign name and GM's userId to the database
         /// </summary>
         /// <param name="name">The name of the campaign</param>
-        /// <param name="email">The GM's email address (uniquely identifies the GM)</param>
-        /// <returns>If the campaign successfully saved or not</returns>
-        public async Task<bool> AddCampaignAsync(string name, string email)
+        /// <param name="userId">The GM's userId address (uniquely identifies the GM)</param>
+        /// <returns>The ID of the added campaign</returns>
+        public async Task<Guid> AddCampaignAsync(string name, string userId)
         {
             using (var db = new Dnd35DataContext())
             {
                 var campaign = new Dnd35Campaign
                 {
                     Name = name,
-                    GmEmail = email
+                    GmUserId = userId
                 };
 
                 db.Campaigns.Add(campaign);
 
                 int changes = await db.SaveChangesAsync();
 
-                return changes == 1;
+                if (changes != 1)
+                {
+                    throw new Exception("Could not save campaign");
+                }
+
+                return campaign.CampaignId;
             }
         }
     }

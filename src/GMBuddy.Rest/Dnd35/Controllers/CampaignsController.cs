@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -10,6 +9,7 @@ using Microsoft.Extensions.Logging;
 namespace GMBuddy.Rest.Dnd35.Controllers
 {
     [Area("Dnd35")]
+    [Route("/[area]/[controller]")]
     public class CampaignsController : Controller
     {
         private readonly ILogger<CampaignsController> logger;
@@ -22,13 +22,13 @@ namespace GMBuddy.Rest.Dnd35.Controllers
             this.games = games;
         }
 
-        [HttpGet("/[area]/[controller]")]
+        [HttpGet("")]
         public async Task<IActionResult> ListCampaigns()
         {
             return Json(await games.GetCampaignsAsync());
         }
 
-        [HttpGet("/[area]/[controller]/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetCampaign(string id)
         {
             var campaigns = await games.GetCampaignsAsync();
@@ -37,18 +37,20 @@ namespace GMBuddy.Rest.Dnd35.Controllers
             return Json(campaigns.Single(c => c.CampaignId.ToString().Equals(id)));
         }
 
-        [HttpPost("/[area]/[controller]")]
+        [HttpPost("")]
         public async Task<IActionResult> AddCampaign(string name)
         {
-            string userId = User.Claims.Single(c => c.Type.Equals(ClaimTypes.Role)).Value;
-            bool success = await games.AddCampaignAsync(name, userId);
-
-            if (!success)
+            try
             {
-                return BadRequest();
-            }
+                string userId = User.Claims.Single(c => c.Type.Equals(ClaimTypes.NameIdentifier)).Value;
+                var campaignId = await games.AddCampaignAsync(name, userId);
 
-            return Created("idkyet", null);
+                return Created(Url.Action(nameof(GetCampaign), new {Id = campaignId}), null);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new {Error = e.Message});
+            }
         }
     }
 }
