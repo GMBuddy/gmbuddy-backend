@@ -12,7 +12,7 @@ namespace GMBuddy.Games.Dnd35
         /// Get all campaigns (eventually with filtering options)
         /// </summary>
         /// <returns>Returns a list of campaigns. If none exist, an empty array is returned. If an error occurs, an exception is thrown</returns>
-        public async Task<IEnumerable<Dnd35Campaign>> GetCampaigns()
+        public async Task<IEnumerable<Dnd35Campaign>> GetCampaignsAsync()
         {
             using (var db = new Dnd35DataContext())
             {

@@ -12,7 +12,6 @@ namespace GMBuddy.Games.Dnd35.Models
         public string Name { get; set; }
 
         [Required]
-        [EmailAddress]
-        public string GmEmail { get; set; }
+        public string GmUserId { get; set; }
     }
 }
