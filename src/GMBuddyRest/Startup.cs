@@ -1,4 +1,7 @@
-﻿using GMBuddy.Games.Dnd35;
+﻿using System;
+using System.Text;
+using GMBuddy;
+using GMBuddy.Games.Dnd35;
 using GMBuddyRest.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -8,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 
 namespace GMBuddyRest
 {
@@ -48,11 +52,24 @@ namespace GMBuddyRest
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
+            app.UseJwtBearerAuthentication(new JwtBearerOptions
             {
-                Authority = "http://localhost:5000",
-                ScopeName = "GMBuddyApi",
-                RequireHttpsMetadata = false
+                AutomaticAuthenticate = true,
+                AutomaticChallenge = true,
+                TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = AuthorizationConstants.SecurityKey,
+
+                    ValidateAudience = true,
+                    ValidAudience = AuthorizationConstants.Audience,
+
+                    ValidateIssuer = true,
+                    ValidIssuer = AuthorizationConstants.Issuer,
+
+                    RequireExpirationTime = true,
+                    ValidateLifetime = true
+                }
             });
 
             app.UseMvc(routes => {

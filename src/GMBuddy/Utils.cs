@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace GMBuddy.Games
+namespace GMBuddy
 {
     public static class Utils
     {
@@ -25,10 +25,8 @@ namespace GMBuddy.Games
             string fileName = $"{gameType}.sqlite";
 
             string path = RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
-                ? Path.Combine(Environment.GetEnvironmentVariable("HOME"), ".gmbuddy", "database", fileName) 
+                ? Path.Combine(Environment.GetEnvironmentVariable("HOME"), ".gmbuddy", "database", fileName)
                 : Path.Combine(Environment.GetEnvironmentVariable("LOCALAPPDATA"), "GMBuddy", "Databases", fileName);
-
-            Console.WriteLine(path);
 
             return path;
         }

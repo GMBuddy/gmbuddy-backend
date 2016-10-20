@@ -1,31 +1,45 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using GMBuddy.Identity.Models;
 using GMBuddy.Identity.Models.ViewModels;
 using GMBuddy.Identity.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace GMBuddy.Identity.Controllers
 {
-    [Route("Account")]
     public class AccountController : Controller
     {
         private readonly UserManager<User> userManager;
         private readonly JwtService jwtService;
+        private readonly ILogger<AccountController> logger;
 
-        public AccountController(UserManager<User> userManager, JwtService jwtService)
+        public AccountController(UserManager<User> userManager, JwtService jwtService, ILoggerFactory loggerFactory)
         {
             this.userManager = userManager;
             this.jwtService = jwtService;
+            logger = loggerFactory.CreateLogger<AccountController>();
         }
 
         [HttpPost]
-        public IActionResult Login()
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
-            throw new NotImplementedException();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = await userManager.FindByEmailAsync(model.Email);
+            bool valid = await userManager.CheckPasswordAsync(user, model.Password);
+
+            if (!valid)
+            {
+                logger.LogWarning($"Could not log {model.Email} in");
+                return new UnauthorizedResult();
+            }
+
+            return Json(jwtService.Create(user));
         }
 
         [HttpPost]
@@ -34,7 +48,7 @@ namespace GMBuddy.Identity.Controllers
             throw new NotImplementedException();
         }
 
-        [HttpPost("Register")]
+        [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (!ModelState.IsValid)
@@ -54,12 +68,11 @@ namespace GMBuddy.Identity.Controllers
 
             if (!result.Succeeded)
             {
+                logger.LogWarning($"Could not create user {user.Email}");
                 return BadRequest();
             }
-
-            var token = jwtService.CreateAsync(user);
-
-            return Json(token);
+            
+            return Json(jwtService.Create(user));
         }
     }
 }

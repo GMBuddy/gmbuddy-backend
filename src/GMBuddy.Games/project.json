@@ -1,4 +1,4 @@
-﻿{
+{
   "version": "1.0.0-*",
 
   "buildOptions": {
@@ -16,7 +16,8 @@
       "version": "1.0.0-preview2-final",
       "type": "build"
     },
-    "Microsoft.EntityFrameworkCore.Sqlite": "1.0.1"
+    "Microsoft.EntityFrameworkCore.Sqlite": "1.0.1",
+    "GMBuddy": "1.0.0-*"
   },
 
   "tools": {

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using GMBuddy.Identity.Models;
@@ -23,27 +19,47 @@ namespace GMBuddy.Identity.Services
             this.options = options.Value;
         }
 
-        public JwtToken CreateAsync(User user)
+        /// <summary>
+        /// Creates a JwtToken containing an encoded Access Token and an expiration time.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">User must not be null</exception>
+        public JwtToken Create(User user)
         {
+            if (user == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            logger.LogInformation($"Issuing access token for user ${user.UserName}");
+
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                new Claim(JwtRegisteredClaimNames.Jti, options.Jti)
+                new Claim(JwtRegisteredClaimNames.Jti, AuthorizationConstants.Jti)
             };
 
             var header = new JwtHeader(options.SigningCredentials);
-            var payload = new JwtPayload(options.Issuer, options.Audience, claims, options.NotBefore, options.Expiration);
+            var payload = new JwtPayload(
+                AuthorizationConstants.Issuer,
+                AuthorizationConstants.Audience,
+                claims,
+                AuthorizationConstants.NotBefore,
+                AuthorizationConstants.Expiration);
             var jwt = new JwtSecurityToken(header, payload);
             string encoded = new JwtSecurityTokenHandler().WriteToken(jwt);
+
+            logger.LogInformation($"Access token generated: {encoded}");
 
             return new JwtToken
             {
                 AccessToken = encoded,
-                ExpiresIn = (int) options.ValidFor.TotalSeconds
+                ExpiresIn = (int)AuthorizationConstants.ValidFor.TotalSeconds
             };
         }
 
-        public string VerifyAsync()
+        public string Verify(string encodedToken)
         {
             throw new NotImplementedException();
         }
@@ -60,46 +76,6 @@ namespace GMBuddy.Identity.Services
     /// </summary>
     public class JwtOptions
     {
-        /// <summary>
-        /// "iss" (Issuer) Claim
-        /// </summary>
-        public string Issuer { get; set; } = "GMBuddyIdentity";
-
-        /// <summary>
-        /// "sub" (Subject) Claim
-        /// </summary>
-        public string Subject { get; set; }
-
-        /// <summary>
-        /// "aud" (Audience) Claim
-        /// </summary>
-        public string Audience { get; set; } = "http://localhost:5000";
-
-        /// <summary>
-        /// "nbf" (Not Before) Claim (default is UTC NOW)
-        /// </summary>
-        public DateTime NotBefore { get; set; } = DateTime.UtcNow;
-
-        /// <summary>
-        /// "iat" (Issued At) Claim (default is UTC NOW)
-        /// </summary>
-        public DateTime IssuedAt { get; set; } = DateTime.UtcNow;
-
-        /// <summary>
-        /// Set the timespan the token will be valid for (default is 5 days)
-        /// </summary>
-        public TimeSpan ValidFor { get; set; } = TimeSpan.FromDays(5);
-
-        /// <summary>
-        /// "exp" (Expiration Time) Claim (returns IssuedAt + ValidFor)
-        /// </summary>
-        public DateTime Expiration => IssuedAt.Add(ValidFor);
-
-        /// <summary>
-        /// "jti" (JWT ID) Claim (default ID is a GUID)
-        /// </summary>
-        public string Jti => Guid.NewGuid().ToString();
-
         /// <summary>
         /// The signing key to use when generating tokens.
         /// </summary>

@@ -1,5 +1,4 @@
-﻿using System;
-using GMBuddy.Games.Dnd35.Models;
+﻿using GMBuddy.Games.Dnd35.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace GMBuddy.Games.Dnd35.Data

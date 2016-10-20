@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using GMBuddy.Games;
 using GMBuddy.Identity.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 

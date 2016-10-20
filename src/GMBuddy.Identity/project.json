@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "GMBuddy.Games": "1.0.0-*",
+    "GMBuddy": "1.0.0-*",
     "Microsoft.ApplicationInsights.AspNetCore": "1.0.0",
     "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "1.0.0",
     "Microsoft.AspNetCore.Mvc": "1.0.1",
@@ -8,11 +8,11 @@
     "Microsoft.AspNetCore.Server.IISIntegration": "1.0.0",
     "Microsoft.AspNetCore.Server.Kestrel": "1.0.1",
     "Microsoft.EntityFrameworkCore": "1.0.1",
-    "Microsoft.EntityFrameworkCore.Sqlite": "1.0.1",
     "Microsoft.EntityFrameworkCore.Design": {
       "version": "1.0.0-preview2-final",
       "type": "build"
     },
+    "Microsoft.EntityFrameworkCore.Sqlite": "1.0.1",
     "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0",
     "Microsoft.Extensions.Configuration.FileExtensions": "1.0.0",
     "Microsoft.Extensions.Configuration.Json": "1.0.0",
