@@ -83,9 +83,7 @@ namespace GMBuddy.Rest
                 }
             });
 
-            app.UseMvc(routes => {
-                routes.MapRoute("default", "api/{controller}/{action=Index}");
-            });
+            app.UseMvc();
         }
     }
 }
