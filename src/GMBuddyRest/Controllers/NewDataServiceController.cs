@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using GMBuddy.Games.Dnd35;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,14 +22,9 @@ namespace GMBuddyRest.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(string name, string email)
+        public IActionResult Post(string name, string email)
         {
-            if (await dnd35.AddCampaignAsync(name, email))
-            {
-                return Ok();
-            }
-
-            return BadRequest();
+            throw new NotImplementedException();
         }
     }
 }

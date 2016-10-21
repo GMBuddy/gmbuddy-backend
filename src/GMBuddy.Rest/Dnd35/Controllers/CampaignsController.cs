@@ -45,7 +45,7 @@ namespace GMBuddy.Rest.Dnd35.Controllers
                 string userId = User.Claims.Single(c => c.Type.Equals(ClaimTypes.NameIdentifier)).Value;
                 var campaignId = await games.AddCampaignAsync(name, userId);
 
-                return Created(Url.Action(nameof(GetCampaign), new {Id = campaignId}), null);
+                return CreatedAtAction(nameof(GetCampaign), new {Id = campaignId}, null);
             }
             catch (Exception e)
             {
