@@ -45,6 +45,8 @@ namespace GMBuddy.Identity
 
             services.AddDbContext<IdentityContext>();
 
+            services.AddCors();
+
             services.AddIdentity<User, IdentityRole>(options =>
                 {
                     options.Password.RequireDigit = false;
@@ -86,6 +88,13 @@ namespace GMBuddy.Identity
             app.UseApplicationInsightsRequestTelemetry();
 
             app.UseApplicationInsightsExceptionTelemetry();
+
+            app.UseCors(builder =>
+                builder.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials()
+            );
 
             app.UseIdentity();
 

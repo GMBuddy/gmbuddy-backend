@@ -43,6 +43,8 @@ namespace GMBuddy.Rest
 
             services.AddTransient<Dnd35GameService>();
 
+            services.AddCors();
+
             services.AddMvc(config =>
             {
                 var policy = new AuthorizationPolicyBuilder()
@@ -62,6 +64,13 @@ namespace GMBuddy.Rest
             app.UseApplicationInsightsRequestTelemetry();
 
             app.UseApplicationInsightsExceptionTelemetry();
+
+            app.UseCors(builder =>
+                builder.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials()
+            );
 
             app.UseJwtBearerAuthentication(new JwtBearerOptions
             {
