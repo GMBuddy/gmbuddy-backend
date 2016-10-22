@@ -32,7 +32,7 @@ namespace GMBuddy.Identity.Services
                 throw new ArgumentNullException();
             }
 
-            logger.LogInformation($"Issuing access token for user ${user.UserName}");
+            logger.LogInformation($"Issuing access token for user {user.UserName}");
 
             var claims = new[]
             {
