@@ -155,5 +155,19 @@ namespace GMBuddy.Rest.Dnd35.Controllers
                 return BadRequest(new {Error = e.Message});
             }
         }
+
+        [HttpPost("")]
+        public async Task<IActionResult> AssignItemToCharacter(string itemId, string characterId)
+        {
+            try
+            {
+                var character = await games.AssignItemToCharacterAsync(itemId,characterId); //not using userId because we want to allow GM to modify item list as well. How do we want to check that?
+                return CreatedAtAction(nameof(GetCharacter), new {Id = character}, null); //Do we want to keep the concept of a CampaignCharacter and add CampaignCharacter to the database?
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new {Error = e.Message});
+            }
+        }
     }
 }

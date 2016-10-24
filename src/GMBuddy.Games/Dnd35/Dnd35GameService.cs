@@ -135,7 +135,7 @@ namespace GMBuddy.Games.Dnd35
         /// <param name="userId">The email of the user assigning the character to the campaign</param>
         /// <param name="characterId">The characterId of the character to be added to the campaign</param>
         /// <param name="campaignId">The campaignId of the campaign to which the character is being added</param>
-        /// <returns>The campaignId of the modified character (because I didn't know what else to return)</returns>
+        /// <returns>The campaignId of the modified campaign (because I didn't know what else to return)</returns>
         public async Task<string> AssignCharacterToCampaignAsync(string userId, string characterId, string campaignId)
         {
             //TODO: redesign this using the concept of CampaignCharacter so that seperate versions of a character can be added to different campaigns (ugh)
@@ -200,6 +200,35 @@ namespace GMBuddy.Games.Dnd35
                 }
 
                 return item.ItemId;
+            }
+        }
+
+        /// <summary>
+        /// Adds a item with the given itemId to a character in the database
+        /// </summary>
+        /// <param name="itemId">The itemId of the item to be added to the character</param>
+        /// <param name="characterId">The characterId of the character to which the item is being added</param>
+        /// <returns>The characterId of the modified character (because I didn't know what else to return)</returns>
+        public async Task<Guid> AssignItemToCharacterAsync(string itemId, string characterId)
+        {
+            using (var db = new Dnd35DataContext())
+            {
+                var characters = await db.Characters.ToListAsync();
+                var character = characters.Single(c => c.CharacterId.ToString().Equals(characterId));
+
+                var items = await db.Items.ToListAsync();
+                var item = items.Single(i => i.ItemId.ToString().Equals(itemId));
+                
+                character.Items.Add(item);
+                
+                int changes = await db.SaveChangesAsync();
+                
+                if (changes != 1)
+                {
+                    throw new Exception("Could not update character");
+                }
+
+                return character.CharacterId;
             }
         }
     }
