@@ -19,5 +19,9 @@ namespace GMBuddy.Games.Dnd35.Data
         }
 
         public DbSet<Dnd35Campaign> Campaigns { get; set; }
+
+        public DbSet<Dnd35Character> Characters { get; set; }
+
+        public DbSet<Dnd35Item> Items { get; set; }
     }
 }
