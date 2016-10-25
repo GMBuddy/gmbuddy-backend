@@ -1,10 +1,10 @@
 {
   "dependencies": {
-    "GMBuddy": "1.0.0-*",
-    "GMBuddy.Games": "1.0.0-*",
-    "IdentityModel": "2.0.0-rc3",
-    "IdentityServer4.AccessTokenValidation": "1.0.1-rc1",
-    "Microsoft.AspNetCore.Authentication.JwtBearer": "1.0.0",
+    "Microsoft.NETCore.App": {
+      "version": "1.0.1",
+      "type": "platform"
+    },
+    "Microsoft.ApplicationInsights.AspNetCore": "1.0.0",
     "Microsoft.AspNetCore.Mvc": "1.0.1",
     "Microsoft.AspNetCore.Routing": "1.0.1",
     "Microsoft.AspNetCore.Server.IISIntegration": "1.0.0",
@@ -16,10 +16,9 @@
     "Microsoft.Extensions.Logging.Console": "1.0.0",
     "Microsoft.Extensions.Logging.Debug": "1.0.0",
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0",
-    "Microsoft.NETCore.App": {
-      "version": "1.0.1",
-      "type": "platform"
-    }
+    "Microsoft.AspNetCore.Authentication.JwtBearer": "1.0.0",
+    "GMBuddy": "1.0.0-*",
+    "GMBuddy.Games": "1.0.0-*"
   },
 
   "tools": {
