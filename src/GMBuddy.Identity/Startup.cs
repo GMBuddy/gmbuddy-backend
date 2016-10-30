@@ -96,6 +96,26 @@ namespace GMBuddy.Identity
                     .AllowCredentials()
             );
 
+            app.UseJwtBearerAuthentication(new JwtBearerOptions
+            {
+                AutomaticAuthenticate = true,
+                AutomaticChallenge = true,
+                TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = AuthorizationConstants.SecurityKey,
+
+                    ValidateAudience = true,
+                    ValidAudience = AuthorizationConstants.Audience,
+
+                    ValidateIssuer = true,
+                    ValidIssuer = AuthorizationConstants.Issuer,
+
+                    RequireExpirationTime = true,
+                    ValidateLifetime = true
+                }
+            });
+
             app.UseIdentity();
 
             app.UseMvc(routes =>
