@@ -48,7 +48,6 @@ namespace GMBuddy.Games.Micro20
                 db.Campaigns.Add(campaign);
 
                 int changes = await db.SaveChangesAsync();
-
                 if (changes != 1)
                 {
                     throw new Exception("Could not save campaign");

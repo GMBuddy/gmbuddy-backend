@@ -17,13 +17,18 @@ namespace GMBuddy.Games.Test.Micro20.Campaign
         {
             // Arrange
             var options = DatabaseSetup.CreateContextOptions();
-            var userId = new Guid();
+            string expectedUser = new Guid().ToString();
             var campaigns = new List<Micro20Campaign>
             {
                 new Micro20Campaign
                 {
                     Name = "A campaign",
-                    GmUserId = userId.ToString()
+                    GmUserId = expectedUser
+                },
+                new Micro20Campaign
+                {
+                    Name = "Another campaign",
+                    GmUserId = expectedUser
                 }
             };
 
