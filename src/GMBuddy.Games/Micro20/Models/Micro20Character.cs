@@ -9,6 +9,6 @@ namespace GMBuddy.Games.Micro20.Models
     public class Micro20Character
     {
         [Range(3, 18)]
-        public int BaseStrength { get; set; }
+        public int Strength { get; set; }
     }
 }

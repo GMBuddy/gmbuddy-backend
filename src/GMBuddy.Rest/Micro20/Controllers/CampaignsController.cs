@@ -37,6 +37,12 @@ namespace GMBuddy.Rest.Micro20.Controllers
             return Json(campaigns.Single(c => c.CampaignId.ToString().Equals(id)));
         }
 
+        [HttpPost("join")]
+        public async Task<IActionResult> JoinCampaign(string characterId)
+        {
+            
+        }
+
         [HttpPost("")]
         public async Task<IActionResult> AddCampaign(string name)
         {
