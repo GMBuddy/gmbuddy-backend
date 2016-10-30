@@ -1,3 +1,9 @@
+[CmdletBinding()]
+Param(
+	[switch]$NoGames,
+	[switch]$NoIdentity
+)
+
 $env:ASPNETCORE_ENVIRONMENT = "Development"
 New-Item -ItemType Directory -Force -Path $env:LOCALAPPDATA\GMBuddy\Databases | Out-Null
 
@@ -6,12 +12,43 @@ Get-ChildItem $env:LOCALAPPDATA\GMBuddy -Recurse | Where-Object { ! $_.PSIsConta
 
 # create migrations and update databases
 
-cd .\src\GMBuddy.Games
-dotnet ef migrations add InitialMigration -c GMBuddy.Games.Dnd35.Data.Dnd35DataContext -o .\Dnd35\Data\Migrations
-dotnet ef database update
+if ($NoGames -eq $false) 
+{
+	Start-Process -FilePath "dotnet.exe" `
+		-ArgumentList "ef","migrations","add","InitialMigration", `
+			"-c","GMBuddy.Games.Dnd35.Data.Dnd35DataContext", `
+			"-o",".\Dnd35\Data\Migrations" `
+		-NoNewWindow -Wait `
+		-WorkingDirectory ".\src\GMBuddy.Games"
+	Start-Process -FilePath "dotnet.exe" `
+		-ArgumentList "ef","database","update", `
+			"-c","GMBuddy.Games.Dnd35.Data.Dnd35DataContext" `
+		-NoNewWindow -Wait `
+		-WorkingDirectory ".\src\GMBuddy.Games"
+	Start-Process -FilePath "dotnet.exe" `
+		-ArgumentList "ef","migrations","add","InitialMigration", `
+			"-c","GMBuddy.Games.Micro20.Data.Micro20DataContext", `
+			"-o",".\Micro20\Data\Migrations" `
+		-NoNewWindow -Wait `
+		-WorkingDirectory ".\src\GMBuddy.Games"
+	Start-Process -FilePath "dotnet.exe" `
+		-ArgumentList "ef","database","update", `
+			"-c","GMBuddy.Games.Micro20.Data.Micro20DataContext" `
+		-NoNewWindow -Wait `
+		-WorkingDirectory ".\src\GMBuddy.Games"
+}
 
-cd ..\GMBuddy.Identity
-dotnet ef migrations add InitialMigration -c GMBuddy.Identity.Data.IdentityContext -o .\Data\Migrations
-dotnet ef database update
+if ($NoIdentity -eq $false)
+{
+	Start-Process -FilePath "dotnet.exe" `
+		-ArgumentList "ef","migrations","add","InitialMigration", `
+			"-c","GMBuddy.Identity.Data.IdentityContext", `
+			"-o",".\Data\Migrations" `
+		-NoNewWindow -Wait `
+		-WorkingDirectory ".\src\GMBuddy.Identity"
+	Start-Process -FilePath "dotnet.exe" `
+		-ArgumentList "ef","database","update" `
+		-NoNewWindow -Wait `
+		-WorkingDirectory ".\src\GMBuddy.Identity"
+}
 
-cd ..\..
