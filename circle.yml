@@ -10,7 +10,7 @@ test:
 		- dotnet test ./test/GMBuddy.Games.Test
 
 deployment:
-    production:
-        branch: master
-        commands:
-            - git remote add digitalocean ssh://root@$DO_GIT_PATH && git push digitalocean master --force
+  production:
+    branch: master
+    commands:
+      - git remote add digitalocean ssh://root@$DO_GIT_PATH && git push digitalocean master --force
