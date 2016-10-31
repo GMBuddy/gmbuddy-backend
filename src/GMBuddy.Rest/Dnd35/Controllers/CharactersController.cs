@@ -55,33 +55,33 @@ namespace GMBuddy.Rest.Dnd35.Controllers
 
         //TODO: Add Ability Proficiency Booleans
         [HttpPost("")]
-        public async Task<IActionResult> ModifyCharacterAtributes(string characterId, string? characterClass,
-        int? level, string? race, string? size, string? gender, string? allignment,
-        string? diety, string? height, string? weight, string? looks, string[]? languages, string[]? feats,
-        string[]? racialTraitsAndFeatures, int? spellSaveDC, int? carryCapacityLight, int? carryCapacityMedium,
+        public async Task<IActionResult> ModifyCharacterAtributes(string characterId, string characterClass,
+        int? level, string race, string size, string gender, string allignment,
+        string diety, string height, string weight, string looks, string languages, string feats,
+        string racialTraitsAndFeatures, int? spellSaveDC, int? carryCapacityLight, int? carryCapacityMedium,
         int? carryCapacityHeavy, int? experience, int? normalAC, int? touchAC, int? flatootedAC, int? maxHitpoints,
         int? currentHitpoints, int? strength, int? dexterity, int? constitution, int? intelligence, int? wisdom,
         int? charisma, int? fortitudeSave, int? reflexSave, int? willSave, int? appraise, int? balance, int? bluff,
-        int? climb, int? concentration, int? craft1, string? craft1Type, int? craft2, string? craft2Type, int? craft3,
-        string? craft3Type, int? decipherScript, int? diplomacy, int? disableDevice, int? disguise, int? escapeArtist,
+        int? climb, int? concentration, int? craft1, string craft1Type, int? craft2, string craft2Type, int? craft3,
+        string craft3Type, int? decipherScript, int? diplomacy, int? disableDevice, int? disguise, int? escapeArtist,
         int? forgery, int? gatherInformation, int? handleAnimal, int? heal, int? hide, int? intimidate, int? jump,
         int? knowledgeArcana, int? knowledgeArchitecture, int? knowledgeDungeoneering, int? knowledgeHistory,
         int? knowledgeLocal, int? knowledgeNature, int? knowledgeNobility, int? knowledgeThePlanes, int? knowledgeReligion,
-        int? knowledgeOther, string? knowledgeOtherType, int? listen, int? moveSilently, int? openLock, int? performAct,
+        int? knowledgeOther, string knowledgeOtherType, int? listen, int? moveSilently, int? openLock, int? performAct,
         int? performComedy, int? performDance, int? performKeyboard, int? performOratory, int? performPercussion,
-        int? performString, int? performWind, int? performSing, int? performOther, string? performOtherType, int? profession1,
-        string? profession1Type, int? profession2, string? profession2Type, int? ride, int? search, int? senseMotive,
+        int? performString, int? performWind, int? performSing, int? performOther, string performOtherType, int? profession1,
+        string profession1Type, int? profession2, string profession2Type, int? ride, int? search, int? senseMotive,
         int? sleightOfHand, int? spellcraft, int? spot, int? survival, int? swim, int? tumble, int? useMagicDevice,
         int? useRope)
         {
             try
             {
                 string userId = User.Claims.Single(c => c.Type.Equals(ClaimTypes.NameIdentifier)).Value;
-                var character = await games.ModifyAttributesAsync(userId, characterId, characterClass, level, race, size,
+                var character = await games.ModifyCharacterAttributesAsync(userId, characterId, characterClass, level, race, size,
                 gender, allignment, diety, height, weight, looks, languages, feats, racialTraitsAndFeatures, spellSaveDC, carryCapacityLight,
                 carryCapacityMedium, carryCapacityHeavy, experience, normalAC, touchAC, flatootedAC, maxHitpoints, currentHitpoints, strength,
                 dexterity, constitution, intelligence, wisdom, charisma, fortitudeSave, reflexSave, willSave, appraise, balance, bluff,
-                climb, concentration, craft1, craft1Type, Craft2, craft2Type, craft3, craft3Type, decipherScript, diplomacy, disableDevice,
+                climb, concentration, craft1, craft1Type, craft2, craft2Type, craft3, craft3Type, decipherScript, diplomacy, disableDevice,
                 disguise, escapeArtist, forgery, gatherInformation, handleAnimal, heal, hide, intimidate, jump, knowledgeArcana, knowledgeArchitecture,
                 knowledgeDungeoneering, knowledgeHistory, knowledgeLocal, knowledgeNature, knowledgeNobility, knowledgeThePlanes,
                 knowledgeReligion, knowledgeReligion, knowledgeOther, knowledgeOtherType, listen, moveSilently, openLock, performAct, performComedy,

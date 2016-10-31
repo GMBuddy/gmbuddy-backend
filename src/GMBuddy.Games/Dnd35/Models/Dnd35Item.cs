@@ -11,7 +11,7 @@ namespace GMBuddy.Games.Dnd35.Models
         public Guid ItemId { get; set; }
         public string ItemName { get; set; }
         public string ItemDescription { get; set; }
-        public int CharacterId { get; set; }
+        public string CharacterId { get; set; }
 
         public bool IsActive { get; set; }
 

@@ -106,7 +106,7 @@ namespace GMBuddy.Games.Dnd35.Models
         public int Profession1 { get; set; } //Wisdom
         public string Profession1Type { get; set; }
         public int Profession2 { get; set; } //Wisdom
-        public int Profession2Type { get; set; }
+        public string Profession2Type { get; set; }
         public int Ride { get; set; } //Dexterity
         public int Search { get; set; } //Intelligence
         public int SenseMotive { get; set; } //Wisdom

@@ -12,7 +12,7 @@ namespace GMBuddy.Rest.Dnd35.Controllers
     [Route("/[area]/[controller]")]
     public class ItemsController : Controller
     {
-        private readonly ILogger<CampaignsController> logger;
+        private readonly ILogger<ItemsController> logger;
         private readonly Dnd35GameService games;
 
         public ItemsController(ILoggerFactory loggerFactory, Dnd35GameService games)
@@ -65,8 +65,8 @@ namespace GMBuddy.Rest.Dnd35.Controllers
         {
             try
             {
-                var character = await games.AssignItemToCharacterAsync(itemId,characterId); //not using userId because we want to allow GM to modify item list as well. How do we want to check that?
-                return CreatedAtAction(nameof(GetCharacter), new {Id = character}, null); //Do we want to keep the concept of a CampaignCharacter and add CampaignCharacter to the database?
+                var item = await games.AssignItemToCharacterAsync(itemId,characterId); //not using userId because we want to allow GM to modify item list as well. How do we want to check that?
+                return CreatedAtAction(nameof(GetItem), new {Id = item}, null); //Do we want to keep the concept of a CampaignCharacter and add CampaignCharacter to the database?
             }
             catch (Exception e)
             {

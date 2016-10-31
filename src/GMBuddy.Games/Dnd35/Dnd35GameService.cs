@@ -77,8 +77,7 @@ namespace GMBuddy.Games.Dnd35
                 var character = new Dnd35Character
                 {
                     UserId = userId,
-                    Name = name,
-                    Bio = bio
+                    Name = name
                 };
 
                 db.Characters.Add(character);
@@ -105,233 +104,133 @@ namespace GMBuddy.Games.Dnd35
         /// All the oher parameters are able to be null, and they are the values of the attributes to be modified
         /// <returns>The characterId of the modified character (because I didn't know what else to return)</returns>
         public async Task<Guid> ModifyAttributesAsync(string userId, string characterId, string characterClass,
-        int level, string race, string size, string gender, string allignment,
-        string diety, string height, string weight, string looks, string[] languages, string[] feats,
-        string[] racialTraitsAndFeatures, int spellSaveDC, int carryCapacityLight, int carryCapacityMedium,
-        int carryCapacityHeavy, int experience, int normalAC, int touchAC, int flatootedAC, int maxHitpoints,
-        int currentHitpoints, int strength, int dexterity, int constitution, int intelligence, int wisdom,
-        int charisma, int fortitudeSave, int reflexSave, int willSave, int appraise, int balance, int bluff,
-        int climb, int concentration, int craft1, string craft1Type, int craft2, string craft2Type, int craft3,
-        string craft3Type, int decipherScript, int diplomacy, int disableDevice, int disguise, int escapeArtist,
-        int forgery, int gatherInformation, int handleAnimal, int heal, int hide, int intimidate, int jump,
-        int knowledgeArcana, int knowledgeArchitecture, int knowledgeDungeoneering, int knowledgeHistory,
-        int knowledgeLocal, int knowledgeNature, int knowledgeNobility, int knowledgeThePlanes, int knowledgeReligion,
-        int knowledgeOther, string knowledgeOtherType, int listen, int moveSilently, int openLock, int performAct,
-        int performComedy, int performDance, int performKeyboard, int performOratory, int performPercussion,
-        int performString, int performWind, int performSing, int performOther, string performOtherType, int profession1,
-        string profession1Type, int profession2, string profession2Type, int ride, int search, int senseMotive,
-        int sleightOfHand, int spellcraft, int spot, int survival, int swim, int tumble, int useMagicDevice,
-        int useRope)
+        int? level, string race, string size, string gender, string allignment,
+        string diety, string height, string weight, string looks, string languages, string feats,
+        string racialTraitsAndFeatures, int? spellSaveDC, int? carryCapacityLight, int? carryCapacityMedium,
+        int? carryCapacityHeavy, int? experience, int? normalAC, int? touchAC, int? flatootedAC, int? maxHitpoints,
+        int? currentHitpoints, int? strength, int? dexterity, int? constitution, int? intelligence, int? wisdom,
+        int? charisma, int? fortitudeSave, int? reflexSave, int? willSave, int? appraise, int? balance, int? bluff,
+        int? climb, int? concentration, int? craft1, string craft1Type, int? craft2, string craft2Type, int? craft3,
+        string craft3Type, int? decipherScript, int? diplomacy, int? disableDevice, int? disguise, int? escapeArtist,
+        int? forgery, int? gatherInformation, int? handleAnimal, int? heal, int? hide, int? intimidate, int? jump,
+        int? knowledgeArcana, int? knowledgeArchitecture, int? knowledgeDungeoneering, int? knowledgeHistory,
+        int? knowledgeLocal, int? knowledgeNature, int? knowledgeNobility, int? knowledgeThePlanes, int? knowledgeReligion,
+        int? knowledgeOther, string knowledgeOtherType, int? listen, int? moveSilently, int? openLock, int? performAct,
+        int? performComedy, int? performDance, int? performKeyboard, int? performOratory, int? performPercussion,
+        int? performString, int? performWind, int? performSing, int? performOther, string performOtherType, int? profession1,
+        string profession1Type, int? profession2, string profession2Type, int? ride, int? search, int? senseMotive,
+        int? sleightOfHand, int? spellcraft, int? spot, int? survival, int? swim, int? tumble, int? useMagicDevice,
+        int? useRope)
         {
             using (var db = new Dnd35DataContext())
             {
                 //get the character, add the key value pair to the character's stat dictionary
                 var characters = await db.Characters.ToListAsync();
-                var character = characters.Single(c => (c.CharacterId.ToString().Equals(characterId)) && (c.CampaignId.ToString().Equals(campaignId)));
-
+                var character = characters.Single(c => (c.CharacterId.ToString().Equals(characterId)));
+                /*
                 if(character.UserId != userId)
                 {
                     throw new Exception("Current user does not have access to modify this campaign"); //Should we even check for this? Should we also allow GM to modify a player's stats?
                 }
-                if(characterClass != null)
-                  character.Class = characterClass;
-                if(level != null)
-                  character.Level = level;
-                if(race != null)
-                  character.Race = race;
-                if(size != null)
-                  character.Size = size;
-                if(gender != null)
-                  character.Gender = gender;
-                if(allignment != null)
-                  character.Allignment = allignment;
-                if(diety != null)
-                  character.Diety = diety;
-                if(height != null)
-                  character.Height = height;
-                if(weight!= null)
-                  character.Weight = weight;
-                if(looks != null)
-                  character.Looks = looks;
-                if(languages != null){
-                  foreach(string language in languages){
-                    character.Languages.add(language);
-                  }
-                }
-                if(feats != null){
-                  foreach(string feat in feats){
-                    characters.Feats.add(feat);
-                  }
-                }
-                if(racialTraitsAndFeatures != null){
-                  foreach(string trait in racialTraitsAndFeatures){
-                    characters.RacialTraitsAndClassFeatures.add(trait);
-                  }
-                }
+                */
+                character.Class = characterClass ?? character.Class;
+
+                character.Level = level ?? character.Level;
+                character.Race = race ?? character.Race;
+
+                character.Size = size;
+
+                character.Gender = gender ?? character.Gender;
+                character.Allignment = allignment ?? character.Allignment;
+                character.Diety = diety ?? character.Diety;
+                character.Height = height ?? character.Height;
+                character.Weight = weight ?? character.Weight;
+                character.Looks = looks ?? character.Looks;
+                character.Languages = languages ?? character.Languages;
+                character.Feats = feats ?? character.Feats;
+                character.RacialTraitsAndClassFeatures = racialTraitsAndFeatures ?? character.RacialTraitsAndClassFeatures;
                 character.SpellSaveDC = spellSaveDC ?? character.SpellSaveDC;
-                //TODO: Change the ones below to look like the one above!
-                if(carryCapacityLight != null)
-                  character.CarryCapacityLight = carryCapacityLight;
-                if(carryCapacityMedium != null)
-                  character.CarryCapacityMedium = carryCapacityMedium;
-                if(carryCapacityHeavy != null)
-                  character.CarryCapacityHeavy = carryCapacityHeavy;
-                if(experience != null)
-                  character.Experience = experience;
-                if(normalAC != null)
-                  character.AC = normalAC;
-                if(touchAC != null)
-                  character.TouchAC = touchAC;
-                if(flatFootedAC != null)
-                  character.FlatFootedAC = flatootedAC;
-                if(maxHitpoints != null)
-                  character.MaxHitpoints = maxHitpoints;
-                if(currentHitpoints != null)
-                  character.CurrentHitpoints = currentHitpoints;
-                if(strength != null)
-                  character.Strength = strength;
-                if(dexterity != null)
-                  character.Dexterity = dexterity;
-                if(constitution != null)
-                  character.Constitution = constitution;
-                if(interlligence != null)
-                  character.Intelligence = intelligence;
-                if(wisdom != null)
-                  character.Wisdom = wisdom;
-                if(charisma != null)
-                  character.Charisma = charisma;
-                if(fortitudeSave != null)
-                  character.fortitudeSave = FortitudeSave;
-                if(reflexSave != null)
-                  character.ReflexSave = reflexSave;
-                if(willSave != null)
-                  character.WillSave = willSave;
-                if(appraise != null)
-                  character.Appraise = appraise;
-                if(balance != null)
-                  character.Balance = balance;
-                if(bluff != null)
-                  character.Bluff = bluff;
-                if(climb != null)
-                  character.Climb = climb;
-                if(concentration != null)
-                  character.Concentration = concentration;
-                if(craft1 != null)
-                  character.Craft1 = craft1;
-                if(craft1Type != null)
-                  character.Craft1Type = craft1Type;
-                if(craft2 != null)
-                  character.Craft2 = craft2;
-                if(craft2Type != null)
-                  character.Craft2Type = craft2Type;
-                if(decipherScript != null)
-                  character.DecipherScript = decipherScript;
-                if(diplomacy != null)
-                  character.Diplomacy = diplomacy;
-                if(disableDevice != null)
-                  character.DisableDevice = disableDevice;
-                if(disguise != null)
-                  character.Disguise = disguise;
-                if(escapeArtist != null)
-                  chaaracter.EscapeArtist = escapeArtist;
-                if(forgery != null)
-                  character.Forgery = forgery;
-                if(gatherInformation != null)
-                  character.GatherInformation = gatherInformation;
-                if(handleAnimal != null)
-                  character.HandleAnimal = handleAnimal;
-                if(heal != null)
-                  character.Heal = heal;
-                if(hide != null)
-                  character.Hide = hide;
-                if(intimidate != null)
-                  character.Intimidate = intimidate;
-                if(jump != null)
-                  character.Jump = jump;
-                if(knowledgeArcana != null)
-                  character.KnowledgeArcana = knowledgeArcana;
-                if(knowledgeArchitecture != null)
-                  character.KnowledgeArchitecture = knowledgeArchitecture;
-                if(knowledgeDungeoneering != null)
-                  character.KnowledgeDungeoneering = knowledgeDungeoneering;
-                if(knowledgeHistory != null)
-                  character.KnowledgeHistory = knowledgeHistory;
-                if(knowledgeDungeoneering != null)
-                  character.KnowledgeDungeoneering = knowledgeDungeoneering;
-                if(knowledgeHistory != null)
-                  character.KnowledgeHistory = knowledgeHistory;
-                if(knowledgeLocal != null)
-                  character.KnowledgeLocal = KnowledgeLocal;
-                if(knowledgeNature != null)
-                  character.KnowledgeNature = knowledgeNature;
-                if(knowledgeNobility != null)
-                  character.KnowledgeNobility = knowledgeNobility;
-                if(knowledgeThePlanes != null)
-                  character.KnowledgeThePlanes = knowledgeThePlanes;
-                if(knowledgeReligion != null)
-                  character.KnowledgeReligion = knowledgeReligion;
-                if(knowledgeOther != null)
-                  character.KnowledgeOther = knowledgeOther;
-                if(knowledgeOtherType != null)
-                  character.KnowledgeOtherType = knowledgeOtherType;
-                if(listen != null)
-                  character.Listen = listen;
-                if(moveSilently != null)
-                  character.MoveSilently = moveSilently;
-                if(openLock != null)
-                  character.OpenLock = openLock;
-                if(performAct != null)
-                  character.PerformAct = performAct;
-                if(performComedy != null)
-                  character.PerformAct = performAct;
-                if(performDance != null)
-                  character.PerformDance = performDance;
-                if(performKeyboard != null)
-                  character.PerformKeyboard = performKeyboard;
-                if(performOratory != null)
-                  character.PerformOratory = performOratory;
-                if(performPercussion != null)
-                  character.PerformPercussion = performPercussion;
-                if(performString != null)
-                  character.PerformString = performString;
-                if(performWind != null)
-                  character.PerformWind = performWind;
-                if(performSing != null)
-                  character.PerformSing = performSing;
-                if(performOther != null)
-                  character.PerformOther = performOther;
-                if(performOtherType != null)
-                  character.PerformOtherType = performOtherType;
-                if(profession1 != null)
-                  character.Profession1 = profession1;
-                if(profession1Type != null)
-                  character.Profession1Type = profession1Type;
-                if(profession2 != null)
-                  character.Profession2 = profession2;
-                if(profession2Type != null)
-                  character.Profession2Type = profession2Type;
-                if(ride != null)
-                  character.Ride = ride;
-                if(search != null)
-                  character.Search = search;
-                if(senseMotive != null)
-                  character.SenseMotive = senseMotive;
-                if(sleightOfHand != null)
-                  character.SleightOfHand = sleightOfHand;
-                if(spellcraft != null)
-                  character.Spellcraft = spellcraft;
-                if(spot != null)
-                  character.Spot = spot;
-                if(survival != null)
-                  character.Survival = survival;
-                if(swim != null)
-                  character.Swim = swim;
-                if(tumble != null)
-                  character.Tumble = tumble;
-                if(useMagicDevice != null)
-                  character.UseMagicDevice = useMagicDevice;
-                if(useRope != null)
-                  character.UseRope = useRope;
+                character.CarryCapacityLight = carryCapacityLight ?? character.CarryCapacityLight;
+                character.CarryCapacityMedium = carryCapacityMedium ?? character.CarryCapacityMedium;
+                character.CarryCapacityHeavy = carryCapacityHeavy ?? character.CarryCapacityHeavy;
+                character.Experience = experience ?? character.Experience;
+                character.AC = normalAC ?? character.AC;
+                character.TouchAC = touchAC ?? character.TouchAC;
+                character.FlatFootedAC = flatootedAC ?? character.FlatFootedAC;
+                character.MaxHitpoints = maxHitpoints ?? character.MaxHitpoints;
+                character.CurrentHitpoints = currentHitpoints ?? character.CurrentHitpoints;
+                character.Strength = strength ?? character.Strength;
+                character.Dexterity = dexterity ?? character.Dexterity;
+                character.Constitution = constitution ?? character.Constitution;
+                character.Intelligence = intelligence ?? character.Intelligence;
+                character.Wisdom = wisdom ?? character.Wisdom;
+                character.Charisma = charisma ?? character.Charisma;
+                character.FortitudeSave = fortitudeSave ?? character.FortitudeSave;
+                character.ReflexSave = reflexSave ?? character.ReflexSave;
+                character.WillSave = willSave ?? character.WillSave;
+                character.Appraise = appraise ?? character.Appraise;
+                character.Balance = balance ?? character.Balance;
+                character.Bluff = bluff ?? character.Bluff;
+                character.Climb = climb ?? character.Climb;
+                character.Concentration = concentration ?? character.Concentration;
+                character.Craft1 = craft1 ?? character.Craft1;
+                character.Craft1Type = craft1Type ?? character.Craft1Type;
+                character.Craft2 = craft2 ?? character.Craft2;
+                character.Craft2Type = craft2Type ?? character.Craft2Type;
+                character.DecipherScript = decipherScript ?? character.DecipherScript;
+                character.Diplomacy = diplomacy ?? character.Diplomacy;
+                character.DisableDevice = disableDevice ?? character.DisableDevice;
+                character.Disguise = disguise ?? character.Disguise;
+                character.EscapeArtist = escapeArtist ?? character.EscapeArtist;
+                character.Forgery = forgery ?? character.Forgery;
+                character.GatherInformation = gatherInformation ?? character.GatherInformation;
+                character.HandleAnimal = handleAnimal ?? character.HandleAnimal;
+                character.Heal = heal ?? character.Heal;
+                character.Hide = hide ?? character.Hide;
+                character.Intimidate = intimidate ?? character.Intimidate;
+                character.Jump = jump ?? character.Jump;
+                character.KnowledgeArcana = knowledgeArcana ?? character.KnowledgeArcana;
+                character.KnowledgeArchitecture = knowledgeArchitecture ?? character.KnowledgeArchitecture;
+                character.KnowledgeDungeoneering = knowledgeDungeoneering ?? character.KnowledgeDungeoneering;
+                character.KnowledgeHistory = knowledgeHistory ?? character.KnowledgeHistory;
+                character.KnowledgeDungeoneering = knowledgeDungeoneering ?? character.KnowledgeDungeoneering;
+                character.KnowledgeHistory = knowledgeHistory ?? character.KnowledgeHistory;
+                character.KnowledgeLocal = knowledgeLocal ?? character.KnowledgeLocal;
+                character.KnowledgeNature = knowledgeNature ?? character.KnowledgeNature;
+                character.KnowledgeNobility = knowledgeNobility ?? character.KnowledgeNobility;
+                character.KnowledgeThePlanes = knowledgeThePlanes ?? character.KnowledgeThePlanes;
+                character.KnowledgeReligion = knowledgeReligion ?? character.KnowledgeReligion;
+                character.KnowledgeOther = knowledgeOther ?? character.KnowledgeOther;
+                character.KnowledgeOtherType = knowledgeOtherType ?? character.KnowledgeOtherType;
+                character.Listen = listen ?? character.Listen;
+                character.MoveSilently = moveSilently ?? character.MoveSilently;
+                character.OpenLock = openLock ?? character.OpenLock;
+                character.PerformAct = performAct ?? character.PerformAct;
+                character.PerformComedy = performComedy ?? character.PerformComedy;
+                character.PerformDance = performDance ?? character.PerformDance;
+                character.PerformKeyboard = performKeyboard ?? character.PerformKeyboard;
+                character.PerformOratory = performOratory ?? character.PerformOratory;
+                character.PerformPercussion = performPercussion ?? character.PerformPercussion;
+                character.PerformString = performString ?? character.PerformString;
+                character.PerformWind = performWind ?? character.PerformWind;
+                character.PerformSing = performSing ?? character.PerformSing;
+                character.PerformOther = performOther ?? character.PerformOther;
+                character.PerformOtherType = performOtherType ?? character.PerformOtherType;
+                character.Profession1 = profession1 ?? character.Profession1;
+                character.Profession1Type = profession1Type ?? character.Profession1Type;
+                character.Profession2 = profession2 ?? character.Profession2;
+                character.Profession2Type = profession2Type ?? character.Profession2Type;
+                character.Ride = ride ?? character.Ride;
+                character.Search = search ?? character.Search;
+                character.SenseMotive = senseMotive ?? character.SenseMotive;
+                character.SleightOfHand = sleightOfHand ?? character.SleightOfHand;
+                character.Spellcraft = spellcraft ?? character.Spellcraft;
+                character.Spot = spot ?? character.Spot;
+                character.Survival = survival ?? character.Survival;
+                character.Swim = swim ?? character.Swim;
+                character.Tumble = tumble ?? character.Tumble;
+                character.UseMagicDevice = useMagicDevice ?? character.UseMagicDevice;
+                character.UseRope = useRope ?? character.UseRope;
 
                 //TODO: Implement Proficiency Booleans.
 
@@ -433,7 +332,7 @@ namespace GMBuddy.Games.Dnd35
                 var items = await db.Items.ToListAsync();
                 var item = items.Single(i => i.ItemId.ToString().Equals(itemId));
 
-                character.ChracterId = characterId;
+                item.CharacterId = characterId;
 
                 int changes = await db.SaveChangesAsync();
 
@@ -442,7 +341,7 @@ namespace GMBuddy.Games.Dnd35
                     throw new Exception("Could not update character");
                 }
 
-                return character.CharacterId;
+                return item.ItemId;
             }
         }
     }
