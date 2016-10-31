@@ -41,7 +41,8 @@ namespace GMBuddy.Rest
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
 
-            services.AddTransient<Dnd35GameService>();
+            services.AddTransient<Games.Dnd35.Dnd35GameService>();
+            services.AddTransient<Games.Micro20.GameService>();
 
             services.AddCors();
 

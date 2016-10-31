@@ -8,7 +8,7 @@ using GMBuddy.Games.Micro20.Models;
 using GMBuddy.Games.Test.Micro20.TestUtilities;
 using Xunit;
 
-namespace GMBuddy.Games.Test.Micro20.Campaign
+namespace GMBuddy.Games.Test.Micro20.Campaigns
 {
     public class GetCampaigns
     {
@@ -18,21 +18,21 @@ namespace GMBuddy.Games.Test.Micro20.Campaign
             // Arrange
             var options = DatabaseSetup.CreateContextOptions();
             string expectedUser = new Guid().ToString();
-            var campaigns = new List<Micro20Campaign>
+            var campaigns = new List<Campaign>
             {
-                new Micro20Campaign
+                new Campaign
                 {
                     Name = "A campaign",
                     GmUserId = expectedUser
                 },
-                new Micro20Campaign
+                new Campaign
                 {
                     Name = "Another campaign",
                     GmUserId = expectedUser
                 }
             };
 
-            using (var db = new Micro20DataContext(options))
+            using (var db = new DatabaseContext(options))
             {
                 db.Campaigns.AddRange(campaigns);
                 int changes = await db.SaveChangesAsync();
@@ -40,7 +40,7 @@ namespace GMBuddy.Games.Test.Micro20.Campaign
             }
 
             // Act
-            var games = new Micro20GameService(options);
+            var games = new GameService(options);
             var result = await games.GetCampaigns();
 
             // Assert

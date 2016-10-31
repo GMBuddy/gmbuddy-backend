@@ -10,7 +10,7 @@ namespace GMBuddy.Games.Test.Micro20.TestUtilities
 {
     public class DatabaseSetup
     {
-        public static DbContextOptions<Micro20DataContext> CreateContextOptions()
+        public static DbContextOptions<DatabaseContext> CreateContextOptions()
         {
             // Create a fresh service provider, and therefore a fresh 
             // InMemory database instance.
@@ -20,7 +20,7 @@ namespace GMBuddy.Games.Test.Micro20.TestUtilities
 
             // Create a new options instance telling the context to use an
             // InMemory database and the new service provider.
-            var builder = new DbContextOptionsBuilder<Micro20DataContext>()
+            var builder = new DbContextOptionsBuilder<DatabaseContext>()
                 .UseInMemoryDatabase()
                 .UseInternalServiceProvider(serviceProvider);
 

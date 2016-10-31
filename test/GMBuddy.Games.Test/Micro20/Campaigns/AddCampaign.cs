@@ -7,7 +7,7 @@ using GMBuddy.Games.Test.Micro20.TestUtilities;
 using Xunit;
 using Microsoft.EntityFrameworkCore;
 
-namespace GMBuddy.Games.Test.Micro20.Campaign
+namespace GMBuddy.Games.Test.Micro20.Campaigns
 {
     public class AddCampaign
     {
@@ -19,7 +19,7 @@ namespace GMBuddy.Games.Test.Micro20.Campaign
             string userId = new Guid().ToString();
 
             // Act
-            var games = new Micro20GameService(options);
+            var games = new GameService(options);
             var first = await games.AddCampaign("A campaign", userId);
             Assert.NotNull(first);
 
@@ -27,7 +27,7 @@ namespace GMBuddy.Games.Test.Micro20.Campaign
             Assert.NotNull(second);
 
             // Assert
-            using (var db = new Micro20DataContext(options))
+            using (var db = new DatabaseContext(options))
             {
                 Assert.Equal(2, db.Campaigns.Count());
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -16,9 +15,9 @@ namespace GMBuddy.Rest.Micro20.Controllers
     public class CampaignsController : Controller
     {
         private readonly ILogger<CampaignsController> logger;
-        private readonly Micro20GameService games;
+        private readonly GameService games;
 
-        public CampaignsController(ILoggerFactory loggerFactory, Micro20GameService games)
+        public CampaignsController(ILoggerFactory loggerFactory, GameService games)
         {
             logger = loggerFactory.CreateLogger<CampaignsController>();
 
@@ -41,7 +40,7 @@ namespace GMBuddy.Rest.Micro20.Controllers
         }
 
         [HttpPost("{CampaignId}/Characters")]
-        public async Task<IActionResult> JoinCampaign(CharacterInputModel model)
+        public async Task<IActionResult> JoinCampaign(NewCharacter model)
         {
             if (!ModelState.IsValid)
             {
@@ -54,10 +53,6 @@ namespace GMBuddy.Rest.Micro20.Controllers
                 return Created(string.Empty, new {CharacterId = result.ToString()});
             }
             catch (DataNotCreatedException e)
-            {
-                return BadRequest(new {Error = e.Message});
-            }
-            catch (ValidationException e)
             {
                 return BadRequest(new {Error = e.Message});
             }

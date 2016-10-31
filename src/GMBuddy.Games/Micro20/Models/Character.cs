@@ -28,9 +28,9 @@ namespace GMBuddy.Games.Micro20.Models
             
         }
 
-        public Character(CharacterInputModel model)
+        public Character(NewCharacter model)
         {
-            CampaignId = Guid.Parse(model.CampaignId);
+            CampaignId = model.CampaignId;
             UserId = model.UserId;
             BaseStrength = model.Strength;
             BaseDexterity = model.Dexterity;
@@ -49,7 +49,7 @@ namespace GMBuddy.Games.Micro20.Models
         public Guid CampaignId { get; set; }
 
         [ForeignKey("CampaignId")]
-        public Micro20Campaign Campaign { get; set; }
+        public Campaign Campaign { get; set; }
 
         [Range(3, 18)]
         public int BaseStrength { get; set; }
@@ -60,10 +60,13 @@ namespace GMBuddy.Games.Micro20.Models
         [Range(3, 18)]
         public int BaseMind { get; set; }
 
+        [EnumDataType(typeof(Micro20RaceType))]
         public Micro20RaceType Race { get; set; }
 
+        [EnumDataType(typeof(Micro20ClassType))]
         public Micro20ClassType Class { get; set; }
 
+        [Range(1, int.MaxValue)]
         public int Level { get; set; } = 1;
     }
 }

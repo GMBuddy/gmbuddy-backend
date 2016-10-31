@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GMBuddy.Games.Micro20.Models
 {
-    public class Micro20Campaign
+    public class Campaign
     {
         [Key]
         public Guid CampaignId { get; set; }

@@ -7,13 +7,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GMBuddy.Games.Micro20.Data
 {
-    public class Micro20DataContext : DbContext
+    public class DatabaseContext : DbContext
     {
-        public Micro20DataContext()
+        public DatabaseContext()
         {
         }
 
-        public Micro20DataContext(DbContextOptions options) : base(options)
+        public DatabaseContext(DbContextOptions options) : base(options)
         {
         }
 
@@ -25,7 +25,7 @@ namespace GMBuddy.Games.Micro20.Data
             }
         }
 
-        public DbSet<Micro20Campaign> Campaigns { get; set; }
+        public DbSet<Campaign> Campaigns { get; set; }
 
         public DbSet<Character> Characters { get; set; }
     }

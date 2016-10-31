@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace GMBuddy.Games.Micro20.Models
 {
-    public class Micro20CharacterSheet
+    public class CharacterSheet
     {
         private readonly Character character;
 
-        public Micro20CharacterSheet(Character character)
+        public CharacterSheet(Character character)
         {
             this.character = character;
         }
