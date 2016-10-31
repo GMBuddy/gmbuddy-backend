@@ -1,8 +1,11 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using GMBuddy.Exceptions;
 using GMBuddy.Games.Micro20;
+using GMBuddy.Games.Micro20.InputModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -25,22 +28,39 @@ namespace GMBuddy.Rest.Micro20.Controllers
         [HttpGet("")]
         public async Task<IActionResult> ListCampaigns()
         {
-            return Json(await games.GetCampaignsAsync());
+            return Json(await games.GetCampaigns());
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCampaign(string id)
         {
-            var campaigns = await games.GetCampaignsAsync();
+            var campaigns = await games.GetCampaigns();
 
-            // TODO: Provide filter to games.GetCampaignsAsync() to do this internally
+            // TODO: Provide filter to games.GetCampaigns() to do this internally
             return Json(campaigns.Single(c => c.CampaignId.ToString().Equals(id)));
         }
 
-        [HttpPost("join")]
-        public async Task<IActionResult> JoinCampaign(string characterId)
+        [HttpPost("{CampaignId}/Characters")]
+        public async Task<IActionResult> JoinCampaign(CharacterInputModel model)
         {
-            
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var result = await games.AddCharacter(model);
+                return Created(string.Empty, new {CharacterId = result.ToString()});
+            }
+            catch (DataNotCreatedException e)
+            {
+                return BadRequest(new {Error = e.Message});
+            }
+            catch (ValidationException e)
+            {
+                return BadRequest(new {Error = e.Message});
+            }
         }
 
         [HttpPost("")]
@@ -49,7 +69,7 @@ namespace GMBuddy.Rest.Micro20.Controllers
             try
             {
                 string userId = User.Claims.Single(c => c.Type.Equals(ClaimTypes.NameIdentifier)).Value;
-                var campaignId = await games.AddCampaignAsync(name, userId);
+                var campaignId = await games.AddCampaign(name, userId);
 
                 return CreatedAtAction(nameof(GetCampaign), new { Id = campaignId }, new { CampaignId = campaignId });
             }

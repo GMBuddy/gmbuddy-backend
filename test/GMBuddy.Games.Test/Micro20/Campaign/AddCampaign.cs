@@ -20,10 +20,10 @@ namespace GMBuddy.Games.Test.Micro20.Campaign
 
             // Act
             var games = new Micro20GameService(options);
-            var first = await games.AddCampaignAsync("A campaign", userId);
+            var first = await games.AddCampaign("A campaign", userId);
             Assert.NotNull(first);
 
-            var second = await games.AddCampaignAsync("Another campaign", userId);
+            var second = await games.AddCampaign("Another campaign", userId);
             Assert.NotNull(second);
 
             // Assert

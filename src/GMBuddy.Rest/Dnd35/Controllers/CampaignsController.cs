@@ -33,7 +33,7 @@ namespace GMBuddy.Rest.Dnd35.Controllers
         {
             var campaigns = await games.GetCampaignsAsync();
 
-            // TODO: Provide filter to games.GetCampaignsAsync() to do this internally
+            // TODO: Provide filter to games.GetCampaigns() to do this internally
             return Json(campaigns.Single(c => c.CampaignId.ToString().Equals(id)));
         }
 

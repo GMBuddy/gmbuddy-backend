@@ -26,5 +26,7 @@ namespace GMBuddy.Games.Micro20.Data
         }
 
         public DbSet<Micro20Campaign> Campaigns { get; set; }
+
+        public DbSet<Character> Characters { get; set; }
     }
 }

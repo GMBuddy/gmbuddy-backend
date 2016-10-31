@@ -41,7 +41,7 @@ namespace GMBuddy.Games.Test.Micro20.Campaign
 
             // Act
             var games = new Micro20GameService(options);
-            var result = await games.GetCampaignsAsync();
+            var result = await games.GetCampaigns();
 
             // Assert
             Assert.Equal(campaigns.Count, result.Count());
