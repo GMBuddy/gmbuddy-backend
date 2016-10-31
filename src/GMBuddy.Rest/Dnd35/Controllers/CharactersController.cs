@@ -59,7 +59,7 @@ namespace GMBuddy.Rest.Dnd35.Controllers
         int? level, string race, string size, string gender, string allignment,
         string diety, string height, string weight, string looks, string languages, string feats,
         string racialTraitsAndFeatures, int? spellSaveDC, int? carryCapacityLight, int? carryCapacityMedium,
-        int? carryCapacityHeavy, int? experience, int? normalAC, int? touchAC, int? flatootedAC, int? maxHitpoints,
+        int? carryCapacityHeavy, int? experience, int? normalAC, int? touchAC, int? flatFootedAC, int? maxHitpoints,
         int? currentHitpoints, int? strength, int? dexterity, int? constitution, int? intelligence, int? wisdom,
         int? charisma, int? fortitudeSave, int? reflexSave, int? willSave, int? appraise, int? balance, int? bluff,
         int? climb, int? concentration, int? craft1, string craft1Type, int? craft2, string craft2Type, int? craft3,
@@ -79,12 +79,12 @@ namespace GMBuddy.Rest.Dnd35.Controllers
                 string userId = User.Claims.Single(c => c.Type.Equals(ClaimTypes.NameIdentifier)).Value;
                 var character = await games.ModifyCharacterAttributesAsync(userId, characterId, characterClass, level, race, size,
                 gender, allignment, diety, height, weight, looks, languages, feats, racialTraitsAndFeatures, spellSaveDC, carryCapacityLight,
-                carryCapacityMedium, carryCapacityHeavy, experience, normalAC, touchAC, flatootedAC, maxHitpoints, currentHitpoints, strength,
+                carryCapacityMedium, carryCapacityHeavy, experience, normalAC, touchAC, flatFootedAC, maxHitpoints, currentHitpoints, strength,
                 dexterity, constitution, intelligence, wisdom, charisma, fortitudeSave, reflexSave, willSave, appraise, balance, bluff,
                 climb, concentration, craft1, craft1Type, craft2, craft2Type, craft3, craft3Type, decipherScript, diplomacy, disableDevice,
                 disguise, escapeArtist, forgery, gatherInformation, handleAnimal, heal, hide, intimidate, jump, knowledgeArcana, knowledgeArchitecture,
                 knowledgeDungeoneering, knowledgeHistory, knowledgeLocal, knowledgeNature, knowledgeNobility, knowledgeThePlanes,
-                knowledgeReligion, knowledgeReligion, knowledgeOther, knowledgeOtherType, listen, moveSilently, openLock, performAct, performComedy,
+                knowledgeReligion, knowledgeOther, knowledgeOtherType, listen, moveSilently, openLock, performAct, performComedy,
                 performDance, performKeyboard, performOratory, performPercussion, performString, performWind, performSing, performOther, performOtherType,
                 profession1, profession1Type, profession2, profession2Type, ride, search, senseMotive, sleightOfHand, spellcraft, spot,
                 survival, swim, tumble, useMagicDevice, useRope);

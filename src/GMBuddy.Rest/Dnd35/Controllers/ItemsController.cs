@@ -61,6 +61,42 @@ namespace GMBuddy.Rest.Dnd35.Controllers
         //TODO: Implement ModifyItemAttributes
 
         [HttpPost("")]
+        public async Task<IActionResult> ModifyItemModifiers(string itemId,
+        int? normalAC, int? touchAC, int? flatFootedAC, int? maxHitpoints, int? strength, int? dexterity,
+        int? constitution, int? intelligence, int? wisdom, int? charisma, int? fortitudeSave, int? reflexSave,
+        int? willSave, int? appraise, int? balance, int? bluff, int? climb, int? concentration, int? craft1, int? craft2,
+        int? craft3, int? decipherScript, int? diplomacy, int? disableDevice, int? disguise, int? escapeArtist,
+        int? forgery, int? gatherInformation, int? handleAnimal, int? heal, int? hide, int? intimidate, int? jump,
+        int? knowledgeArcana, int? knowledgeArchitecture, int? knowledgeDungeoneering, int? knowledgeHistory,
+        int? knowledgeLocal, int? knowledgeNature, int? knowledgeNobility, int? knowledgeThePlanes, int? knowledgeReligion,
+        int? knowledgeOther, string knowledgeOtherType, int? listen, int? moveSilently, int? openLock, int? performAct,
+        int? performComedy, int? performDance, int? performKeyboard, int? performOratory, int? performPercussion,
+        int? performString, int? performWind, int? performSing, int? performOther, int? profession1,
+        int? profession2, int? ride, int? search, int? senseMotive, int? sleightOfHand, int? spellcraft,
+        int? spot, int? survival, int? swim, int? tumble, int? useMagicDevice, int? useRope)
+        {
+            try
+            {
+                string userId = User.Claims.Single(c => c.Type.Equals(ClaimTypes.NameIdentifier)).Value;
+                var item = await games.ModifyItemAttributesAsync(userId, normalAC, touchAC, flatFootedAC, maxHitpoints, strength,
+                dexterity, constitution, intelligence, wisdom, charisma, fortitudeSave, reflexSave, willSave, appraise, balance, bluff,
+                climb, concentration, craft1, craft2, craft3, decipherScript, diplomacy, disableDevice,
+                disguise, escapeArtist, forgery, gatherInformation, handleAnimal, heal, hide, intimidate, jump, knowledgeArcana, knowledgeArchitecture,
+                knowledgeDungeoneering, knowledgeHistory, knowledgeLocal, knowledgeNature, knowledgeNobility, knowledgeThePlanes,
+                knowledgeReligion, knowledgeOther, listen, moveSilently, openLock, performAct, performComedy,
+                performDance, performKeyboard, performOratory, performPercussion, performString, performWind, performSing, performOther,
+                profession1, profession2, ride, search, senseMotive, sleightOfHand, spellcraft, spot,
+                survival, swim, tumble, useMagicDevice, useRope);
+
+                return CreatedAtAction(nameof(GetItem), new {Id = item}, null);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new {Error = e.Message});
+            }
+        }
+
+        [HttpPost("")]
         public async Task<IActionResult> AssignItemToCharacter(string itemId, string characterId)
         {
             try

@@ -68,9 +68,8 @@ namespace GMBuddy.Games.Dnd35
         /// </summary>
         /// <param name="userId">The email of the user creating the character</param>
         /// <param name="name">The name of the character to be created</param>
-        /// <param name="bio">The biography of the character to be created</param>
         /// <returns>The ID of the added character</returns>
-        public async Task<Guid> AddCharacterAsync(string userId, string name, string bio)
+        public async Task<Guid> AddCharacterAsync(string userId, string name)
         {
             using (var db = new Dnd35DataContext())
             {
@@ -96,18 +95,15 @@ namespace GMBuddy.Games.Dnd35
         /// <summary>
         /// Adds a stat with the given name and value to a character in the database
         /// </summary>
-        /// <param name="userId">The email of the user adding the stat to the character</param>
-        /// <param name="statName">The name of the stat to be added</param>
-        /// <param name="statValue">The value of the stat to be added</param>
+        /// <param name="userId">The email of the user adding the stat to the character, should either be the user who made the character or the GM of that user</param>
         /// <param name="characterId">The characterId of the character to which the stat is being added</param>
-        /// <param name="campaignId">The campaignId of the campaign which the character is in</param>
         /// All the oher parameters are able to be null, and they are the values of the attributes to be modified
         /// <returns>The characterId of the modified character (because I didn't know what else to return)</returns>
-        public async Task<Guid> ModifyAttributesAsync(string userId, string characterId, string characterClass,
+        public async Task<Guid> ModifyCharacterAttributesAsync(string userId, string characterId, string characterClass,
         int? level, string race, string size, string gender, string allignment,
         string diety, string height, string weight, string looks, string languages, string feats,
         string racialTraitsAndFeatures, int? spellSaveDC, int? carryCapacityLight, int? carryCapacityMedium,
-        int? carryCapacityHeavy, int? experience, int? normalAC, int? touchAC, int? flatootedAC, int? maxHitpoints,
+        int? carryCapacityHeavy, int? experience, int? normalAC, int? touchAC, int? flatFootedAC, int? maxHitpoints,
         int? currentHitpoints, int? strength, int? dexterity, int? constitution, int? intelligence, int? wisdom,
         int? charisma, int? fortitudeSave, int? reflexSave, int? willSave, int? appraise, int? balance, int? bluff,
         int? climb, int? concentration, int? craft1, string craft1Type, int? craft2, string craft2Type, int? craft3,
@@ -156,7 +152,7 @@ namespace GMBuddy.Games.Dnd35
                 character.Experience = experience ?? character.Experience;
                 character.AC = normalAC ?? character.AC;
                 character.TouchAC = touchAC ?? character.TouchAC;
-                character.FlatFootedAC = flatootedAC ?? character.FlatFootedAC;
+                character.FlatFootedAC = flatFootedAC ?? character.FlatFootedAC;
                 character.MaxHitpoints = maxHitpoints ?? character.MaxHitpoints;
                 character.CurrentHitpoints = currentHitpoints ?? character.CurrentHitpoints;
                 character.Strength = strength ?? character.Strength;
@@ -313,6 +309,116 @@ namespace GMBuddy.Games.Dnd35
                 if (changes != 1)
                 {
                     throw new Exception("Could not save item");
+                }
+
+                return item.ItemId;
+            }
+        }
+
+        /// <summary>
+        /// Updates the modifers of an item with the given values in the database
+        /// </summary>
+        /// <param name="userId">The email of the user adding the modifier to the item, should either be the user who currently owns the item or the GM of that user</param>
+        /// <param name="itemId">The itemId of the item to which the modifier is being added</param>
+        /// All the oher parameters are able to be null, and they are the values of the attributes to be modified
+        /// <returns>The characterId of the modified character (because I didn't know what else to return)</returns>
+        public async Task<Guid> ModifyItemAttributesAsync(string itemId, int? normalAC, int? touchAC, int? flatFootedAC, int? maxHitpoints,
+        int? strength, int? dexterity, int? constitution, int? intelligence, int? wisdom,
+        int? charisma, int? fortitudeSave, int? reflexSave, int? willSave, int? appraise, int? balance, int? bluff,
+        int? climb, int? concentration, int? craft1, int? craft2, int? craft3,
+        int? decipherScript, int? diplomacy, int? disableDevice, int? disguise, int? escapeArtist,
+        int? forgery, int? gatherInformation, int? handleAnimal, int? heal, int? hide, int? intimidate, int? jump,
+        int? knowledgeArcana, int? knowledgeArchitecture, int? knowledgeDungeoneering, int? knowledgeHistory,
+        int? knowledgeLocal, int? knowledgeNature, int? knowledgeNobility, int? knowledgeThePlanes, int? knowledgeReligion,
+        int? knowledgeOther, int? listen, int? moveSilently, int? openLock, int? performAct,
+        int? performComedy, int? performDance, int? performKeyboard, int? performOratory, int? performPercussion,
+        int? performString, int? performWind, int? performSing, int? performOther, int? profession1,
+        int? profession2, int? ride, int? search, int? senseMotive, int? sleightOfHand, int? spellcraft, int? spot, int? survival, int? swim, int? tumble, int? useMagicDevice, int? useRope)
+        {
+            using (var db = new Dnd35DataContext())
+            {
+                //get the item
+                var items = await db.Items.ToListAsync();
+                var item = items.Single(i => (i.ItemId.ToString().Equals(itemId)));
+                //modify any attributes that are not null
+                item.AC = normalAC ?? item.AC;
+                item.TouchAC = touchAC ?? item.TouchAC;
+                item.FlatFootedAC = flatFootedAC ?? item.FlatFootedAC;
+                item.MaxHitpoints = maxHitpoints ?? item.MaxHitpoints;
+                item.Strength = strength ?? item.Strength;
+                item.Dexterity = dexterity ?? item.Dexterity;
+                item.Constitution = constitution ?? item.Constitution;
+                item.Intelligence = intelligence ?? item.Intelligence;
+                item.Wisdom = wisdom ?? item.Wisdom;
+                item.Charisma = charisma ?? item.Charisma;
+                item.FortitudeSave = fortitudeSave ?? item.FortitudeSave;
+                item.ReflexSave = reflexSave ?? item.ReflexSave;
+                item.WillSave = willSave ?? item.WillSave;
+                item.Appraise = appraise ?? item.Appraise;
+                item.Balance = balance ?? item.Balance;
+                item.Bluff = bluff ?? item.Bluff;
+                item.Climb = climb ?? item.Climb;
+                item.Concentration = concentration ?? item.Concentration;
+                item.Craft1 = craft1 ?? item.Craft1;
+                item.Craft2 = craft2 ?? item.Craft2;
+                item.DecipherScript = decipherScript ?? item.DecipherScript;
+                item.Diplomacy = diplomacy ?? item.Diplomacy;
+                item.DisableDevice = disableDevice ?? item.DisableDevice;
+                item.Disguise = disguise ?? item.Disguise;
+                item.EscapeArtist = escapeArtist ?? item.EscapeArtist;
+                item.Forgery = forgery ?? item.Forgery;
+                item.GatherInformation = gatherInformation ?? item.GatherInformation;
+                item.HandleAnimal = handleAnimal ?? item.HandleAnimal;
+                item.Heal = heal ?? item.Heal;
+                item.Hide = hide ?? item.Hide;
+                item.Intimidate = intimidate ?? item.Intimidate;
+                item.Jump = jump ?? item.Jump;
+                item.KnowledgeArcana = knowledgeArcana ?? item.KnowledgeArcana;
+                item.KnowledgeArchitecture = knowledgeArchitecture ?? item.KnowledgeArchitecture;
+                item.KnowledgeDungeoneering = knowledgeDungeoneering ?? item.KnowledgeDungeoneering;
+                item.KnowledgeHistory = knowledgeHistory ?? item.KnowledgeHistory;
+                item.KnowledgeDungeoneering = knowledgeDungeoneering ?? item.KnowledgeDungeoneering;
+                item.KnowledgeHistory = knowledgeHistory ?? item.KnowledgeHistory;
+                item.KnowledgeLocal = knowledgeLocal ?? item.KnowledgeLocal;
+                item.KnowledgeNature = knowledgeNature ?? item.KnowledgeNature;
+                item.KnowledgeNobility = knowledgeNobility ?? item.KnowledgeNobility;
+                item.KnowledgeThePlanes = knowledgeThePlanes ?? item.KnowledgeThePlanes;
+                item.KnowledgeReligion = knowledgeReligion ?? item.KnowledgeReligion;
+                item.KnowledgeOther = knowledgeOther ?? item.KnowledgeOther;
+                item.Listen = listen ?? item.Listen;
+                item.MoveSilently = moveSilently ?? item.MoveSilently;
+                item.OpenLock = openLock ?? item.OpenLock;
+                item.PerformAct = performAct ?? item.PerformAct;
+                item.PerformComedy = performComedy ?? item.PerformComedy;
+                item.PerformDance = performDance ?? item.PerformDance;
+                item.PerformKeyboard = performKeyboard ?? item.PerformKeyboard;
+                item.PerformOratory = performOratory ?? item.PerformOratory;
+                item.PerformPercussion = performPercussion ?? item.PerformPercussion;
+                item.PerformString = performString ?? item.PerformString;
+                item.PerformWind = performWind ?? item.PerformWind;
+                item.PerformSing = performSing ?? item.PerformSing;
+                item.PerformOther = performOther ?? item.PerformOther;
+                item.Profession1 = profession1 ?? item.Profession1;
+                item.Profession2 = profession2 ?? item.Profession2;
+                item.Ride = ride ?? item.Ride;
+                item.Search = search ?? item.Search;
+                item.SenseMotive = senseMotive ?? item.SenseMotive;
+                item.SleightOfHand = sleightOfHand ?? item.SleightOfHand;
+                item.Spellcraft = spellcraft ?? item.Spellcraft;
+                item.Spot = spot ?? item.Spot;
+                item.Survival = survival ?? item.Survival;
+                item.Swim = swim ?? item.Swim;
+                item.Tumble = tumble ?? item.Tumble;
+                item.UseMagicDevice = useMagicDevice ?? item.UseMagicDevice;
+                item.UseRope = useRope ?? item.UseRope;
+
+                //TODO: Implement Proficiency Booleans.
+
+                int changes = await db.SaveChangesAsync();
+
+                if (changes != 1)
+                {
+                    throw new Exception("Could not save campaign");
                 }
 
                 return item.ItemId;
