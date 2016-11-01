@@ -42,11 +42,19 @@ namespace GMBuddy.Games.Micro20.Models
         [Key]
         public Guid CharacterId { get; set; }
 
+        /// <summary>
+        /// Provided by authentication mechanisms (they do not foreign key out to the identity db in any way)
+        /// </summary>
+        /// <remarks>
+        /// UserIds are handled by a different system, so we want them to be opaque strings here
+        /// </remarks>
         [Required]
         public string UserId { get; set; }
         
-        [Required]
-        public Guid CampaignId { get; set; }
+        /// <summary>
+        /// A nullable Guid linking this character to 0 or 1 campaign. Can be updated arbitrarily
+        /// </summary>
+        public Guid? CampaignId { get; set; }
 
         [ForeignKey("CampaignId")]
         public Campaign Campaign { get; set; }

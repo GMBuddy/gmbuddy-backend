@@ -6,18 +6,20 @@ namespace GMBuddy.Games.Micro20.InputModels
     public class CharacterModification
     {
         [Required]
-        public Guid CharacterId { get; set; }
+        public Guid? CharacterId { get; set; }
+
+        public Guid? NewCampaign { get; set; }
 
         [Range(3, 18)]
-        public int? Strength { get; set; }
+        public int? NewStrength { get; set; }
 
         [Range(3, 18)]
-        public int? Dexterity { get; set; }
+        public int? NewDexterity { get; set; }
 
         [Range(3, 18)]
-        public int? Mind { get; set; }
+        public int? NewMind { get; set; }
 
         [Range(1, 100)]
-        public int? Level { get; set; }
+        public int? NewLevel { get; set; }
     }
 }

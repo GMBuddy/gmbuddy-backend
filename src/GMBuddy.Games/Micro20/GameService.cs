@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using GMBuddy.Exceptions;
 using GMBuddy.Games.Micro20.Data;
@@ -71,11 +69,11 @@ namespace GMBuddy.Games.Micro20
         /// <exception cref="ValidationException">If shouldValidate = true and the given model is invalid</exception>
         /// <exception cref="DataNotCreatedException">If the character was not added to the database</exception>
         /// <returns>The character's ID</returns>
-        public async Task<Guid> AddCharacter(NewCharacter model, string userId, bool shouldValidate = false)
+        public async Task<Guid> CreateCharacter(NewCharacter model, string userId, bool shouldValidate = false)
         {
             if (model == null || string.IsNullOrWhiteSpace(userId))
             {
-                throw new ArgumentNullException(nameof(model), "Character must not be null");
+                throw new ArgumentNullException(nameof(model), "Character and user ID must not be null");
             }
 
             if (shouldValidate)
@@ -128,10 +126,11 @@ namespace GMBuddy.Games.Micro20
                 }
 
                 // update properties only if they are not null
-                character.BaseStrength = model.Strength ?? character.BaseStrength;
-                character.BaseDexterity = model.Dexterity ?? character.BaseDexterity;
-                character.BaseMind = model.Mind ?? character.BaseMind;
-                character.Level = model.Level ?? character.Level;
+                character.CampaignId = model.NewCampaign ?? character.CampaignId;
+                character.BaseStrength = model.NewStrength ?? character.BaseStrength;
+                character.BaseDexterity = model.NewDexterity ?? character.BaseDexterity;
+                character.BaseMind = model.NewMind ?? character.BaseMind;
+                character.Level = model.NewLevel ?? character.Level;
 
                 int changes = await db.SaveChangesAsync();
                 return changes == 1;

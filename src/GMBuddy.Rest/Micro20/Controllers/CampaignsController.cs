@@ -31,33 +31,13 @@ namespace GMBuddy.Rest.Micro20.Controllers
             return Json(await games.GetCampaigns());
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetCampaign(string id)
+        [HttpGet("{campaignId}")]
+        public async Task<IActionResult> GetCampaign(Guid campaignId)
         {
             var campaigns = await games.GetCampaigns();
 
             // TODO: Provide filter to games.GetCampaigns() to do this internally
-            return Json(campaigns.Single(c => c.CampaignId.ToString().Equals(id)));
-        }
-
-        [HttpPost("{CampaignId}/Characters")]
-        public async Task<IActionResult> JoinCampaign(NewCharacter model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            try
-            {
-                string userId = User.Claims.Single(c => c.Type == JwtRegisteredClaimNames.Sub).Value;
-                var result = await games.AddCharacter(model, userId);
-                return Created(string.Empty, new {CharacterId = result.ToString()});
-            }
-            catch (DataNotCreatedException e)
-            {
-                return BadRequest(new {Error = e.Message});
-            }
+            return Json(campaigns.Single(c => c.CampaignId == campaignId));
         }
 
         [HttpPost("")]
