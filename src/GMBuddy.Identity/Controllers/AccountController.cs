@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using GMBuddy.Identity.Models;
 using GMBuddy.Identity.Models.ViewModels;
 using GMBuddy.Identity.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -73,6 +76,20 @@ namespace GMBuddy.Identity.Controllers
             }
             
             return Json(jwtService.Create(user));
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult Ping()
+        {
+            // This returns the pretty name of the key, if necessary
+            var claims = User.Claims.Select(c => new
+            {
+                Key = c.Properties.FirstOrDefault().Value ?? c.Type,
+                c.Value
+            });
+
+            return Json(claims);
         }
     }
 }
