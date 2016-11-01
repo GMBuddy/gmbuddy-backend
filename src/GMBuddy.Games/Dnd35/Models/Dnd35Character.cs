@@ -1,16 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace GMBuddy.Games.Dnd35.Models
 {
     public class Dnd35Character
     {
+        [Key]
         public Guid CharacterId { get; set; }
+        [Required]
         public string UserId { get; set; }
-        public string CampaignId { get; set; }
+        [Required]
         public string Name { get; set; }
+        public string CampaignId { get; set; }
 
         //Miscellaneous attributes
         //TODO: restrict class, race, level, size, gender, allignment to expected values using enums

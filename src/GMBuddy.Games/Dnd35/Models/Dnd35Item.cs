@@ -1,15 +1,15 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace GMBuddy.Games.Dnd35.Models
 {
     public class Dnd35Item
     {
-        //how do I set attributes as key/required?
+        [Key]
         public Guid ItemId { get; set; }
+        [Required]
         public string ItemName { get; set; }
+        [Required]
         public string ItemDescription { get; set; }
         public string CharacterId { get; set; }
 
