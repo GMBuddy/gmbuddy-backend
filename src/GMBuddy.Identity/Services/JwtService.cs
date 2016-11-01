@@ -38,7 +38,9 @@ namespace GMBuddy.Identity.Services
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email), 
-                new Claim(JwtRegisteredClaimNames.Jti, AuthorizationConstants.Jti)
+                new Claim(JwtRegisteredClaimNames.Jti, AuthorizationConstants.Jti),
+                new Claim(JwtRegisteredClaimNames.GivenName, user.FirstName),
+                new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName)
             };
 
             var header = new JwtHeader(options.SigningCredentials);
