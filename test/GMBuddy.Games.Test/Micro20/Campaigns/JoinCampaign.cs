@@ -42,10 +42,9 @@ namespace GMBuddy.Games.Test.Micro20.Campaigns
                 Mind = 10,
                 CampaignId = campaign.CampaignId,
                 Class = Micro20ClassType.Fighter,
-                Race = Micro20RaceType.Human,
-                UserId = userId
+                Race = Micro20RaceType.Human
             };
-            var result = await games.AddCharacter(character, true);
+            var result = await games.AddCharacter(character, userId, true);
 
             // Assert
             using (var db = new DatabaseContext(options))
@@ -65,16 +64,16 @@ namespace GMBuddy.Games.Test.Micro20.Campaigns
         }
 
         [Theory]
-        [InlineData(0, 10, 10, Micro20ClassType.Cleric, Micro20RaceType.Dwarf, "ID")]
-        [InlineData(10, 0, 10, Micro20ClassType.Cleric, Micro20RaceType.Dwarf, "ID")]
-        [InlineData(10, 10, 0, Micro20ClassType.Cleric, Micro20RaceType.Dwarf, "ID")]
-        [InlineData(10, 10, 10, -1, Micro20RaceType.Dwarf, "ID")]
-        [InlineData(10, 10, 10, Micro20ClassType.Cleric, -1, "ID")]
-        [InlineData(10, 10, 10, Micro20ClassType.Cleric, Micro20RaceType.Dwarf, null)]
-        public async Task Fail_BadCharacterData(int str, int dex, int mind, int classType, int raceType, string userId)
+        [InlineData(0, 10, 10, Micro20ClassType.Cleric, Micro20RaceType.Dwarf)]
+        [InlineData(10, 0, 10, Micro20ClassType.Cleric, Micro20RaceType.Dwarf)]
+        [InlineData(10, 10, 0, Micro20ClassType.Cleric, Micro20RaceType.Dwarf)]
+        [InlineData(10, 10, 10, -1, Micro20RaceType.Dwarf)]
+        [InlineData(10, 10, 10, Micro20ClassType.Cleric, -1)]
+        public async Task Fail_BadCharacterData(int str, int dex, int mind, int classType, int raceType)
         {
             // Arrange
             var options = DatabaseSetup.CreateContextOptions();
+            const string userId = "A user id";
             var campaign = new Campaign
             {
                 GmUserId = userId,
@@ -98,13 +97,12 @@ namespace GMBuddy.Games.Test.Micro20.Campaigns
                 Mind = mind,
                 CampaignId = campaign.CampaignId,
                 Class = (Micro20ClassType) classType,
-                Race = (Micro20RaceType) raceType,
-                UserId = userId
+                Race = (Micro20RaceType) raceType
             };
 
             try
             {
-                result = await games.AddCharacter(character, true);
+                result = await games.AddCharacter(character, userId, true);
             }
             catch (ValidationException e)
             {
@@ -113,6 +111,7 @@ namespace GMBuddy.Games.Test.Micro20.Campaigns
 
             // Assert
             Assert.Equal(new Guid(), result);
+            Assert.NotNull(ex);
             using (var db = new DatabaseContext(options))
             {
                 Assert.False(db.Characters.Any());
