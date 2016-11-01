@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GMBuddy.Games.Micro20.Models
 {
@@ -13,5 +15,8 @@ namespace GMBuddy.Games.Micro20.Models
 
         [Required]
         public string GmUserId { get; set; }
+
+        [InverseProperty("Campaign")]
+        public ICollection<Character> Characters { get; set; }
     }
 }

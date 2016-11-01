@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 using GMBuddy.Games.Dnd35;
@@ -72,6 +73,11 @@ namespace GMBuddy.Rest
                     .AllowAnyMethod()
                     .AllowCredentials()
             );
+
+            // Microsoft hurts my soul (sometimes)
+            // https://stackoverflow.com/questions/38453895/getting-claims-with-identityserver3
+            // We need "sub" to be "sub", not some bullshit xmlsoap reference
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             app.UseJwtBearerAuthentication(new JwtBearerOptions
             {

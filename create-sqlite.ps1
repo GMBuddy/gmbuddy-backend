@@ -27,13 +27,13 @@ if ($NoGames -eq $false)
 		-WorkingDirectory ".\src\GMBuddy.Games"
 	Start-Process -FilePath "dotnet.exe" `
 		-ArgumentList "ef","migrations","add","InitialMigration", `
-			"-c","GMBuddy.Games.Micro20.Data.Micro20DataContext", `
+			"-c","GMBuddy.Games.Micro20.Data.DatabaseContext", `
 			"-o",".\Micro20\Data\Migrations" `
 		-NoNewWindow -Wait `
 		-WorkingDirectory ".\src\GMBuddy.Games"
 	Start-Process -FilePath "dotnet.exe" `
 		-ArgumentList "ef","database","update", `
-			"-c","GMBuddy.Games.Micro20.Data.Micro20DataContext" `
+			"-c","GMBuddy.Games.Micro20.Data.DatabaseContext" `
 		-NoNewWindow -Wait `
 		-WorkingDirectory ".\src\GMBuddy.Games"
 }

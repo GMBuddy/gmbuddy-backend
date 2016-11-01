@@ -16,9 +16,9 @@ namespace GMBuddy.Games.Micro20
     {
         private readonly DbContextOptions options;
 
-        public GameService(DbContextOptions options)
+        public GameService(DbContextOptions options = null)
         {
-            this.options = options;
+            this.options = options ?? new DbContextOptionsBuilder().Options;
         }
 
         /// <summary>
@@ -65,14 +65,15 @@ namespace GMBuddy.Games.Micro20
         /// Creates a new character associated with a single campaign
         /// </summary>
         /// <param name="model"></param>
+        /// <param name="userId"></param>
         /// <param name="shouldValidate">Whether to explicitly validate the given model</param>
         /// <exception cref="ArgumentNullException">If model is empty</exception>
         /// <exception cref="ValidationException">If shouldValidate = true and the given model is invalid</exception>
         /// <exception cref="DataNotCreatedException">If the character was not added to the database</exception>
         /// <returns>The character's ID</returns>
-        public async Task<Guid> AddCharacter(NewCharacter model, bool shouldValidate = false)
+        public async Task<Guid> AddCharacter(NewCharacter model, string userId, bool shouldValidate = false)
         {
-            if (model == null)
+            if (model == null || string.IsNullOrWhiteSpace(userId))
             {
                 throw new ArgumentNullException(nameof(model), "Character must not be null");
             }
@@ -84,7 +85,7 @@ namespace GMBuddy.Games.Micro20
 
             using (var db = new DatabaseContext(options))
             {
-                var character = new Character(model);
+                var character = new Character(model, userId);
 
                 db.Characters.Add(character);
 
@@ -141,18 +142,19 @@ namespace GMBuddy.Games.Micro20
         /// Gets a model sheet for a model of a given ID
         /// </summary>
         /// <param name="characterId"></param>
-        /// <exception cref="ArgumentException">If the given model id is null or invalid</exception>
+        /// <exception cref="ArgumentException">If characterId is null or empty</exception>
+        /// <exception cref="DataNotFoundException">If the given character can not be found</exception>
         /// <returns></returns>
-        public async Task<CharacterSheet> GetSheet(string characterId)
+        public async Task<CharacterSheet> GetSheet(Guid characterId)
         {
-            if (string.IsNullOrWhiteSpace(characterId))
+            if (characterId == null)
             {
                 throw new ArgumentException("Invalid model id", nameof(characterId));
             }
 
             using (var db = new DatabaseContext(options))
             {
-                var character = await db.Characters.SingleOrDefaultAsync(c => c.CharacterId.ToString() == characterId);
+                var character = await db.Characters.SingleOrDefaultAsync(c => c.CharacterId == characterId);
                 if (character == null)
                 {
                     throw new DataNotFoundException("Character could not be found");

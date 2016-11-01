@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -49,7 +50,8 @@ namespace GMBuddy.Rest.Micro20.Controllers
 
             try
             {
-                var result = await games.AddCharacter(model);
+                string userId = User.Claims.Single(c => c.Type == JwtRegisteredClaimNames.Sub).Value;
+                var result = await games.AddCharacter(model, userId);
                 return Created(string.Empty, new {CharacterId = result.ToString()});
             }
             catch (DataNotCreatedException e)

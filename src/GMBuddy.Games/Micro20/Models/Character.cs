@@ -28,10 +28,10 @@ namespace GMBuddy.Games.Micro20.Models
             
         }
 
-        public Character(NewCharacter model)
+        public Character(NewCharacter model, string userId)
         {
             CampaignId = model.CampaignId;
-            UserId = model.UserId;
+            UserId = userId;
             BaseStrength = model.Strength;
             BaseDexterity = model.Dexterity;
             BaseMind = model.Mind;

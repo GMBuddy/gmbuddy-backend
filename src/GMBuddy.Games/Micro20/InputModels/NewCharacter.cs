@@ -9,9 +9,6 @@ namespace GMBuddy.Games.Micro20.InputModels
     public class NewCharacter
     {
         [Required]
-        public string UserId { get; set; }
-
-        [Required]
         public Guid CampaignId { get; set; }
 
         [Range(3, 18)]
