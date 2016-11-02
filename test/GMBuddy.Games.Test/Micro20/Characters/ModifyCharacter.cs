@@ -53,11 +53,11 @@ namespace GMBuddy.Games.Test.Micro20.Characters
             try
             {
                 var m1 = new CharacterModification { CharacterId = character.CharacterId, NewDexterity = 12 };
-                result = await games.ModifyCharacter(m1, true);
+                result = await games.ModifyCharacter(m1, userId, true);
                 Assert.True(result);
 
                 var m2 = new CharacterModification { CharacterId = character.CharacterId, NewCampaign = campaign.CampaignId };
-                result = await games.ModifyCharacter(m2, true);
+                result = await games.ModifyCharacter(m2, userId, true);
                 Assert.True(result);
             }
             catch (Exception e) when (e is DataNotFoundException || e is ValidationException)

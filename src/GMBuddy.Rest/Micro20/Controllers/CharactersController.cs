@@ -1,10 +1,9 @@
 ﻿using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Threading.Tasks;
 using GMBuddy.Exceptions;
 using GMBuddy.Games.Micro20;
 using GMBuddy.Games.Micro20.InputModels;
+using GMBuddy.Rest.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -16,10 +15,12 @@ namespace GMBuddy.Rest.Micro20.Controllers
     {
         private readonly GameService games;
         private readonly ILogger<CharactersController> logger;
+        private readonly IUserService users;
 
-        public CharactersController(GameService games, ILoggerFactory loggerFactory)
+        public CharactersController(GameService games, ILoggerFactory loggerFactory, IUserService users)
         {
             this.games = games;
+            this.users = users;
             logger = loggerFactory.CreateLogger<CharactersController>();
         }
 
@@ -33,13 +34,13 @@ namespace GMBuddy.Rest.Micro20.Controllers
 
             try
             {
-                string userId = User.Claims.Single(c => c.Type == JwtRegisteredClaimNames.Sub).Value;
+                string userId = users.GetUserId();
                 var result = await games.CreateCharacter(model, userId);
                 return Created(string.Empty, new { CharacterId = result.ToString() });
             }
             catch (DataNotCreatedException e)
             {
-                logger.LogWarning("Could not create character");
+                logger.LogInformation("Could not create character");
                 return BadRequest(new { Error = e.Message });
             }
         }
@@ -47,15 +48,22 @@ namespace GMBuddy.Rest.Micro20.Controllers
         [HttpGet("{characterId}")]
         public async Task<IActionResult> GetCharacter(Guid characterId)
         {
+            string userId = users.GetUserId();
+
             try
             {
-                var sheet = await games.GetSheet(characterId);
+                var sheet = await games.GetSheet(characterId, userId);
                 return Json(sheet);
             }
             catch (DataNotFoundException)
             {
-                logger.LogWarning($"Could not find character {characterId}");
+                logger.LogInformation($"Could not find character {characterId}");
                 return NotFound();
+            }
+            catch (UnauthorizedException)
+            {
+                logger.LogInformation($"User {userId} tried to modify {characterId} but was not authorized to do so");
+                return Unauthorized();
             }
         }
 
@@ -67,15 +75,17 @@ namespace GMBuddy.Rest.Micro20.Controllers
                 return BadRequest(ModelState);
             }
 
+            string userId = users.GetUserId();
+
             try
             {
-                await games.ModifyCharacter(model);
+                await games.ModifyCharacter(model, userId);
                 return NoContent();
             }
-            catch (Exception e)
+            catch (UnauthorizedException)
             {
-                logger.LogWarning($"Could not modify character {model.CharacterId}");
-                return BadRequest(new {Error = e.Message});
+                logger.LogInformation($"User {userId} tried to modify {model.CharacterId} but was not authorized to do so");
+                return Unauthorized();
             }
         }
     }

@@ -7,6 +7,7 @@ using GMBuddy.Games.Micro20.Data;
 using GMBuddy.Games.Micro20.InputModels;
 using GMBuddy.Games.Micro20.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace GMBuddy.Games.Micro20
 {
@@ -22,12 +23,33 @@ namespace GMBuddy.Games.Micro20
         /// <summary>
         /// Get all campaigns (eventually with filtering options)
         /// </summary>
+        /// <param name="userId"></param>
         /// <returns>Returns a list of campaigns. If none exist, an empty array is returned. If an error occurs, an exception is thrown</returns>
-        public async Task<IEnumerable<Campaign>> GetCampaigns()
+        public async Task<IEnumerable<Campaign>> GetCampaigns(string userId)
         {
             using (var db = new DatabaseContext(options))
             {
-                return await db.Campaigns.ToListAsync();
+                return await db.Campaigns.Where(c => c.GmUserId == userId).ToListAsync();
+            }
+        }
+
+        public async Task<Campaign> GetCampaign(Guid campaignId, string userId)
+        {
+            using (var db = new DatabaseContext(options))
+            {
+                var campaign = await db.Campaigns.SingleOrDefaultAsync(c => c.CampaignId == campaignId);
+
+                if (campaign == null)
+                {
+                    throw new DataNotFoundException($"Could not find campaign {campaignId}");
+                }
+
+                if (campaign.GmUserId != userId)
+                {
+                    throw new UnauthorizedException($"User {userId} does not have permission to access {campaignId}");
+                }
+
+                return campaign;
             }
         }
 
@@ -36,6 +58,7 @@ namespace GMBuddy.Games.Micro20
         /// </summary>
         /// <param name="name">The name of the campaign</param>
         /// <param name="userId">The GM's userId address (uniquely identifies the GM)</param>
+        /// <exception cref="DataNotCreatedException">If the campaign could not be saved to the database</exception>
         /// <returns>The ID of the added campaign</returns>
         public async Task<Guid> AddCampaign(string name, string userId)
         {
@@ -52,7 +75,7 @@ namespace GMBuddy.Games.Micro20
                 int changes = await db.SaveChangesAsync();
                 if (changes != 1)
                 {
-                    throw new Exception("Could not save campaign");
+                    throw new DataNotCreatedException("Could not save campaign");
                 }
 
                 return campaign.CampaignId;
@@ -101,15 +124,17 @@ namespace GMBuddy.Games.Micro20
         /// Modifies a character with the given CharacterModification fields
         /// </summary>
         /// <param name="model">The parameters to update</param>
+        /// <param name="userId">Ensures that the given user is allowed to modify the character</param>
         /// <param name="shouldValidate">If shouldValidate = true and the given model isnt valid</param>
         /// <exception cref="ArgumentNullException">If model is empty</exception>
         /// <exception cref="ValidationException">If shouldValidate = true and model is invalid</exception>
+        /// <exception cref="UnauthorizedException">If the character modification is valid but the user is not allowed to make that modification</exception>
         /// <returns>True if the any properties were changed, false otherwise</returns>
-        public async Task<bool> ModifyCharacter(CharacterModification model, bool shouldValidate = false)
+        public async Task<bool> ModifyCharacter(CharacterModification model, string userId, bool shouldValidate = false)
         {
-            if (model == null)
+            if (model == null || string.IsNullOrWhiteSpace(userId))
             {
-                throw new ArgumentNullException(nameof(model), "The CharacterModification must not be null");
+                throw new ArgumentNullException(nameof(model), "The modifications and user ID must not be null");
             }
 
             if (shouldValidate)
@@ -123,6 +148,11 @@ namespace GMBuddy.Games.Micro20
                 if (character == null)
                 {
                     throw new DataNotFoundException("Could not find the character given by CharacterId");
+                }
+
+                if (character.UserId != userId)
+                {
+                    throw new UnauthorizedException($"User {userId} is not the owner of character {character.CharacterId}");
                 }
 
                 // update properties only if they are not null
@@ -141,10 +171,12 @@ namespace GMBuddy.Games.Micro20
         /// Gets a model sheet for a model of a given ID
         /// </summary>
         /// <param name="characterId"></param>
+        /// <param name="userId">Ensures that the given user is allowed to view the character</param>
         /// <exception cref="ArgumentException">If characterId is null or empty</exception>
         /// <exception cref="DataNotFoundException">If the given character can not be found</exception>
+        /// <exception cref="UnauthorizedException">If the character exists but the user is not allowed to view it</exception>
         /// <returns></returns>
-        public async Task<CharacterSheet> GetSheet(Guid characterId)
+        public async Task<CharacterSheet> GetSheet(Guid characterId, string userId)
         {
             if (characterId == null)
             {
@@ -157,6 +189,11 @@ namespace GMBuddy.Games.Micro20
                 if (character == null)
                 {
                     throw new DataNotFoundException("Character could not be found");
+                }
+
+                if (character.UserId != userId)
+                {
+                    throw new UnauthorizedException("User is not authorized to view character");
                 }
 
                 return new CharacterSheet(character); ;

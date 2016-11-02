@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using GMBuddy.Exceptions;
 using GMBuddy.Games.Micro20;
 using GMBuddy.Games.Micro20.InputModels;
+using GMBuddy.Rest.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -17,40 +18,53 @@ namespace GMBuddy.Rest.Micro20.Controllers
     {
         private readonly ILogger<CampaignsController> logger;
         private readonly GameService games;
+        private readonly IUserService users;
 
-        public CampaignsController(ILoggerFactory loggerFactory, GameService games)
+        public CampaignsController(ILoggerFactory loggerFactory, GameService games, IUserService users)
         {
             logger = loggerFactory.CreateLogger<CampaignsController>();
-
+            this.users = users;
             this.games = games;
         }
 
         [HttpGet("")]
         public async Task<IActionResult> ListCampaigns()
         {
-            return Json(await games.GetCampaigns());
+            return Json(await games.GetCampaigns(users.GetUserId()));
         }
 
         [HttpGet("{campaignId}")]
         public async Task<IActionResult> GetCampaign(Guid campaignId)
         {
-            var campaigns = await games.GetCampaigns();
-
-            // TODO: Provide filter to games.GetCampaigns() to do this internally
-            return Json(campaigns.Single(c => c.CampaignId == campaignId));
+            try
+            {
+                var campaign = await games.GetCampaign(campaignId, users.GetUserId());
+                return Json(campaign);
+            }
+            catch (DataNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (UnauthorizedException)
+            {
+                return Unauthorized();
+            }
         }
 
         [HttpPost("")]
         public async Task<IActionResult> AddCampaign(string name)
         {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return BadRequest();
+            }
+
             try
             {
-                string userId = User.Claims.Single(c => c.Type.Equals(ClaimTypes.NameIdentifier)).Value;
-                var campaignId = await games.AddCampaign(name, userId);
-
-                return CreatedAtAction(nameof(GetCampaign), new { Id = campaignId }, new { CampaignId = campaignId });
+                var campaignId = await games.AddCampaign(name, users.GetUserId());
+                return CreatedAtAction(nameof(GetCampaign), new { campaignId }, new { CampaignId = campaignId });
             }
-            catch (Exception e)
+            catch (DataNotCreatedException e)
             {
                 return BadRequest(new { Error = e.Message });
             }

@@ -17,7 +17,7 @@ namespace GMBuddy.Games.Test.Micro20.Campaigns
         {
             // Arrange
             var options = DatabaseSetup.CreateContextOptions();
-            string expectedUser = new Guid().ToString();
+            const string expectedUser = "A User ID";
             var campaigns = new List<Campaign>
             {
                 new Campaign
@@ -41,7 +41,7 @@ namespace GMBuddy.Games.Test.Micro20.Campaigns
 
             // Act
             var games = new GameService(options);
-            var result = await games.GetCampaigns();
+            var result = await games.GetCampaigns(expectedUser);
 
             // Assert
             Assert.Equal(campaigns.Count, result.Count());

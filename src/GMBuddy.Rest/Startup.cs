@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Threading.Tasks;
-using GMBuddy.Games.Dnd35;
+﻿using System.IdentityModel.Tokens.Jwt;
+using GMBuddy.Rest.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -44,6 +40,7 @@ namespace GMBuddy.Rest
 
             services.AddTransient<Games.Dnd35.Dnd35GameService>();
             services.AddTransient<Games.Micro20.GameService>();
+            services.AddScoped<IUserService, UserService>();
 
             services.AddCors();
 
