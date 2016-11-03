@@ -25,7 +25,7 @@ namespace GMBuddy.Games.Micro20
         /// </summary>
         /// <param name="userId"></param>
         /// <returns>Returns a list of campaigns. If none exist, an empty array is returned. If an error occurs, an exception is thrown</returns>
-        public async Task<IEnumerable<Campaign>> GetCampaigns(string userId)
+        public async Task<IEnumerable<Campaign>> ListCampaigns(string userId)
         {
             using (var db = new DatabaseContext(options))
             {

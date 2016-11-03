@@ -30,7 +30,7 @@ namespace GMBuddy.Rest.Micro20.Controllers
         [HttpGet("")]
         public async Task<IActionResult> ListCampaigns()
         {
-            return Json(await games.GetCampaigns(users.GetUserId()));
+            return Json(await games.ListCampaigns(users.GetUserId()));
         }
 
         [HttpGet("{campaignId}")]
