@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using GMBuddy.Games.Dnd35;
+﻿using System.IdentityModel.Tokens.Jwt;
+using GMBuddy.Rest.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -41,7 +38,9 @@ namespace GMBuddy.Rest
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
 
-            services.AddTransient<Dnd35GameService>();
+            services.AddTransient<Games.Dnd35.Dnd35GameService>();
+            services.AddTransient<Games.Micro20.GameService>();
+            services.AddScoped<IUserService, UserService>();
 
             services.AddCors();
 
@@ -71,6 +70,11 @@ namespace GMBuddy.Rest
                     .AllowAnyMethod()
                     .AllowCredentials()
             );
+
+            // Microsoft hurts my soul (sometimes)
+            // https://stackoverflow.com/questions/38453895/getting-claims-with-identityserver3
+            // We need "sub" to be "sub", not some bullshit xmlsoap reference
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             app.UseJwtBearerAuthentication(new JwtBearerOptions
             {
