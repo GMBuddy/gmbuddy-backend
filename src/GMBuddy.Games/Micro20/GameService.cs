@@ -33,18 +33,29 @@ namespace GMBuddy.Games.Micro20
             }
         }
 
+        /// <summary>
+        /// Get a single campaign
+        /// </summary>
+        /// <param name="campaignId">The ID of the campaign to retrieve</param>
+        /// <param name="userId">A user ID, which currently must be the campaign's GM</param>
+        /// <exception cref="DataNotFoundException">If no such campaign exists</exception>
+        /// <exception cref="UnauthorizedException">If the campaign exists but the user is unauthorized to view it</exception>
+        /// <returns></returns>
         public async Task<Campaign> GetCampaign(Guid campaignId, string userId)
         {
             using (var db = new DatabaseContext(options))
             {
-                var campaign = await db.Campaigns.SingleOrDefaultAsync(c => c.CampaignId == campaignId);
+                var campaign = await db.Campaigns
+                    .Include(c => c.Characters)
+                    .SingleOrDefaultAsync(c => c.CampaignId == campaignId);
 
                 if (campaign == null)
                 {
                     throw new DataNotFoundException($"Could not find campaign {campaignId}");
                 }
 
-                if (campaign.GmUserId != userId)
+                // ReSharper disable once SimplifyLinqExpression
+                if (campaign.GmUserId != userId && !campaign.Characters.Any(c => c.UserId == userId))
                 {
                     throw new UnauthorizedException($"User {userId} does not have permission to access {campaignId}");
                 }
