@@ -29,7 +29,10 @@ namespace GMBuddy.Games.Micro20
         {
             using (var db = new DatabaseContext(options))
             {
-                return await db.Campaigns.Where(c => c.GmUserId == userId).ToListAsync();
+                return await db.Campaigns
+                    .Include(c => c.Characters)
+                    .Where(c => c.GmUserId == userId || c.Characters.Any(ch => ch.UserId == userId))
+                    .ToListAsync();
             }
         }
 
