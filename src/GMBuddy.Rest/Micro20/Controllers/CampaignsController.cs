@@ -1,11 +1,7 @@
 ﻿using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using GMBuddy.Exceptions;
-using GMBuddy.Games.Micro20;
-using GMBuddy.Games.Micro20.InputModels;
+using GMBuddy.Games.Micro20.GameService;
 using GMBuddy.Rest.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

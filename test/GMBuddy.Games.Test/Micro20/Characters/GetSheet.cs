@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using GMBuddy.Exceptions;
 using GMBuddy.Games.Micro20;
 using GMBuddy.Games.Micro20.Data;
+using GMBuddy.Games.Micro20.GameService;
 using GMBuddy.Games.Micro20.InputModels;
 using GMBuddy.Games.Micro20.Models;
 using GMBuddy.Games.Test.Micro20.TestUtilities;

@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using GMBuddy.Games.Micro20.GameService;
 using GMBuddy.Rest.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -39,7 +40,7 @@ namespace GMBuddy.Rest
             services.AddApplicationInsightsTelemetry(Configuration);
 
             services.AddTransient<Games.Dnd35.Dnd35GameService>();
-            services.AddTransient<Games.Micro20.GameService>();
+            services.AddTransient<GameService>();
             services.AddScoped<IUserService, UserService>();
 
             services.AddCors();
