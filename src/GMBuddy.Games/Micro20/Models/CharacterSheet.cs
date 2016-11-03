@@ -14,6 +14,20 @@ namespace GMBuddy.Games.Micro20.Models
             this.character = character;
         }
 
+        public Guid CharacterId => character.CharacterId;
+
+        public string UserId => character.UserId;
+
+        public string Name => character.Name;
+
+        public string Height => character.Height;
+
+        public string Weight => character.Weight;
+
+        public string HairColor => character.HairColor;
+
+        public string EyeColor => character.EyeColor;
+
         /// <summary>
         /// The character's STR attribute, including all buffs
         /// </summary>
@@ -79,5 +93,11 @@ namespace GMBuddy.Games.Micro20.Models
                 return mind;
             }
         }
+
+        public Micro20RaceType Race => character.Race;
+
+        public Micro20ClassType Class => character.Class;
+
+        public int Level => character.Level;
     }
 }

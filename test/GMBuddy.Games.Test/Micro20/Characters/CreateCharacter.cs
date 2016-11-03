@@ -21,6 +21,7 @@ namespace GMBuddy.Games.Test.Micro20.Characters
             // Arrange
             var options = DatabaseSetup.CreateContextOptions();
             const string userId = "The Best ID";
+            const string name = "My Character";
             var campaign = new Campaign
             {
                 GmUserId = userId,
@@ -39,6 +40,7 @@ namespace GMBuddy.Games.Test.Micro20.Characters
             var games = new GameService(options);
             var character = new NewCharacter
             {
+                Name = name,
                 Strength = 10,
                 Dexterity = 10,
                 Mind = 10,
@@ -81,6 +83,7 @@ namespace GMBuddy.Games.Test.Micro20.Characters
             // Arrange
             var options = DatabaseSetup.CreateContextOptions();
             const string userId = "The Best ID";
+            const string name = "My Character";
             Guid? result = null;
             Type eType = null;
 
@@ -88,6 +91,7 @@ namespace GMBuddy.Games.Test.Micro20.Characters
             var games = new GameService(options);
             var character = new NewCharacter
             {
+                Name = name,
                 Strength = 10,
                 Dexterity = 10,
                 Mind = 10,
@@ -126,12 +130,13 @@ namespace GMBuddy.Games.Test.Micro20.Characters
         }
 
         [Theory]
-        [InlineData(0, 10, 10, Micro20ClassType.Cleric, Micro20RaceType.Dwarf)]
-        [InlineData(10, 0, 10, Micro20ClassType.Cleric, Micro20RaceType.Dwarf)]
-        [InlineData(10, 10, 0, Micro20ClassType.Cleric, Micro20RaceType.Dwarf)]
-        [InlineData(10, 10, 10, -1, Micro20RaceType.Dwarf)]
-        [InlineData(10, 10, 10, Micro20ClassType.Cleric, -1)]
-        public async Task Fail_BadCharacterData(int str, int dex, int mind, int classType, int raceType)
+        [InlineData(null, 10, 10, 10, Micro20ClassType.Cleric, Micro20RaceType.Dwarf)]
+        [InlineData("My Character", 0, 10, 10, Micro20ClassType.Cleric, Micro20RaceType.Dwarf)]
+        [InlineData("My Character", 10, 0, 10, Micro20ClassType.Cleric, Micro20RaceType.Dwarf)]
+        [InlineData("My Character", 10, 10, 0, Micro20ClassType.Cleric, Micro20RaceType.Dwarf)]
+        [InlineData("My Character", 10, 10, 10, -1, Micro20RaceType.Dwarf)]
+        [InlineData("My Character", 10, 10, 10, Micro20ClassType.Cleric, -1)]
+        public async Task Fail_BadCharacterData(string name, int str, int dex, int mind, int classType, int raceType)
         {
             // Arrange
             var options = DatabaseSetup.CreateContextOptions();
@@ -154,6 +159,7 @@ namespace GMBuddy.Games.Test.Micro20.Characters
             var games = new GameService(options);
             var character = new NewCharacter
             {
+                Name = name,
                 Strength = str,
                 Dexterity = dex,
                 Mind = mind,

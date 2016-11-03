@@ -170,11 +170,16 @@ namespace GMBuddy.Games.Micro20
                 }
 
                 // update properties only if they are not null
-                character.CampaignId = model.NewCampaign ?? character.CampaignId;
-                character.BaseStrength = model.NewStrength ?? character.BaseStrength;
-                character.BaseDexterity = model.NewDexterity ?? character.BaseDexterity;
-                character.BaseMind = model.NewMind ?? character.BaseMind;
-                character.Level = model.NewLevel ?? character.Level;
+                character.Name = model.Name ?? character.Name;
+                character.Height = model.Height ?? character.Height;
+                character.Weight = model.Weight ?? character.Weight;
+                character.HairColor = model.HairColor ?? character.HairColor;
+                character.EyeColor = model.EyeColor ?? character.EyeColor;
+                character.CampaignId = model.Campaign ?? character.CampaignId;
+                character.BaseStrength = model.Strength ?? character.BaseStrength;
+                character.BaseDexterity = model.Dexterity ?? character.BaseDexterity;
+                character.BaseMind = model.Mind ?? character.BaseMind;
+                character.Level = model.Level ?? character.Level;
 
                 int changes = await db.SaveChangesAsync();
                 return changes == 1;

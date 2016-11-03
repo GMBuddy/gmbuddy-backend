@@ -10,6 +10,17 @@ namespace GMBuddy.Games.Micro20.InputModels
     {
         public Guid? CampaignId { get; set; }
 
+        [Required]
+        public string Name { get; set; }
+
+        public string Height { get; set; }
+
+        public string Weight { get; set; }
+
+        public string HairColor { get; set; }
+
+        public string EyeColor { get; set; }
+
         [Range(3, 18)]
         public int Strength { get; set; }
 
