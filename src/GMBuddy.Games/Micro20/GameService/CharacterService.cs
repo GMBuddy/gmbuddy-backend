@@ -118,10 +118,10 @@ namespace GMBuddy.Games.Micro20.GameService
 
             using (var db = new DatabaseContext(options))
             {
-                return await db.Characters
+                var characters = await db.Characters
                     .Where(c => c.UserId == userId)
-                    .Select(c => new CharacterSheet(c))
                     .ToListAsync();
+                return characters.Select(c => new CharacterSheet(c));
             }
         }
 
