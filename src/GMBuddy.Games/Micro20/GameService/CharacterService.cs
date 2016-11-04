@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
 using GMBuddy.Exceptions;
 using GMBuddy.Games.Micro20.Data;
@@ -102,6 +104,28 @@ namespace GMBuddy.Games.Micro20.GameService
         }
 
         /// <summary>
+        /// Gets a list of character sheets for the given user's characters
+        /// </summary>
+        /// <param name="userId">The user requesting their characters</param>
+        /// <exception cref="ArgumentNullException">If userId is null or invalid</exception>
+        /// <returns></returns>
+        public async Task<IEnumerable<CharacterSheet>> ListCharacters(string userId)
+        {
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                throw new ArgumentNullException(nameof(userId), "User ID invalid");
+            }
+
+            using (var db = new DatabaseContext(options))
+            {
+                return await db.Characters
+                    .Where(c => c.UserId == userId)
+                    .Select(c => new CharacterSheet(c))
+                    .ToListAsync();
+            }
+        }
+
+        /// <summary>
         /// Gets a model sheet for a model of a given ID
         /// </summary>
         /// <param name="characterId"></param>
@@ -110,11 +134,11 @@ namespace GMBuddy.Games.Micro20.GameService
         /// <exception cref="DataNotFoundException">If the given character can not be found</exception>
         /// <exception cref="UnauthorizedException">If the character exists but the user is not allowed to view it</exception>
         /// <returns></returns>
-        public async Task<CharacterSheet> GetSheet(Guid characterId, string userId)
+        public async Task<CharacterSheet> GetCharacter(Guid characterId, string userId)
         {
-            if (characterId == null)
+            if (string.IsNullOrWhiteSpace(userId))
             {
-                throw new ArgumentException("Invalid model id", nameof(characterId));
+                throw new ArgumentNullException(nameof(userId), "User ID invalid");
             }
 
             using (var db = new DatabaseContext(options))

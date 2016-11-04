@@ -59,7 +59,7 @@ namespace GMBuddy.Games.Test.Micro20.Characters
                 using (var db = new DatabaseContext(options))
                 {
                     var character = await db.Characters.SingleAsync();
-                    sheet = await games.GetSheet(character.CharacterId, userId);
+                    sheet = await games.GetCharacter(character.CharacterId, userId);
                 }
             }
             catch (DataNotCreatedException e)
@@ -75,14 +75,17 @@ namespace GMBuddy.Games.Test.Micro20.Characters
                 Assert.Equal(1, db.Characters.Count());
 
                 var character = await db.Characters.SingleAsync();
-                Assert.Equal(character.CharacterId, sheet.CharacterId);
-                Assert.Equal(character.BaseStrength + 1, sheet.Strength);
-                Assert.Equal(character.BaseDexterity + 1, sheet.Dexterity);
-                Assert.Equal(character.BaseMind + 1, sheet.Mind);
-                Assert.Equal(character.Race, sheet.Race);
-                Assert.Equal(character.Class, sheet.Class);
-                Assert.Equal(userId, sheet.UserId);
-                Assert.Equal(1, sheet.Level);
+                Assert.Equal(character.CharacterId, sheet.Details.CharacterId);
+                Assert.Equal(character.BaseStrength, sheet.BaseStats.Strength);
+                Assert.Equal(1, sheet.Modifiers.Strength);
+                Assert.Equal(character.BaseDexterity, sheet.BaseStats.Dexterity);
+                Assert.Equal(1, sheet.Modifiers.Dexterity);
+                Assert.Equal(character.BaseMind, sheet.BaseStats.Mind);
+                Assert.Equal(1, sheet.Modifiers.Mind);
+                Assert.Equal(character.Race, sheet.Details.Race);
+                Assert.Equal(character.Class, sheet.Details.Class);
+                Assert.Equal(userId, sheet.Details.UserId);
+                Assert.Equal(1, sheet.Details.Level);
             }
         }
     }

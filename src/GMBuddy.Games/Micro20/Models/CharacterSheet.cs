@@ -5,99 +5,135 @@ using System.Threading.Tasks;
 
 namespace GMBuddy.Games.Micro20.Models
 {
-    public class CharacterSheet
+    public class BaseStats
     {
-        private readonly Character character;
+        private readonly Character c;
 
-        public CharacterSheet(Character character)
+        public BaseStats(Character c)
         {
-            this.character = character;
+            this.c = c;
         }
 
-        public Guid CharacterId => character.CharacterId;
+        public int Strength => c.BaseStrength;
 
-        public string UserId => character.UserId;
+        public int Dexterity => c.BaseDexterity;
 
-        public string Name => character.Name;
+        public int Mind => c.BaseMind;
+    }
 
-        public string Height => character.Height;
+    /// <summary>
+    /// Contains properties for all fields that can be modified in any capacity.
+    /// </summary>
+    /// <example>
+    /// int ActualStrength = sheet.BaseStats.Strength + sheet.Modifiers.Strength
+    /// </example>
+    public class Modifiers
+    {
+        private readonly Character c;
 
-        public string Weight => character.Weight;
+        public Modifiers(Character c)
+        {
+            this.c = c;
+        }
 
-        public string HairColor => character.HairColor;
-
-        public string EyeColor => character.EyeColor;
-
-        /// <summary>
-        /// The character's STR attribute, including all buffs
-        /// </summary>
         public int Strength
         {
             get
             {
-                int strength = character.BaseStrength;
-
-                if (character.Race == Micro20RaceType.Dwarf)
+                switch (c.Race)
                 {
-                    strength += 2;
+                    case Micro20RaceType.Dwarf:
+                        return 2;
+                    case Micro20RaceType.Human:
+                        return 1;
+                    case Micro20RaceType.Elf:
+                    case Micro20RaceType.Halfling:
+                    default:
+                        return 0;
                 }
-                else if (character.Race == Micro20RaceType.Human)
-                {
-                    strength += 1;
-                }
-
-                return strength;
             }
         }
 
-        /// <summary>
-        /// The character's DEX attribute, including all buffs
-        /// </summary>
         public int Dexterity
         {
             get
             {
-                int dexterity = character.BaseDexterity;
-
-                if (character.Race == Micro20RaceType.Halfling)
+                switch (c.Race)
                 {
-                    dexterity += 2;
+                    case Micro20RaceType.Halfling:
+                        return 2;
+                    case Micro20RaceType.Human:
+                        return 1;
+                    case Micro20RaceType.Elf:
+                    case Micro20RaceType.Dwarf:
+                    default:
+                        return 0;
                 }
-                else if (character.Race == Micro20RaceType.Human)
-                {
-                    dexterity += 1;
-                }
-
-                return dexterity;
             }
         }
 
-        /// <summary>
-        /// The character's MIND attribute, including all buffs
-        /// </summary>
         public int Mind
         {
             get
             {
-                int mind = character.BaseMind;
-
-                if (character.Race == Micro20RaceType.Elf)
+                switch (c.Race)
                 {
-                    mind += 2;
+                    case Micro20RaceType.Elf:
+                        return 2;
+                    case Micro20RaceType.Human:
+                        return 1;
+                    case Micro20RaceType.Dwarf:
+                    case Micro20RaceType.Halfling:
+                    default:
+                        return 0;
                 }
-                else if (character.Race == Micro20RaceType.Human)
-                {
-                    mind += 1;
-                }
-
-                return mind;
             }
         }
+    }
 
-        public Micro20RaceType Race => character.Race;
+    public class Details
+    {
+        private readonly Character c;
 
-        public Micro20ClassType Class => character.Class;
+        public Details(Character c)
+        {
+            this.c = c;
+        }
 
-        public int Level => character.Level;
+        public Guid CharacterId => c.CharacterId;
+
+        public string UserId => c.UserId;
+
+        public string Name => c.Name;
+
+        public string Height => c.Height;
+
+        public string Weight => c.Weight;
+
+        public string HairColor => c.HairColor;
+
+        public string EyeColor => c.EyeColor;
+
+        public Micro20RaceType Race => c.Race;
+
+        public Micro20ClassType Class => c.Class;
+
+        public int Level => c.Level;
+    }
+
+    public class CharacterSheet
+    {
+        private readonly Character c;
+
+        public CharacterSheet(Character c)
+        {
+            this.c = c;
+        }
+
+        public Details Details => new Details(c);
+
+        public BaseStats BaseStats => new BaseStats(c);
+
+        public Modifiers Modifiers => new Modifiers(c);
     }
 }
