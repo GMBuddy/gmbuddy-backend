@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -42,7 +43,7 @@ namespace GMBuddy.Rest.Dnd35.Controllers
         {
             try
             {
-                string userId = User.Claims.Single(c => c.Type.Equals(ClaimTypes.NameIdentifier)).Value;
+                string userId = User.Claims.Single(c => c.Type.Equals(JwtRegisteredClaimNames.Sub)).Value;
                 var campaignId = await games.AddCampaignAsync(name, userId);
 
                 return CreatedAtAction(nameof(GetCampaign), new {Id = campaignId}, new {CampaignId = campaignId});
