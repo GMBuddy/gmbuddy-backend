@@ -57,12 +57,16 @@ namespace GMBuddy.Rest.Micro20.Controllers
 
             try
             {
-                var campaignId = await games.AddCampaign(name, users.GetUserId());
-                return CreatedAtAction(nameof(GetCampaign), new { campaignId }, new { CampaignId = campaignId });
+                var campaign = await games.AddCampaign(name, users.GetUserId());
+                return CreatedAtAction(nameof(GetCampaign), new {campaignId = campaign.CampaignId}, campaign);
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(new {Error = e.Message});
             }
             catch (DataNotCreatedException e)
             {
-                return BadRequest(new { Error = e.Message });
+                return BadRequest(new {Error = e.Message});
             }
         }
     }
