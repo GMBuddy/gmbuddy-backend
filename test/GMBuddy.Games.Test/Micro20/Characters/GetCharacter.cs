@@ -6,6 +6,7 @@ using GMBuddy.Exceptions;
 using GMBuddy.Games.Micro20.Data;
 using GMBuddy.Games.Micro20.GameService;
 using GMBuddy.Games.Micro20.Models;
+using GMBuddy.Games.Micro20.OutputModels;
 using GMBuddy.Games.Test.Micro20.TestUtilities;
 using Microsoft.EntityFrameworkCore;
 using Xunit;

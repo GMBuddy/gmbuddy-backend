@@ -63,10 +63,16 @@ namespace GMBuddy.Games.Micro20.GameService
         /// </summary>
         /// <param name="name">The name of the campaign</param>
         /// <param name="userId">The GM's userId address (uniquely identifies the GM)</param>
+        /// <exception cref="ArgumentException">If name is invalid</exception>
         /// <exception cref="DataNotCreatedException">If the campaign could not be saved to the database</exception>
         /// <returns>The ID of the added campaign</returns>
-        public async Task<Guid> AddCampaign(string name, string userId)
+        public async Task<Campaign> AddCampaign(string name, string userId)
         {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("Name is invalid", nameof(name));
+            }
+
             using (var db = new DatabaseContext(options))
             {
                 var campaign = new Campaign
@@ -83,7 +89,7 @@ namespace GMBuddy.Games.Micro20.GameService
                     throw new DataNotCreatedException("Could not save campaign");
                 }
 
-                return campaign.CampaignId;
+                return campaign;
             }
         }
     }

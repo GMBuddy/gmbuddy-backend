@@ -7,6 +7,7 @@ using GMBuddy.Exceptions;
 using GMBuddy.Games.Micro20.Data;
 using GMBuddy.Games.Micro20.InputModels;
 using GMBuddy.Games.Micro20.Models;
+using GMBuddy.Games.Micro20.OutputModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace GMBuddy.Games.Micro20.GameService
