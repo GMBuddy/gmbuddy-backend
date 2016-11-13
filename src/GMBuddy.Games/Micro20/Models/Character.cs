@@ -32,6 +32,11 @@ namespace GMBuddy.Games.Micro20.Models
         {
             CampaignId = model.CampaignId;
             UserId = userId;
+            Name = model.Name;
+            Height = model.Height;
+            Weight = model.Weight;
+            HairColor = model.HairColor;
+            EyeColor = model.EyeColor;
             BaseStrength = model.Strength;
             BaseDexterity = model.Dexterity;
             BaseMind = model.Mind;
@@ -41,6 +46,17 @@ namespace GMBuddy.Games.Micro20.Models
 
         [Key]
         public Guid CharacterId { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        public string Height { get; set; }
+
+        public string Weight { get; set; }
+
+        public string HairColor { get; set; }
+
+        public string EyeColor { get; set; }
 
         /// <summary>
         /// Provided by authentication mechanisms (they do not foreign key out to the identity db in any way)

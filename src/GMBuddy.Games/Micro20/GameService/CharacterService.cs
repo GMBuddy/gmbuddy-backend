@@ -1,87 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
 using GMBuddy.Exceptions;
 using GMBuddy.Games.Micro20.Data;
 using GMBuddy.Games.Micro20.InputModels;
 using GMBuddy.Games.Micro20.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
-namespace GMBuddy.Games.Micro20
+namespace GMBuddy.Games.Micro20.GameService
 {
-    public class GameService
+    public partial class GameService
     {
-        private readonly DbContextOptions options;
-
-        public GameService(DbContextOptions options = null)
-        {
-            this.options = options ?? new DbContextOptionsBuilder().Options;
-        }
-
-        /// <summary>
-        /// Get all campaigns (eventually with filtering options)
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns>Returns a list of campaigns. If none exist, an empty array is returned. If an error occurs, an exception is thrown</returns>
-        public async Task<IEnumerable<Campaign>> GetCampaigns(string userId)
-        {
-            using (var db = new DatabaseContext(options))
-            {
-                return await db.Campaigns.Where(c => c.GmUserId == userId).ToListAsync();
-            }
-        }
-
-        public async Task<Campaign> GetCampaign(Guid campaignId, string userId)
-        {
-            using (var db = new DatabaseContext(options))
-            {
-                var campaign = await db.Campaigns.SingleOrDefaultAsync(c => c.CampaignId == campaignId);
-
-                if (campaign == null)
-                {
-                    throw new DataNotFoundException($"Could not find campaign {campaignId}");
-                }
-
-                if (campaign.GmUserId != userId)
-                {
-                    throw new UnauthorizedException($"User {userId} does not have permission to access {campaignId}");
-                }
-
-                return campaign;
-            }
-        }
-
-        /// <summary>
-        /// Adds a campaign with the given campaign name and GM's userId to the database
-        /// </summary>
-        /// <param name="name">The name of the campaign</param>
-        /// <param name="userId">The GM's userId address (uniquely identifies the GM)</param>
-        /// <exception cref="DataNotCreatedException">If the campaign could not be saved to the database</exception>
-        /// <returns>The ID of the added campaign</returns>
-        public async Task<Guid> AddCampaign(string name, string userId)
-        {
-            using (var db = new DatabaseContext(options))
-            {
-                var campaign = new Campaign
-                {
-                    Name = name,
-                    GmUserId = userId
-                };
-
-                db.Campaigns.Add(campaign);
-
-                int changes = await db.SaveChangesAsync();
-                if (changes != 1)
-                {
-                    throw new DataNotCreatedException("Could not save campaign");
-                }
-
-                return campaign.CampaignId;
-            }
-        }
-
         /// <summary>
         /// Creates a new character associated with a single campaign
         /// </summary>
@@ -156,14 +87,41 @@ namespace GMBuddy.Games.Micro20
                 }
 
                 // update properties only if they are not null
-                character.CampaignId = model.NewCampaign ?? character.CampaignId;
-                character.BaseStrength = model.NewStrength ?? character.BaseStrength;
-                character.BaseDexterity = model.NewDexterity ?? character.BaseDexterity;
-                character.BaseMind = model.NewMind ?? character.BaseMind;
-                character.Level = model.NewLevel ?? character.Level;
+                character.Name = model.Name ?? character.Name;
+                character.Height = model.Height ?? character.Height;
+                character.Weight = model.Weight ?? character.Weight;
+                character.HairColor = model.HairColor ?? character.HairColor;
+                character.EyeColor = model.EyeColor ?? character.EyeColor;
+                character.CampaignId = model.Campaign ?? character.CampaignId;
+                character.BaseStrength = model.Strength ?? character.BaseStrength;
+                character.BaseDexterity = model.Dexterity ?? character.BaseDexterity;
+                character.BaseMind = model.Mind ?? character.BaseMind;
+                character.Level = model.Level ?? character.Level;
 
                 int changes = await db.SaveChangesAsync();
                 return changes == 1;
+            }
+        }
+
+        /// <summary>
+        /// Gets a list of character sheets for the given user's characters
+        /// </summary>
+        /// <param name="userId">The user requesting their characters</param>
+        /// <exception cref="ArgumentNullException">If userId is null or invalid</exception>
+        /// <returns></returns>
+        public async Task<IEnumerable<CharacterSheet>> ListCharacters(string userId)
+        {
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                throw new ArgumentNullException(nameof(userId), "User ID invalid");
+            }
+
+            using (var db = new DatabaseContext(options))
+            {
+                var characters = await db.Characters
+                    .Where(c => c.UserId == userId)
+                    .ToListAsync();
+                return characters.Select(c => new CharacterSheet(c));
             }
         }
 
@@ -176,11 +134,11 @@ namespace GMBuddy.Games.Micro20
         /// <exception cref="DataNotFoundException">If the given character can not be found</exception>
         /// <exception cref="UnauthorizedException">If the character exists but the user is not allowed to view it</exception>
         /// <returns></returns>
-        public async Task<CharacterSheet> GetSheet(Guid characterId, string userId)
+        public async Task<CharacterSheet> GetCharacter(Guid characterId, string userId)
         {
-            if (characterId == null)
+            if (string.IsNullOrWhiteSpace(userId))
             {
-                throw new ArgumentException("Invalid model id", nameof(characterId));
+                throw new ArgumentNullException(nameof(userId), "User ID invalid");
             }
 
             using (var db = new DatabaseContext(options))

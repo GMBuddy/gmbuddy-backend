@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using GMBuddy.Exceptions;
 using GMBuddy.Games.Micro20;
 using GMBuddy.Games.Micro20.Data;
+using GMBuddy.Games.Micro20.GameService;
 using GMBuddy.Games.Micro20.InputModels;
 using GMBuddy.Games.Micro20.Models;
 using GMBuddy.Games.Test.Micro20.TestUtilities;
@@ -52,11 +53,11 @@ namespace GMBuddy.Games.Test.Micro20.Characters
 
             try
             {
-                var m1 = new CharacterModification { CharacterId = character.CharacterId, NewDexterity = 12 };
+                var m1 = new CharacterModification { CharacterId = character.CharacterId, Dexterity = 12 };
                 result = await games.ModifyCharacter(m1, userId, true);
                 Assert.True(result);
 
-                var m2 = new CharacterModification { CharacterId = character.CharacterId, NewCampaign = campaign.CampaignId };
+                var m2 = new CharacterModification { CharacterId = character.CharacterId, Campaign = campaign.CampaignId };
                 result = await games.ModifyCharacter(m2, userId, true);
                 Assert.True(result);
             }

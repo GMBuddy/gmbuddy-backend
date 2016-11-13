@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using GMBuddy.Exceptions;
-using GMBuddy.Games.Micro20;
+using GMBuddy.Games.Micro20.GameService;
 using GMBuddy.Games.Micro20.InputModels;
 using GMBuddy.Rest.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +22,21 @@ namespace GMBuddy.Rest.Micro20.Controllers
             this.games = games;
             this.users = users;
             logger = loggerFactory.CreateLogger<CharactersController>();
+        }
+
+        [HttpGet("")]
+        public async Task<IActionResult> ListCharacters()
+        {
+            try
+            {
+                string userId = users.GetUserId();
+                var result = await games.ListCharacters(userId);
+                return Json(result);
+            }
+            catch (ArgumentNullException)
+            {
+                return Unauthorized();
+            }
         }
 
         [HttpPost("")]
@@ -52,7 +67,7 @@ namespace GMBuddy.Rest.Micro20.Controllers
 
             try
             {
-                var sheet = await games.GetSheet(characterId, userId);
+                var sheet = await games.GetCharacter(characterId, userId);
                 return Json(sheet);
             }
             catch (DataNotFoundException)

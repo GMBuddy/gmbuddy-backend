@@ -25,7 +25,7 @@ namespace GMBuddy
             string fileName = $"{dbName}.sqlite";
 
             string path = RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
-                ? Path.Combine(Environment.GetEnvironmentVariable("HOME"), ".gmbuddy", "database", fileName)
+                ? Path.Combine(Environment.GetEnvironmentVariable("HOME"), ".gmbuddy", "databases", fileName)
                 : Path.Combine(Environment.GetEnvironmentVariable("LOCALAPPDATA"), "GMBuddy", "Databases", fileName);
 
             return path;
