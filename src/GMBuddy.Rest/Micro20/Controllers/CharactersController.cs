@@ -16,11 +16,13 @@ namespace GMBuddy.Rest.Micro20.Controllers
         private readonly GameService games;
         private readonly ILogger<CharactersController> logger;
         private readonly IUserService users;
+        private readonly ISocketService sockets;
 
-        public CharactersController(GameService games, ILoggerFactory loggerFactory, IUserService users)
+        public CharactersController(GameService games, ILoggerFactory loggerFactory, IUserService users, ISocketService sockets)
         {
             this.games = games;
             this.users = users;
+            this.sockets = sockets;
             logger = loggerFactory.CreateLogger<CharactersController>();
         }
 
@@ -83,7 +85,7 @@ namespace GMBuddy.Rest.Micro20.Controllers
         }
 
         [HttpPut("{CharacterId}")]
-        public async Task<IActionResult> ModifyCharacter(CharacterModification model)
+        public async Task<IActionResult> ModifyCharacter(CharacterModification model, bool sendLiveUpdate = true)
         {
             if (!ModelState.IsValid)
             {
@@ -95,6 +97,13 @@ namespace GMBuddy.Rest.Micro20.Controllers
             try
             {
                 await games.ModifyCharacter(model, userId);
+
+                if (sendLiveUpdate)
+                {
+                    var sheet = games.GetCharacter(model.CharacterId.Value, userId);
+                    await sockets.SendAsync("campaignId", "character/FETCH", sheet);
+                }
+
                 return NoContent();
             }
             catch (UnauthorizedException)

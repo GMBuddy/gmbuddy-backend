@@ -42,6 +42,7 @@ namespace GMBuddy.Rest
             services.AddTransient<Games.Dnd35.Dnd35GameService>();
             services.AddTransient<GameService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ISocketService, SocketService>();
 
             services.AddCors();
 
@@ -90,10 +91,7 @@ namespace GMBuddy.Rest
                     ValidAudience = AuthorizationConstants.Audience,
 
                     ValidateIssuer = true,
-                    ValidIssuer = AuthorizationConstants.Issuer,
-
-                    RequireExpirationTime = true,
-                    ValidateLifetime = true
+                    ValidIssuer = AuthorizationConstants.Issuer
                 }
             });
 

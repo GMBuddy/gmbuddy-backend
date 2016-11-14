@@ -1,0 +1,24 @@
+{
+  "name": "gmbuddy-realtime",
+  "version": "0.0.1",
+  "description": "WebSocket interface for GMBuddy game service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo No Test Found"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gmbuddy/gmbuddy-backend.git"
+  },
+  "author": "Jack Horton",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gmbuddy/gmbuddy-backend/issues"
+  },
+  "homepage": "https://github.com/gmbuddy/gmbuddy-backend#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "socket.io": "^1.5.1"
+  }
+}
