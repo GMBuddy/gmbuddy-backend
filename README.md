@@ -1,4 +1,5 @@
 # GMBuddy Backend
+[![CircleCI](https://circleci.com/gh/GMBuddy/gmbuddy-backend.svg?style=svg)](https://circleci.com/gh/GMBuddy/gmbuddy-backend)
 
 ## Installation
 

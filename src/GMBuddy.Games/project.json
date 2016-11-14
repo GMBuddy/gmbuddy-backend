@@ -17,7 +17,8 @@
       "type": "build"
     },
     "Microsoft.EntityFrameworkCore.Sqlite": "1.0.1",
-    "GMBuddy": "1.0.0-*"
+    "GMBuddy": "1.0.0-*",
+    "System.Linq": "4.1.0"
   },
 
   "tools": {

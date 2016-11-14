@@ -45,6 +45,8 @@ namespace GMBuddy.Identity
 
             services.AddDbContext<IdentityContext>();
 
+            services.AddCors();
+
             services.AddIdentity<User, IdentityRole>(options =>
                 {
                     options.Password.RequireDigit = false;
@@ -86,6 +88,33 @@ namespace GMBuddy.Identity
             app.UseApplicationInsightsRequestTelemetry();
 
             app.UseApplicationInsightsExceptionTelemetry();
+
+            app.UseCors(builder =>
+                builder.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials()
+            );
+
+            app.UseJwtBearerAuthentication(new JwtBearerOptions
+            {
+                AutomaticAuthenticate = true,
+                AutomaticChallenge = true,
+                TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = AuthorizationConstants.SecurityKey,
+
+                    ValidateAudience = true,
+                    ValidAudience = AuthorizationConstants.Audience,
+
+                    ValidateIssuer = true,
+                    ValidIssuer = AuthorizationConstants.Issuer,
+
+                    RequireExpirationTime = true,
+                    ValidateLifetime = true
+                }
+            });
 
             app.UseIdentity();
 

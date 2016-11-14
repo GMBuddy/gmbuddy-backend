@@ -32,13 +32,15 @@ namespace GMBuddy.Identity.Services
                 throw new ArgumentNullException();
             }
 
-            logger.LogInformation($"Issuing access token for user ${user.UserName}");
+            logger.LogInformation($"Issuing access token for user {user.UserName}");
 
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email), 
-                new Claim(JwtRegisteredClaimNames.Jti, AuthorizationConstants.Jti)
+                new Claim(JwtRegisteredClaimNames.Jti, AuthorizationConstants.Jti),
+                new Claim(JwtRegisteredClaimNames.GivenName, user.FirstName),
+                new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName)
             };
 
             var header = new JwtHeader(options.SigningCredentials);
