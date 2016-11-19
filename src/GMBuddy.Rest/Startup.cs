@@ -92,8 +92,8 @@ namespace GMBuddy.Rest
                     ValidateIssuer = true,
                     ValidIssuer = AuthorizationConstants.Issuer,
 
-                    RequireExpirationTime = true,
-                    ValidateLifetime = true
+                    RequireExpirationTime = false,
+                    ValidateLifetime = false
                 }
             });
 

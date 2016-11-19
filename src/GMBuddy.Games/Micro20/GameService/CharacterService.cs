@@ -93,7 +93,7 @@ namespace GMBuddy.Games.Micro20.GameService
                 character.Weight = model.Weight ?? character.Weight;
                 character.HairColor = model.HairColor ?? character.HairColor;
                 character.EyeColor = model.EyeColor ?? character.EyeColor;
-                character.CampaignId = model.Campaign ?? character.CampaignId;
+                character.CampaignId = model.CampaignId ?? character.CampaignId;
                 character.BaseStrength = model.Strength ?? character.BaseStrength;
                 character.BaseDexterity = model.Dexterity ?? character.BaseDexterity;
                 character.BaseMind = model.Mind ?? character.BaseMind;

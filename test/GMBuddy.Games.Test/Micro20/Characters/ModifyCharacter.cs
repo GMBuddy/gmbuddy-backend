@@ -57,7 +57,7 @@ namespace GMBuddy.Games.Test.Micro20.Characters
                 result = await games.ModifyCharacter(m1, userId, true);
                 Assert.True(result);
 
-                var m2 = new CharacterModification { CharacterId = character.CharacterId, Campaign = campaign.CampaignId };
+                var m2 = new CharacterModification { CharacterId = character.CharacterId, CampaignId = campaign.CampaignId };
                 result = await games.ModifyCharacter(m2, userId, true);
                 Assert.True(result);
             }

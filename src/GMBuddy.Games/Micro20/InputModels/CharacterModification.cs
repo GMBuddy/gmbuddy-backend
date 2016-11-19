@@ -18,7 +18,7 @@ namespace GMBuddy.Games.Micro20.InputModels
 
         public string EyeColor { get; set; }
 
-        public Guid? Campaign { get; set; }
+        public Guid? CampaignId { get; set; }
 
         [Range(3, 18)]
         public int? Strength { get; set; }
