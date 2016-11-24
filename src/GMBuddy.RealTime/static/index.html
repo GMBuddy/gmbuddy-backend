@@ -4,4 +4,13 @@
     <head>
         <title>GMBuddy Sockets demo</title>
     </head>
+    <body>
+        <script src="socket.io-client.js"></script>
+        <script>
+            const sio = io('http://localhost:4001?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0MzI0OTE4NC0xM2VjLTQyY2QtYjllYS0yODZhNzA4OGMxNmUiLCJlbWFpbCI6InVzZXJAZ21idWRkeS5jb20iLCJqdGkiOiJhYWViNzFkMy1kNDU2LTQ4ZGItODEyYS04ODE1Mjk2NTkwNWQiLCJnaXZlbl9uYW1lIjoiSmFjayIsImZhbWlseV9uYW1lIjoiSG9ydG9uIiwibmJmIjoxNDgwMDIzNjMyLCJleHAiOjE0ODA0NTU2MzIsImlzcyI6IkdNQnVkZHlJZGVudGl0eSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCJ9.VlPAPBvkKXN-57LDaE5x6Jn6HHhbs6p7cPVvZ8yNLik');
+            sio.on('connect', () => { console.log('connected'); });
+
+            sio.on('myaction', (data) => console.log(data));
+        </script>
+    </body>
 </html>
