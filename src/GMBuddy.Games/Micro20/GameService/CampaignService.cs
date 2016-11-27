@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using GMBuddy.Exceptions;
 using GMBuddy.Games.Micro20.Data;
 using GMBuddy.Games.Micro20.Models;
+using GMBuddy.Games.Micro20.OutputModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace GMBuddy.Games.Micro20.GameService
@@ -16,14 +17,16 @@ namespace GMBuddy.Games.Micro20.GameService
         /// </summary>
         /// <param name="userId"></param>
         /// <returns>Returns a list of campaigns. If none exist, an empty array is returned. If an error occurs, an exception is thrown</returns>
-        public async Task<IEnumerable<Campaign>> ListCampaigns(string userId)
+        public async Task<IEnumerable<CampaignView>> ListCampaigns(string userId)
         {
             using (var db = new DatabaseContext(options))
             {
-                return await db.Campaigns
+                var campaigns = await db.Campaigns
                     .Include(c => c.Characters)
                     .Where(c => c.GmUserId == userId || c.Characters.Any(ch => ch.UserId == userId))
                     .ToListAsync();
+
+                return campaigns.Select(c => new CampaignView(c));
             }
         }
 
@@ -35,7 +38,7 @@ namespace GMBuddy.Games.Micro20.GameService
         /// <exception cref="DataNotFoundException">If no such campaign exists</exception>
         /// <exception cref="UnauthorizedException">If the campaign exists but the user is unauthorized to view it</exception>
         /// <returns></returns>
-        public async Task<Campaign> GetCampaign(Guid campaignId, string userId)
+        public async Task<CampaignView> GetCampaign(Guid campaignId, string userId)
         {
             using (var db = new DatabaseContext(options))
             {
@@ -54,7 +57,7 @@ namespace GMBuddy.Games.Micro20.GameService
                     throw new UnauthorizedException($"User {userId} does not have permission to access {campaignId}");
                 }
 
-                return campaign;
+                return new CampaignView(campaign);
             }
         }
 
@@ -66,7 +69,7 @@ namespace GMBuddy.Games.Micro20.GameService
         /// <exception cref="ArgumentException">If name is invalid</exception>
         /// <exception cref="DataNotCreatedException">If the campaign could not be saved to the database</exception>
         /// <returns>The ID of the added campaign</returns>
-        public async Task<Campaign> AddCampaign(string name, string userId)
+        public async Task<CampaignView> AddCampaign(string name, string userId)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -89,7 +92,7 @@ namespace GMBuddy.Games.Micro20.GameService
                     throw new DataNotCreatedException("Could not save campaign");
                 }
 
-                return campaign;
+                return new CampaignView(campaign);
             }
         }
     }

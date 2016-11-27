@@ -7,6 +7,7 @@ using GMBuddy.Games.Micro20;
 using GMBuddy.Games.Micro20.Data;
 using GMBuddy.Games.Micro20.GameService;
 using GMBuddy.Games.Micro20.Models;
+using GMBuddy.Games.Micro20.OutputModels;
 using GMBuddy.Games.Test.Micro20.TestUtilities;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
@@ -21,7 +22,7 @@ namespace GMBuddy.Games.Test.Micro20.Campaigns
             // Arrange
             var options = DatabaseSetup.CreateContextOptions();
             const string expectedUser = "A User ID";
-            Campaign result = null;
+            CampaignView result = null;
             Type eType = null;
             var campaigns = new List<Campaign>
             {
@@ -72,7 +73,7 @@ namespace GMBuddy.Games.Test.Micro20.Campaigns
             // Arrange
             var options = DatabaseSetup.CreateContextOptions();
             const string expectedUser = "A User ID";
-            Campaign result = null;
+            CampaignView result = null;
             Type eType = null;
 
             using (var db = new DatabaseContext(options))
@@ -128,7 +129,7 @@ namespace GMBuddy.Games.Test.Micro20.Campaigns
             var options = DatabaseSetup.CreateContextOptions();
             const string expectedUser = "A User ID";
             const string unauthorized = "A different ID";
-            Campaign result = null;
+            CampaignView result = null;
             Type eType = null;
             var campaigns = new List<Campaign>
             {

@@ -51,7 +51,7 @@ namespace GMBuddy.Games.Test.Micro20.Characters
                 var m1 = new CharacterModification { CharacterId = character.CharacterId, Dexterity = 12 };
                 result = await games.ModifyCharacter(m1, userId, true);
                 Assert.True(result);
-
+                
                 var m2 = new CharacterModification { CharacterId = character.CharacterId, HairColor = hairColor };
                 result = await games.ModifyCharacter(m2, userId, true);
                 Assert.True(result);

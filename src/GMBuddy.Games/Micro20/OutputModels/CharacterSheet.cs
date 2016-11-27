@@ -100,6 +100,8 @@ namespace GMBuddy.Games.Micro20.OutputModels
 
         public Guid CharacterId => c.CharacterId;
 
+        public Guid? CampaignId => c.CampaignId;
+
         public string UserId => c.UserId;
 
         public string Name => c.Name;
