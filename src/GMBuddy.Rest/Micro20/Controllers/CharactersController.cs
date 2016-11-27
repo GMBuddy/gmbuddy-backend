@@ -85,7 +85,7 @@ namespace GMBuddy.Rest.Micro20.Controllers
         }
 
         [HttpPut("{CharacterId}")]
-        public async Task<IActionResult> ModifyCharacter(CharacterModification model, bool sendLiveUpdate = true)
+        public async Task<IActionResult> ModifyCharacter(CharacterModification model, bool updateSockets = true)
         {
             if (!ModelState.IsValid)
             {
@@ -98,10 +98,15 @@ namespace GMBuddy.Rest.Micro20.Controllers
             {
                 await games.ModifyCharacter(model, userId);
 
-                if (sendLiveUpdate)
+                if (updateSockets)
                 {
-                    var sheet = games.GetCharacter(model.CharacterId.Value, userId);
-                    await sockets.SendAsync("campaignId", "character/FETCH", sheet);
+                    // var sheet = games.GetCharacter(model.CharacterId.Value, userId);
+                    // await sockets.Emit("campaignId", "character/FETCH", sheet);
+                    logger.LogInformation("Updating sockets");
+                }
+                else
+                {
+                    logger.LogInformation("Not updating sockets");
                 }
 
                 return NoContent();
