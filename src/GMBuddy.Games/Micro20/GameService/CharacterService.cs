@@ -53,7 +53,7 @@ namespace GMBuddy.Games.Micro20.GameService
         }
 
         /// <summary>
-        /// Modifies a character with the given CharacterModification fields
+        /// Modifies a character with any CharacterModification fields that are not null
         /// </summary>
         /// <param name="model">The parameters to update</param>
         /// <param name="userId">Ensures that the given user is allowed to modify the character</param>
@@ -93,11 +93,55 @@ namespace GMBuddy.Games.Micro20.GameService
                 character.Weight = model.Weight ?? character.Weight;
                 character.HairColor = model.HairColor ?? character.HairColor;
                 character.EyeColor = model.EyeColor ?? character.EyeColor;
-                character.CampaignId = model.Campaign ?? character.CampaignId;
                 character.BaseStrength = model.Strength ?? character.BaseStrength;
                 character.BaseDexterity = model.Dexterity ?? character.BaseDexterity;
                 character.BaseMind = model.Mind ?? character.BaseMind;
                 character.Level = model.Level ?? character.Level;
+
+                int changes = await db.SaveChangesAsync();
+                return changes == 1;
+            }
+        }
+
+        /// <summary>
+        /// Modifies character campaign to the given new value
+        /// </summary>
+        /// <param name="characterId"></param>
+        /// <param name="model"></param>
+        /// <param name="userId"></param>
+        /// <param name="shouldValidate"></param>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ValidationException"></exception>
+        /// <exception cref="DataNotFoundException"></exception>
+        /// <exception cref="UnauthorizedException"></exception>
+        /// <returns>Whether or not the model was changed</returns>
+        public async Task<bool> ModifyCharacterCampaign(Guid characterId, CharacterCampaignModification model, string userId,
+            bool shouldValidate = false)
+        {
+            if (model == null || string.IsNullOrEmpty(userId))
+            {
+                throw new ArgumentException("Invalid parameters");
+            }
+
+            if (shouldValidate)
+            {
+                Validator.ValidateObject(model, new ValidationContext(model), true);
+            }
+
+            using (var db = new DatabaseContext(options))
+            {
+                var character = await db.Characters.SingleOrDefaultAsync(c => c.CharacterId == characterId);
+                if (character == null)
+                {
+                    throw new DataNotFoundException("Could not find the character given by CharacterId");
+                }
+
+                if (character.UserId != userId)
+                {
+                    throw new UnauthorizedException($"User {userId} is not the owner of character {character.CharacterId}");
+                }
+
+                character.CampaignId = model.CampaignId;
 
                 int changes = await db.SaveChangesAsync();
                 return changes == 1;

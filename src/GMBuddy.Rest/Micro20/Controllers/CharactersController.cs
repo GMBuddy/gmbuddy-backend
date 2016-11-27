@@ -3,9 +3,11 @@ using System.Threading.Tasks;
 using GMBuddy.Exceptions;
 using GMBuddy.Games.Micro20.GameService;
 using GMBuddy.Games.Micro20.InputModels;
+using GMBuddy.Games.Micro20.OutputModels;
 using GMBuddy.Rest.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 
 namespace GMBuddy.Rest.Micro20.Controllers
 {
@@ -116,6 +118,53 @@ namespace GMBuddy.Rest.Micro20.Controllers
                 logger.LogInformation($"User {userId} tried to modify {model.CharacterId} but was not authorized to do so");
                 return Unauthorized();
             }
+            catch (DataNotFoundException)
+            {
+                logger.LogInformation($"Could not modify non-existent character {model.CharacterId}");
+                return NotFound();
+            }
+        }
+
+        /// <summary>
+        /// This is a workaround to allow CampaignId to be explicitly reassigned to null,
+        /// which is not allowed with normal character modification
+        /// </summary>
+        [HttpPut("{CharacterId}/CampaignId")]
+        public async Task<IActionResult> ModifyCharacterCampaign(Guid characterId, [FromBody] CharacterCampaignModification model, bool updateSockets = true)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            string userId = users.GetUserId();
+
+            try
+            {
+                bool differentCampaign = false;
+                if (updateSockets)
+                {
+                    var character = await games.GetCharacter(characterId, userId);
+                }
+
+                bool changed = await games.ModifyCharacterCampaign(characterId, model, userId);
+                if (updateSockets && changed)
+                {
+                    await sockets.Leave();
+                }
+            }
+            catch (UnauthorizedException)
+            {
+                logger.LogInformation($"User {userId} tried to modify {characterId} but was not authorized to do so");
+                return Unauthorized();
+            }
+            catch (DataNotFoundException)
+            {
+                logger.LogInformation($"Could not modify non-existent character {characterId}");
+                return NotFound();
+            }
+
+            return NoContent();
         }
     }
 }
