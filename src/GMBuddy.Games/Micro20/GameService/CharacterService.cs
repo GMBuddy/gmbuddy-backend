@@ -55,14 +55,15 @@ namespace GMBuddy.Games.Micro20.GameService
         /// <summary>
         /// Modifies a character with any CharacterModification fields that are not null
         /// </summary>
+        /// <param name="characterId">The character ID of the character to update</param>
         /// <param name="model">The parameters to update</param>
         /// <param name="userId">Ensures that the given user is allowed to modify the character</param>
-        /// <param name="shouldValidate">If shouldValidate = true and the given model isnt valid</param>
+        /// <param name="shouldValidate">Whether or not to explicitly validate the DataAnnotations of the model</param>
         /// <exception cref="ArgumentNullException">If model is empty</exception>
         /// <exception cref="ValidationException">If shouldValidate = true and model is invalid</exception>
         /// <exception cref="UnauthorizedException">If the character modification is valid but the user is not allowed to make that modification</exception>
         /// <returns>True if the any properties were changed, false otherwise</returns>
-        public async Task<bool> ModifyCharacter(CharacterModification model, string userId, bool shouldValidate = false)
+        public async Task<bool> ModifyCharacter(Guid characterId, CharacterModification model, string userId, bool shouldValidate = false)
         {
             if (model == null || string.IsNullOrWhiteSpace(userId))
             {
@@ -76,7 +77,7 @@ namespace GMBuddy.Games.Micro20.GameService
 
             using (var db = new DatabaseContext(options))
             {
-                var character = await db.Characters.SingleOrDefaultAsync(c => c.CharacterId == model.CharacterId);
+                var character = await db.Characters.SingleOrDefaultAsync(c => c.CharacterId == characterId);
                 if (character == null)
                 {
                     throw new DataNotFoundException("Could not find the character given by CharacterId");

@@ -87,7 +87,7 @@ namespace GMBuddy.Rest.Micro20.Controllers
         }
 
         [HttpPut("{CharacterId}")]
-        public async Task<IActionResult> ModifyCharacter(CharacterModification model, bool updateSockets = true)
+        public async Task<IActionResult> ModifyCharacter(Guid characterId, CharacterModification model, bool updateSockets = true)
         {
             if (!ModelState.IsValid)
             {
@@ -98,29 +98,24 @@ namespace GMBuddy.Rest.Micro20.Controllers
 
             try
             {
-                await games.ModifyCharacter(model, userId);
+                bool changed = await games.ModifyCharacter(characterId, model, userId);
 
-                if (updateSockets)
+                if (updateSockets && changed)
                 {
-                    // var sheet = games.GetCharacter(model.CharacterId.Value, userId);
-                    // await sockets.Emit("campaignId", "character/FETCH", sheet);
-                    logger.LogInformation("Updating sockets");
-                }
-                else
-                {
-                    logger.LogInformation("Not updating sockets");
+                    var sheet = await games.GetCharacter(characterId, userId);
+                    await sockets.Emit(sheet.Details.CampaignId.ToString(), SocketActions.UpdatedCharacter, sheet);
                 }
 
                 return NoContent();
             }
             catch (UnauthorizedException)
             {
-                logger.LogInformation($"User {userId} tried to modify {model.CharacterId} but was not authorized to do so");
+                logger.LogInformation($"User {userId} tried to modify {characterId} but was not authorized to do so");
                 return Unauthorized();
             }
             catch (DataNotFoundException)
             {
-                logger.LogInformation($"Could not modify non-existent character {model.CharacterId}");
+                logger.LogInformation($"Could not modify non-existent character {characterId}");
                 return NotFound();
             }
         }
@@ -141,16 +136,17 @@ namespace GMBuddy.Rest.Micro20.Controllers
 
             try
             {
-                bool differentCampaign = false;
+                Guid? oldCampaignId = null;
                 if (updateSockets)
                 {
                     var character = await games.GetCharacter(characterId, userId);
+                    oldCampaignId = character.Details.CampaignId;
                 }
 
                 bool changed = await games.ModifyCharacterCampaign(characterId, model, userId);
-                if (updateSockets && changed)
+                if (updateSockets && changed && oldCampaignId != null)
                 {
-                    await sockets.Leave();
+                    await sockets.Leave(oldCampaignId.ToString());
                 }
             }
             catch (UnauthorizedException)

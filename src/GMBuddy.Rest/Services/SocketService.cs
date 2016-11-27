@@ -8,6 +8,13 @@ using Newtonsoft.Json;
 
 namespace GMBuddy.Rest.Services
 {
+    public static class SocketActions
+    {
+        public static string UpdatedCharacter = "character/FETCH";
+
+        public static string UpdatedCampaign = "campaign/FETCH";
+    }
+
     public interface ISocketService
     {
         /// <summary>
@@ -40,6 +47,12 @@ namespace GMBuddy.Rest.Services
 
         public async Task Emit(string campaignId, string action, object data)
         {
+            if (string.IsNullOrEmpty(campaignId) || string.IsNullOrEmpty(action))
+            {
+                logger.LogWarning("Can not emit message for null campaign or action");
+                return;
+            }
+
             string encodedAction = Uri.EscapeDataString(action);
             string encodedCampaign = Uri.EscapeDataString(campaignId);
             string encodedData = JsonConvert.SerializeObject(data);
