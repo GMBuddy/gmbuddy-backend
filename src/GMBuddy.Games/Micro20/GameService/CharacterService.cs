@@ -108,7 +108,7 @@ namespace GMBuddy.Games.Micro20.GameService
         /// Modifies character campaign to the given new value
         /// </summary>
         /// <param name="characterId"></param>
-        /// <param name="model"></param>
+        /// <param name="newCampaignId"></param>
         /// <param name="userId"></param>
         /// <param name="shouldValidate"></param>
         /// <exception cref="ArgumentException"></exception>
@@ -116,17 +116,11 @@ namespace GMBuddy.Games.Micro20.GameService
         /// <exception cref="DataNotFoundException"></exception>
         /// <exception cref="UnauthorizedException"></exception>
         /// <returns>Whether or not the model was changed</returns>
-        public async Task<bool> ModifyCharacterCampaign(Guid characterId, CharacterCampaignModification model, string userId,
-            bool shouldValidate = false)
+        public async Task<bool> ModifyCharacterCampaign(Guid characterId, Guid? newCampaignId, string userId)
         {
-            if (model == null || string.IsNullOrEmpty(userId))
+            if (string.IsNullOrEmpty(userId))
             {
-                throw new ArgumentException("Invalid parameters");
-            }
-
-            if (shouldValidate)
-            {
-                Validator.ValidateObject(model, new ValidationContext(model), true);
+                throw new ArgumentException("Invalid parameters", nameof(userId));
             }
 
             using (var db = new DatabaseContext(options))
@@ -142,7 +136,7 @@ namespace GMBuddy.Games.Micro20.GameService
                     throw new UnauthorizedException($"User {userId} is not the owner of character {character.CharacterId}");
                 }
 
-                character.CampaignId = model.CampaignId;
+                character.CampaignId = newCampaignId;
 
                 int changes = await db.SaveChangesAsync();
                 return changes == 1;

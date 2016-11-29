@@ -48,12 +48,12 @@ namespace GMBuddy.Games.Test.Micro20.Characters
 
             try
             {
-                var m1 = new CharacterModification { CharacterId = character.CharacterId, Dexterity = 12 };
-                result = await games.ModifyCharacter(m1, userId, true);
+                var m1 = new CharacterModification { Dexterity = 12 };
+                result = await games.ModifyCharacter(character.CharacterId, m1, userId, true);
                 Assert.True(result);
                 
-                var m2 = new CharacterModification { CharacterId = character.CharacterId, HairColor = hairColor };
-                result = await games.ModifyCharacter(m2, userId, true);
+                var m2 = new CharacterModification { HairColor = hairColor };
+                result = await games.ModifyCharacter(character.CharacterId, m2, userId, true);
                 Assert.True(result);
             }
             catch (Exception e) when (e is DataNotFoundException || e is ValidationException)

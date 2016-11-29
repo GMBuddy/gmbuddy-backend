@@ -3,11 +3,9 @@ using System.Threading.Tasks;
 using GMBuddy.Exceptions;
 using GMBuddy.Games.Micro20.GameService;
 using GMBuddy.Games.Micro20.InputModels;
-using GMBuddy.Games.Micro20.OutputModels;
 using GMBuddy.Rest.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
 
 namespace GMBuddy.Rest.Micro20.Controllers
 {
@@ -86,7 +84,7 @@ namespace GMBuddy.Rest.Micro20.Controllers
             }
         }
 
-        [HttpPut("{CharacterId}")]
+        [HttpPut("{characterId}")]
         public async Task<IActionResult> ModifyCharacter(Guid characterId, CharacterModification model, bool updateSockets = true)
         {
             if (!ModelState.IsValid)
@@ -124,7 +122,7 @@ namespace GMBuddy.Rest.Micro20.Controllers
         /// This is a workaround to allow CampaignId to be explicitly reassigned to null,
         /// which is not allowed with normal character modification
         /// </summary>
-        [HttpPut("{CharacterId}/CampaignId")]
+        [HttpPut("{characterId}/campaign")]
         public async Task<IActionResult> ModifyCharacterCampaign(Guid characterId, [FromBody] CharacterCampaignModification model, bool updateSockets = true)
         {
             if (!ModelState.IsValid)
@@ -136,18 +134,16 @@ namespace GMBuddy.Rest.Micro20.Controllers
 
             try
             {
-                Guid? oldCampaignId = null;
-                if (updateSockets)
-                {
-                    var character = await games.GetCharacter(characterId, userId);
-                    oldCampaignId = character.Details.CampaignId;
-                }
+                var character = await games.GetCharacter(characterId, userId);
+                var oldCampaignId = character.Details.CampaignId;
 
-                bool changed = await games.ModifyCharacterCampaign(characterId, model, userId);
+                bool changed = await games.ModifyCharacterCampaign(characterId, model.CampaignId, userId);
                 if (updateSockets && changed && oldCampaignId != null)
                 {
                     await sockets.Leave(oldCampaignId.ToString());
                 }
+
+                return Ok(character);
             }
             catch (UnauthorizedException)
             {
@@ -159,8 +155,6 @@ namespace GMBuddy.Rest.Micro20.Controllers
                 logger.LogInformation($"Could not modify non-existent character {characterId}");
                 return NotFound();
             }
-
-            return NoContent();
         }
     }
 }

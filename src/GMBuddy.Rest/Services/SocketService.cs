@@ -3,8 +3,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace GMBuddy.Rest.Services
 {
@@ -36,13 +36,13 @@ namespace GMBuddy.Rest.Services
     {
         private readonly HttpClient httpClient;
         private readonly ILogger<SocketService> logger;
-        private readonly IHttpContextAccessor httpContext;
+        private readonly IUserService userService;
 
-        public SocketService(ILoggerFactory loggerFactory, IHttpContextAccessor context)
+        public SocketService(ILoggerFactory loggerFactory, IUserService userService)
         {
             httpClient = new HttpClient();
             logger = loggerFactory.CreateLogger<SocketService>();
-            httpContext = context;
+            this.userService = userService;
         }
 
         public async Task Emit(string campaignId, string action, object data)
@@ -53,23 +53,58 @@ namespace GMBuddy.Rest.Services
                 return;
             }
 
-            string encodedAction = Uri.EscapeDataString(action);
-            string encodedCampaign = Uri.EscapeDataString(campaignId);
-            string encodedData = JsonConvert.SerializeObject(data);
-            var uri = new Uri($"http://localhost:4000/emit/{encodedCampaign}/{encodedAction}");
+            // ASP.NET Core automatically camelCases JSON responses, but we have to do so manually
+            string encodedData = JsonConvert.SerializeObject(new
+            {
+                Data = data,
+                CampaignId = campaignId,
+                Action = action
+            }, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
+            var uri = new Uri("http://localhost:4000/emit");
             var content = new StringContent(encodedData, Encoding.UTF8, "application/json");
-            var response = await httpClient.PostAsync(uri, content);
-
-            LogResponse(response, nameof(Emit));
+            try
+            {
+                var response = await httpClient.PutAsync(uri, content);
+                LogResponse(response, nameof(Emit));
+            }
+            catch (HttpRequestException)
+            {
+                logger.LogError("Exception thrown by HTTP request to socket server");
+            }
         }
 
         public async Task Leave(string campaignId)
         {
-            string encodedCampaign = Uri.EscapeDataString(campaignId);
-            var uri = new Uri($"http://localhost:4000/leave/{encodedCampaign}");
-            var response = await httpClient.PostAsync(uri, null);
+            if (string.IsNullOrEmpty(campaignId))
+            {
+                logger.LogWarning("Can not join null campaign");
+                return;
+            }
 
-            LogResponse(response, nameof(Leave));
+            // ASP.NET Core automatically camelCases JSON responses, but we have to do so manually
+            string userId = userService.GetUserId();
+            string encodedData = JsonConvert.SerializeObject(new
+            {
+                CampaignId = campaignId,
+                UserId = userId
+            }, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
+            var uri = new Uri("http://localhost:4000/leave");
+            var content = new StringContent(encodedData, Encoding.UTF8, "application/json");
+            try
+            {
+                var response = await httpClient.PutAsync(uri, content);
+                LogResponse(response, nameof(Leave));
+            }
+            catch (HttpRequestException)
+            {
+                logger.LogError("Exception thrown by HTTP request to socket server");
+            }
         }
 
         private void LogResponse(HttpResponseMessage response, string action)

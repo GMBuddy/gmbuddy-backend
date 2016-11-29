@@ -13,20 +13,28 @@ app.use(morgan('combined'));
 app.use(express.static('static'));
 app.use(bodyParser.json());
 
-app.post('/leave/:userId/:campaignId', (req, res) => {
+app.put('/leave', (req, res) => {
     eventHub.emit('leave', {
-        userId: req.params.userId,
-        campaignId: req.params.campaignId
+        userId: req.body.userId,
+        campaignId: req.body.campaignId
     });
 
     res.status(204).send();
 });
 
-app.post('/emit/:campaignId/:action', (req, res) => {
+app.put('/emit', (req, res) => {
+    console.log(`EMIT: action ${req.body.action} triggered for campaign ${req.body.campaignId} with the following payload`);
+    console.log(req.body.data);
+
     // send the message down to the players in the relevant room
-    io.sockets.to(req.params.campaignId).emit(req.params.action, req.body);
+    io.sockets.to(req.body.campaignId).emit(req.body.action, req.body.data);
 
     res.status(204).send();
+});
+
+// set up logging
+eventHub.on('leave', (data) => {
+    console.log(`LEAVE: user ${data.userId} leaving campaign ${data.camapignId}`);
 });
 
 // Upon connection, try to authenticate the request and join the user's rooms
@@ -46,6 +54,10 @@ io.on('connection', (socket) => {
         if (!userId) {
             throw new Error('Token does not contain sub property');
         }
+
+        if (!campaignId) {
+            throw new Error('Must include campaignId in query string');
+        }
     } catch (err) {
         console.error('Request did not contain valid token. Disconnecting...');
         socket.disconnect(true);
@@ -54,7 +66,7 @@ io.on('connection', (socket) => {
 
     // register event listeners
     eventHub.on('leave', (data) => {
-        if (data.userId.localeCompare(userId) === 0 && data.camapignId.localeCompare(campaignId) === 0) {
+        if (data.userId.localeCompare(userId) === 0 && data.campaignId.localeCompare(campaignId) === 0) {
             console.log(`Leaving campaign ${campaignId}`);
             socket.leave(campaignId, (err) => {
                 if (err) {
@@ -63,20 +75,6 @@ io.on('connection', (socket) => {
                 }
 
                 console.log(`Left room ${campaignId}`);
-            });
-        }
-    });
-
-    eventHub.on('join', (data) => {
-        if (data.userId.localeCompare(userId) === 0 && data.camapignId.localeCompare(campaignId) === 0) {
-            console.log(`Joining campaign ${campaignId}`);
-            socket.join(campaignId, (err) => {
-                if (err) {
-                    console.log(`Error joining ${campaignId}`);
-                    return;
-                }
-
-                console.log(`Joined room ${campaignId}`);
             });
         }
     });
@@ -97,9 +95,14 @@ io.on('connection', (socket) => {
             return;
         }
         
-        eventHub.emit('join', {
-            userId,
-            campaignId
+        console.log(`Joining campaign ${campaignId}`);
+        socket.join(campaignId, (err) => {
+            if (err) {
+                console.log(`Error joining ${campaignId}`);
+                return;
+            }
+
+            console.log(`Joined room ${campaignId}`);
         });
     });
 });
