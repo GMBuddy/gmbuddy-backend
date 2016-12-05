@@ -101,49 +101,10 @@ namespace GMBuddy.Rest.Micro20.Controllers
                 if (updateSockets && changed)
                 {
                     var sheet = await games.GetCharacter(characterId, userId);
-                    await sockets.Emit(sheet.Details.CampaignId.ToString(), SocketActions.UpdatedCharacter, sheet);
+                    await sockets.SendCharacter(sheet);
                 }
 
                 return NoContent();
-            }
-            catch (UnauthorizedException)
-            {
-                logger.LogInformation($"User {userId} tried to modify {characterId} but was not authorized to do so");
-                return Unauthorized();
-            }
-            catch (DataNotFoundException)
-            {
-                logger.LogInformation($"Could not modify non-existent character {characterId}");
-                return NotFound();
-            }
-        }
-
-        /// <summary>
-        /// This is a workaround to allow CampaignId to be explicitly reassigned to null,
-        /// which is not allowed with normal character modification
-        /// </summary>
-        [HttpPut("{characterId}/campaign")]
-        public async Task<IActionResult> ModifyCharacterCampaign(Guid characterId, [FromBody] CharacterCampaignModification model, bool updateSockets = true)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            string userId = users.GetUserId();
-
-            try
-            {
-                var character = await games.GetCharacter(characterId, userId);
-                var oldCampaignId = character.Details.CampaignId;
-
-                bool changed = await games.ModifyCharacterCampaign(characterId, model.CampaignId, userId);
-                if (updateSockets && changed && oldCampaignId != null)
-                {
-                    await sockets.Leave(oldCampaignId.ToString());
-                }
-
-                return Ok(character);
             }
             catch (UnauthorizedException)
             {

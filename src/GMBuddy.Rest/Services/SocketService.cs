@@ -2,29 +2,28 @@ using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using GMBuddy.Games.Micro20.OutputModels;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 namespace GMBuddy.Rest.Services
 {
-    public static class SocketActions
-    {
-        public static string UpdatedCharacter = "character/FETCH";
-
-        public static string UpdatedCampaign = "campaign/FETCH";
-    }
-
     public interface ISocketService
     {
         /// <summary>
-        /// Tries to send a message to the socket server, notifying it of new data for a given room
+        /// Tries to send a character model to the socket room for the given campaign
         /// </summary>
-        /// <param name="campaignId"></param>
-        /// <param name="action"></param>
-        /// <param name="data"></param>
+        /// <param name="sheet"></param>
         /// <returns></returns>
-        Task Emit(string campaignId, string action, object data);
+        Task SendCharacter(CharacterSheet sheet);
+
+        /// <summary>
+        /// Tries to send a campaign model to the socket room for that campaign
+        /// </summary>
+        /// <param name="campaign"></param>
+        /// <returns></returns>
+        Task SendCampaign(CampaignView campaign);
 
         /// <summary>
         /// Tries to send a message to the socket server notifying it that the current user has left a campaign
@@ -38,6 +37,23 @@ namespace GMBuddy.Rest.Services
         private readonly ILogger<SocketService> logger;
         private readonly IUserService userService;
 
+        public const string UpdatedCharacter = "character/FETCH";
+        public const string UpdatedCampaign = "campaign/FETCH";
+
+        private class SocketData
+        {
+            private object Data { get; set; }
+            private Guid CampaignId { get; set; }
+            private string Action { get; set; }
+
+            public SocketData(object data, Guid campaignId, string action)
+            {
+                Data = data;
+                CampaignId = campaignId;
+                Action = action;
+            }
+        }
+
         public SocketService(ILoggerFactory loggerFactory, IUserService userService)
         {
             httpClient = new HttpClient();
@@ -45,21 +61,21 @@ namespace GMBuddy.Rest.Services
             this.userService = userService;
         }
 
-        public async Task Emit(string campaignId, string action, object data)
+        public async Task SendCharacter(CharacterSheet sheet)
         {
-            if (string.IsNullOrEmpty(campaignId) || string.IsNullOrEmpty(action))
+            if (sheet == null)
             {
-                logger.LogWarning("Can not emit message for null campaign or action");
+                throw new ArgumentException("Character must not be null", nameof(sheet));
+            }
+
+            if (sheet.Details.CampaignId == null)
+            {
+                logger.LogInformation($"Skipping socket update for character {sheet.Details.CharacterId} with null campaign");
                 return;
             }
 
             // ASP.NET Core automatically camelCases JSON responses, but we have to do so manually
-            string encodedData = JsonConvert.SerializeObject(new
-            {
-                Data = data,
-                CampaignId = campaignId,
-                Action = action
-            }, new JsonSerializerSettings
+            string encodedData = JsonConvert.SerializeObject(new SocketData(sheet, sheet.Details.CampaignId.Value, UpdatedCharacter), new JsonSerializerSettings
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             });
@@ -68,7 +84,32 @@ namespace GMBuddy.Rest.Services
             try
             {
                 var response = await httpClient.PutAsync(uri, content);
-                LogResponse(response, nameof(Emit));
+                LogResponse(response, nameof(SendCharacter));
+            }
+            catch (HttpRequestException)
+            {
+                logger.LogError("Exception thrown by HTTP request to socket server");
+            }
+        }
+
+        public async Task SendCampaign(CampaignView campaign)
+        {
+            if (campaign == null)
+            {
+                throw new ArgumentException("Character must not be null", nameof(campaign));
+            }
+
+            // ASP.NET Core automatically camelCases JSON responses, but we have to do so manually
+            string encodedData = JsonConvert.SerializeObject(new SocketData(campaign, campaign.CampaignId, UpdatedCampaign), new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
+            var uri = new Uri("http://localhost:4000/emit");
+            var content = new StringContent(encodedData, Encoding.UTF8, "application/json");
+            try
+            {
+                var response = await httpClient.PutAsync(uri, content);
+                LogResponse(response, nameof(SendCharacter));
             }
             catch (HttpRequestException)
             {

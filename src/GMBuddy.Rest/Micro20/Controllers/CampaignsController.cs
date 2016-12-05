@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using GMBuddy.Exceptions;
 using GMBuddy.Games.Micro20.GameService;
+using GMBuddy.Games.Micro20.InputModels;
 using GMBuddy.Rest.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -45,6 +46,13 @@ namespace GMBuddy.Rest.Micro20.Controllers
             {
                 return Unauthorized();
             }
+        }
+
+        [HttpPut("{campaignId}")]
+        public async Task<IActionResult> ModifyCampaign(Guid campaignId, CampaignModification model)
+        {
+            await Task.CompletedTask;
+            throw new NotImplementedException();
         }
 
         [HttpPost("")]

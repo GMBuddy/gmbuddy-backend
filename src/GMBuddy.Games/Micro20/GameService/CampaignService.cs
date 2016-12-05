@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GMBuddy.Exceptions;
 using GMBuddy.Games.Micro20.Data;
+using GMBuddy.Games.Micro20.InputModels;
 using GMBuddy.Games.Micro20.Models;
 using GMBuddy.Games.Micro20.OutputModels;
 using Microsoft.EntityFrameworkCore;
@@ -58,6 +59,75 @@ namespace GMBuddy.Games.Micro20.GameService
                 }
 
                 return new CampaignView(campaign);
+            }
+        }
+
+        public async Task<CampaignView> ModifyCampaign(Guid campaignId, string userId, CampaignModification model)
+        {
+            using (var db = new DatabaseContext(options))
+            {
+                var campaign = await db.Campaigns
+                    .Include(c => c.Characters)
+                    .SingleOrDefaultAsync(c => c.CampaignId == campaignId);
+
+                if (campaign == null)
+                {
+                    throw new DataNotFoundException($"Could not find campaign {campaignId}");
+                }
+
+                // GMs can add anyone and remove anyone
+                if (campaign.GmUserId == userId)
+                {
+                    int should = 0;
+
+                    foreach (var cid in model.AddCharacters)
+                    {
+                        var character = await db.Characters.SingleOrDefaultAsync(c => c.CharacterId == cid);
+
+                        if (character == null)
+                        {
+                            throw new DataNotFoundException($"Could not find character {cid}");
+                        }
+
+                        if (character.CampaignId != campaignId)
+                        {
+                            character.CampaignId = campaignId;
+                            should += 1;
+                        }
+                    }
+
+                    foreach (var cid in model.RemoveCharacters)
+                    {
+                        var character = await db.Characters.SingleOrDefaultAsync(c => c.CharacterId == cid);
+
+                        if (character == null)
+                        {
+                            throw new DataNotFoundException($"Could not find character {cid}");
+                        }
+
+                        if (character.CampaignId == campaignId)
+                        {
+                            character.CampaignId = null;
+                            should += 1;
+                        }
+                    }
+
+                    int actual = await db.SaveChangesAsync();
+                    if (actual != should)
+                    {
+                        throw new DataNotCreatedException("Error saving one or more of the updates");
+                    }
+                }
+                else if (campaign.Characters.Any(c => c.UserId == userId))
+                {
+                    
+                }
+
+                // ReSharper disable once SimplifyLinqExpression
+                if (campaign.GmUserId != userId && !campaign.Characters.Any(c => c.UserId == userId))
+                {
+                    throw new UnauthorizedException($"User {userId} does not have permission to access {campaignId}");
+                }
             }
         }
 

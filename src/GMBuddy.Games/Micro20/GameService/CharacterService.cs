@@ -105,45 +105,6 @@ namespace GMBuddy.Games.Micro20.GameService
         }
 
         /// <summary>
-        /// Modifies character campaign to the given new value
-        /// </summary>
-        /// <param name="characterId"></param>
-        /// <param name="newCampaignId"></param>
-        /// <param name="userId"></param>
-        /// <param name="shouldValidate"></param>
-        /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="ValidationException"></exception>
-        /// <exception cref="DataNotFoundException"></exception>
-        /// <exception cref="UnauthorizedException"></exception>
-        /// <returns>Whether or not the model was changed</returns>
-        public async Task<bool> ModifyCharacterCampaign(Guid characterId, Guid? newCampaignId, string userId)
-        {
-            if (string.IsNullOrEmpty(userId))
-            {
-                throw new ArgumentException("Invalid parameters", nameof(userId));
-            }
-
-            using (var db = new DatabaseContext(options))
-            {
-                var character = await db.Characters.SingleOrDefaultAsync(c => c.CharacterId == characterId);
-                if (character == null)
-                {
-                    throw new DataNotFoundException("Could not find the character given by CharacterId");
-                }
-
-                if (character.UserId != userId)
-                {
-                    throw new UnauthorizedException($"User {userId} is not the owner of character {character.CharacterId}");
-                }
-
-                character.CampaignId = newCampaignId;
-
-                int changes = await db.SaveChangesAsync();
-                return changes == 1;
-            }
-        }
-
-        /// <summary>
         /// Gets a list of character sheets for the given user's characters
         /// </summary>
         /// <param name="userId">The user requesting their characters</param>
