@@ -51,8 +51,16 @@ namespace GMBuddy.Rest.Micro20.Controllers
         [HttpPut("{campaignId}")]
         public async Task<IActionResult> ModifyCampaign(Guid campaignId, CampaignModification model)
         {
-            await Task.CompletedTask;
-            throw new NotImplementedException();
+            try
+            {
+                var campaign = await games.ModifyCampaign(campaignId, users.GetUserId(), model);
+                return Json(campaign);
+            }
+            catch (DataNotFoundException e)
+            {
+                logger.LogInformation(0, e, "Campaign or characters could not be found");
+                return NotFound();
+            }
         }
 
         [HttpPost("")]

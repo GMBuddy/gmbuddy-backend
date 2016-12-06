@@ -18,7 +18,9 @@
     },
     "Microsoft.EntityFrameworkCore.Sqlite": "1.0.1",
     "GMBuddy": "1.0.0-*",
-    "System.Linq": "4.1.0"
+    "System.Linq": "4.1.0",
+    "Microsoft.Extensions.Logging.Console": "1.0.0",
+    "Microsoft.Extensions.Logging.Debug": "1.0.0"
   },
 
   "tools": {
