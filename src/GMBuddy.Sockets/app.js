@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const request = require('request');
 const events = require('events');
+const cors = require('cors');
 
 const app = express();
 const io = socketio();
@@ -12,6 +13,8 @@ const eventHub = new events.EventEmitter();
 app.use(morgan('combined'));
 app.use(express.static('static'));
 app.use(bodyParser.json());
+app.use(cors());
+app.options('*', cors());
 io.set('origins', '*:*');
 
 app.put('/leave', (req, res) => {
@@ -108,8 +111,6 @@ io.on('connection', (socket) => {
     });
 });
 
-app.listen(4000, () => {
-    console.log('HTTP server running on port 4000');
-});
-
-io.listen(4001);
+io.listen(app.listen(4000, () => {
+    console.log('Server started on port 4000');
+}));
