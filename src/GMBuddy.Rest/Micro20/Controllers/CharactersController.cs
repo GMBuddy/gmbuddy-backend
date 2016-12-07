@@ -35,9 +35,10 @@ namespace GMBuddy.Rest.Micro20.Controllers
                 var result = await games.ListCharacters(userId);
                 return Json(result);
             }
-            catch (ArgumentNullException)
+            catch (Exception e) when (e is ArgumentNullException || e is UnauthorizedException)
             {
-                return Unauthorized();
+                logger.LogInformation(0, e, "Could not list characters");
+                return Forbid();
             }
         }
 
@@ -57,7 +58,7 @@ namespace GMBuddy.Rest.Micro20.Controllers
             }
             catch (DataNotCreatedException e)
             {
-                logger.LogInformation("Could not create character");
+                logger.LogWarning(0, e, "Could not create character");
                 return BadRequest(new { Error = e.Message });
             }
         }
@@ -72,15 +73,15 @@ namespace GMBuddy.Rest.Micro20.Controllers
                 var sheet = await games.GetCharacter(characterId, userId);
                 return Json(sheet);
             }
-            catch (DataNotFoundException)
+            catch (DataNotFoundException e)
             {
-                logger.LogInformation($"Could not find character {characterId}");
+                logger.LogInformation(0, e, $"Could not find character {characterId}");
                 return NotFound();
             }
-            catch (UnauthorizedException)
+            catch (UnauthorizedException e)
             {
-                logger.LogInformation($"User {userId} tried to modify {characterId} but was not authorized to do so");
-                return Unauthorized();
+                logger.LogInformation(0, e, $"User {userId} tried to modify {characterId} but was not authorized to do so");
+                return Forbid();
             }
         }
 
@@ -106,14 +107,14 @@ namespace GMBuddy.Rest.Micro20.Controllers
 
                 return NoContent();
             }
-            catch (UnauthorizedException)
+            catch (UnauthorizedException e)
             {
-                logger.LogInformation($"User {userId} tried to modify {characterId} but was not authorized to do so");
-                return Unauthorized();
+                logger.LogInformation(0, e, $"User {userId} tried to modify {characterId} but was not authorized to do so");
+                return Forbid();
             }
-            catch (DataNotFoundException)
+            catch (DataNotFoundException e)
             {
-                logger.LogInformation($"Could not modify non-existent character {characterId}");
+                logger.LogInformation(0, e, $"Could not modify non-existent character {characterId}");
                 return NotFound();
             }
         }

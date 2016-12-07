@@ -46,7 +46,7 @@ namespace GMBuddy.Rest.Micro20.Controllers
             }
             catch (UnauthorizedException)
             {
-                return Unauthorized();
+                return Forbid();
             }
         }
 

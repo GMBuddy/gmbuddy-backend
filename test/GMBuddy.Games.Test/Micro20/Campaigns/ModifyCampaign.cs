@@ -14,214 +14,219 @@ namespace GMBuddy.Games.Test.Micro20.Campaigns
 {
     public class ModifyCampaign
     {
+        /// <summary>
+        /// Ensures that a GM can add any characters to a campaign that they are the GM of
+        /// </summary>
         [Fact]
         public async Task GM_AddCharacters()
         {
             // Arrange
             var options = DatabaseSetup.CreateContextOptions();
-            string userId = new Guid().ToString();
+            const string gm = "User1";
+            const string pleb = "User2";
             var games = new GameService(options);
-            var cam1 = await games.AddCampaign("A campaign", userId);
-            var cam2 = await games.AddCampaign("Another campaign", userId);
-            var char1 = await games.CreateCharacter(new NewCharacter
-            {
-                Name = "char1",
-                Strength = 10,
-                Dexterity = 10,
-                Mind = 10,
-                CampaignId = cam1.CampaignId,
-                Class = Micro20ClassType.Fighter,
-                Race = Micro20RaceType.Human
-            }, userId);
-            var char2 = await games.CreateCharacter(new NewCharacter
-            {
-                Name = "char2",
-                Strength = 10,
-                Dexterity = 10,
-                Mind = 10,
-                CampaignId = null,
-                Class = Micro20ClassType.Fighter,
-                Race = Micro20RaceType.Human
-            }, userId);
-            var char3 = await games.CreateCharacter(new NewCharacter
-            {
-                Name = "char3",
-                Strength = 10,
-                Dexterity = 10,
-                Mind = 10,
-                CampaignId = cam2.CampaignId,
-                Class = Micro20ClassType.Fighter,
-                Race = Micro20RaceType.Human
-            }, userId);
+            var user1Campaigns = await InsertTestCampaigns(options, gm);
+            var campaign = user1Campaigns.First();
+            var characters = new List<Character>();
+            characters.AddRange(await InsertTestCharacters(options, campaign.CampaignId, gm));
+            characters.AddRange(await InsertTestCharacters(options, campaign.CampaignId, pleb));
+            var lonelyCharacters = characters.Where(c => c.CampaignId == null).ToList();
 
             // Act
-            var change = await games.ModifyCampaign(cam1.CampaignId, userId, new CampaignModification
+            // lonelyCharacters will contain two characters with null campaigns, only one belongs to pleb
+            var change = await games.ModifyCampaign(campaign.CampaignId, gm, new CampaignModification
             {
-                Name = "Modified campaign",
-                AddCharacters = new List<Guid> {char2, char3}
+                AddCharacters = lonelyCharacters.Select(c => c.CharacterId).ToList()
             });
 
             // Assert
             using (var db = new DatabaseContext(options))
             {
                 // characters got moved to new campaign
-                var cam1Chars = await db.Characters.Where(c => c.CampaignId == cam1.CampaignId).ToListAsync();
-                Assert.Equal(3, cam1Chars.Count);
+                var camChars = await db.Characters.Where(c => c.CampaignId == campaign.CampaignId).ToListAsync();
+                Assert.Equal(4, camChars.Count);
 
                 // characters were removed from past campaigns
-                var cam2Chars = await db.Characters.Where(c => c.CampaignId == cam2.CampaignId).ToListAsync();
                 var nullChars = await db.Characters.Where(c => c.CampaignId == null).ToListAsync();
-                Assert.Equal(0, cam2Chars.Count);
                 Assert.Equal(0, nullChars.Count);
 
-                // Name gets modified
-                string cam1Name = (await db.Campaigns.SingleAsync(c => c.CampaignId == cam1.CampaignId)).Name;
-                Assert.Equal("Modified campaign", cam1Name);
+                // Name is not modified
+                string camName = (await db.Campaigns.SingleAsync(c => c.CampaignId == campaign.CampaignId)).Name;
+                Assert.Equal(campaign.Name, camName);
 
                 // correct view is returned
-                Assert.Equal(cam1Chars.First().CampaignId, change.CampaignId);
+                Assert.Equal(campaign.CampaignId, change.CampaignId);
             }
         }
 
+        /// <summary>
+        /// Ensures that a gm can remove any characters from a campaign that they are the GM of.
+        /// </summary>
         [Fact]
         public async Task GM_RemoveCharacters()
         {
             // Arrange
             var options = DatabaseSetup.CreateContextOptions();
-            string userId = new Guid().ToString();
+            const string gm = "User1";
+            const string pleb = "User2";
             var games = new GameService(options);
-            var cam1 = await games.AddCampaign("A campaign", userId);
-            var cam2 = await games.AddCampaign("Another campaign", userId);
-            var char1 = await games.CreateCharacter(new NewCharacter
-            {
-                Name = "char1",
-                Strength = 10,
-                Dexterity = 10,
-                Mind = 10,
-                CampaignId = cam1.CampaignId,
-                Class = Micro20ClassType.Fighter,
-                Race = Micro20RaceType.Human
-            }, userId);
-            var char2 = await games.CreateCharacter(new NewCharacter
-            {
-                Name = "char2",
-                Strength = 10,
-                Dexterity = 10,
-                Mind = 10,
-                CampaignId = null,
-                Class = Micro20ClassType.Fighter,
-                Race = Micro20RaceType.Human
-            }, userId);
-            var char3 = await games.CreateCharacter(new NewCharacter
-            {
-                Name = "char3",
-                Strength = 10,
-                Dexterity = 10,
-                Mind = 10,
-                CampaignId = cam2.CampaignId,
-                Class = Micro20ClassType.Fighter,
-                Race = Micro20RaceType.Human
-            }, userId);
+            var user1Campaigns = await InsertTestCampaigns(options, gm);
+            var campaign = user1Campaigns.First();
+            var characters = new List<Character>();
+            characters.AddRange(await InsertTestCharacters(options, campaign.CampaignId, gm));
+            characters.AddRange(await InsertTestCharacters(options, campaign.CampaignId, pleb));
+            var removals = characters.Where(c => c.CampaignId == campaign.CampaignId).ToList();
 
             // Act
-            var change = await games.ModifyCampaign(cam1.CampaignId, userId, new CampaignModification
+            // lonelyCharacters will contain two characters with null campaigns, only one belongs to pleb
+            var change = await games.ModifyCampaign(campaign.CampaignId, gm, new CampaignModification
             {
-                Name = "Modified campaign",
-                RemoveCharacters = new List<Guid> { char1, char2 }
+                RemoveCharacters = removals.Select(c => c.CharacterId).ToList()
             });
 
             // Assert
             using (var db = new DatabaseContext(options))
             {
                 // characters got moved to new campaign
-                var cam1Chars = await db.Characters.Where(c => c.CampaignId == cam1.CampaignId).ToListAsync();
-                Assert.Equal(0, cam1Chars.Count);
+                var camChars = await db.Characters.Where(c => c.CampaignId == campaign.CampaignId).ToListAsync();
+                Assert.Equal(0, camChars.Count);
 
                 // characters were removed from past campaigns
-                var cam2Chars = await db.Characters.Where(c => c.CampaignId == cam2.CampaignId).ToListAsync();
                 var nullChars = await db.Characters.Where(c => c.CampaignId == null).ToListAsync();
-                Assert.Equal(1, cam2Chars.Count);
-                Assert.Equal(2, nullChars.Count);
+                Assert.Equal(4, nullChars.Count);
 
-                // Name gets modified
-                string cam1Name = (await db.Campaigns.SingleAsync(c => c.CampaignId == cam1.CampaignId)).Name;
-                Assert.Equal("Modified campaign", cam1Name);
+                // Name is not modified
+                string camName = (await db.Campaigns.SingleAsync(c => c.CampaignId == campaign.CampaignId)).Name;
+                Assert.Equal(campaign.Name, camName);
 
                 // correct view is returned
-                Assert.Equal(cam1.CampaignId, change.CampaignId);
+                Assert.Equal(campaign.CampaignId, change.CampaignId);
             }
         }
 
+        /// <summary>
+        /// Ensures that a user can add their own characters to a campaign that they dont own.
+        /// Ensures that they can not add characters they dont own to a campaign.
+        /// Ensures that a campaign modification that does not intend to modify the name does not do so.
+        /// </summary>
         [Fact]
         public async Task User_AddCharacters()
         {
             // Arrange
             var options = DatabaseSetup.CreateContextOptions();
-            const string gm = "GM";
-            const string user1 = "User1";
-            const string user2 = "User2";
+            const string gm = "User1";
+            const string pleb = "User2";
             var games = new GameService(options);
-            var cam1 = await games.AddCampaign("A campaign", gm);
-            var cam2 = await games.AddCampaign("Another campaign", gm);
-            var char1 = await games.CreateCharacter(new NewCharacter
-            {
-                Name = "char1",
-                Strength = 10,
-                Dexterity = 10,
-                Mind = 10,
-                CampaignId = null,
-                Class = Micro20ClassType.Fighter,
-                Race = Micro20RaceType.Human
-            }, user1);
-            var char2 = await games.CreateCharacter(new NewCharacter
-            {
-                Name = "char2",
-                Strength = 10,
-                Dexterity = 10,
-                Mind = 10,
-                CampaignId = null,
-                Class = Micro20ClassType.Fighter,
-                Race = Micro20RaceType.Human
-            }, user1);
-            var char3 = await games.CreateCharacter(new NewCharacter
-            {
-                Name = "char3",
-                Strength = 10,
-                Dexterity = 10,
-                Mind = 10,
-                CampaignId = null,
-                Class = Micro20ClassType.Fighter,
-                Race = Micro20RaceType.Human
-            }, user2);
+            var user1Campaigns = await InsertTestCampaigns(options, gm);
+            var campaign = user1Campaigns.First();
+            var characters = new List<Character>();
+            characters.AddRange(await InsertTestCharacters(options, campaign.CampaignId, gm));
+            characters.AddRange(await InsertTestCharacters(options, campaign.CampaignId, pleb));
+            var lonelyCharacters = characters.Where(c => c.CampaignId == null).ToList();
 
             // Act
-
-            // user1 only owns char1 and char2, so the result of this will only add char2 to cam1
-            var change = await games.ModifyCampaign(cam1.CampaignId, user1, new CampaignModification
+            // lonelyCharacters will contain two characters with null campaigns, only one belongs to pleb
+            var change = await games.ModifyCampaign(campaign.CampaignId, pleb, new CampaignModification
             {
-                AddCharacters = new List<Guid> { char2, char3 }
+                AddCharacters = lonelyCharacters.Select(c => c.CharacterId).ToList()
             });
 
             // Assert
             using (var db = new DatabaseContext(options))
             {
                 // characters got moved to new campaign
-                var cam1Chars = await db.Characters.Where(c => c.CampaignId == cam1.CampaignId).ToListAsync();
-                Assert.Equal(1, cam1Chars.Count);
+                var camChars = await db.Characters.Where(c => c.CampaignId == campaign.CampaignId).ToListAsync();
+                Assert.Equal(3, camChars.Count);
 
                 // characters were removed from past campaigns
-                var cam2Chars = await db.Characters.Where(c => c.CampaignId == cam2.CampaignId).ToListAsync();
                 var nullChars = await db.Characters.Where(c => c.CampaignId == null).ToListAsync();
-                Assert.Equal(0, cam2Chars.Count);
-                Assert.Equal(2, nullChars.Count);
+                Assert.Equal(1, nullChars.Count);
 
-                // Name gets modified
-                string cam1Name = (await db.Campaigns.SingleAsync(c => c.CampaignId == cam1.CampaignId)).Name;
-                Assert.Equal("A campaign", cam1Name);
+                // Name is not modified
+                string camName = (await db.Campaigns.SingleAsync(c => c.CampaignId == campaign.CampaignId)).Name;
+                Assert.Equal(campaign.Name, camName);
 
                 // correct view is returned
-                Assert.Equal(cam1Chars.First().CampaignId, change.CampaignId);
+                Assert.Equal(campaign.CampaignId, change.CampaignId);
             }
+        }
+
+        /// <summary>
+        /// Adds two campaigns that the expectedUser is the GM of
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="expectedUser"></param>
+        /// <returns>The list of campaigns added</returns>
+        private async Task<List<Campaign>> InsertTestCampaigns(DbContextOptions options, string expectedUser = "A user")
+        {
+            var campaigns = new List<Campaign>
+            {
+                new Campaign
+                {
+                    Name = "A campaign",
+                    GmUserId = expectedUser
+                },
+                new Campaign
+                {
+                    Name = "Another campaign",
+                    GmUserId = expectedUser
+                }
+            };
+
+            using (var db = new DatabaseContext(options))
+            {
+                db.Campaigns.AddRange(campaigns);
+                int changes = await db.SaveChangesAsync();
+                Assert.Equal(2, changes);
+            }
+
+            return campaigns;
+        }
+
+        /// <summary>
+        /// Adds two characters to the database, one of which is assigned to the given campaign 
+        /// and both of which are assigned to the given user
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="campaignId"></param>
+        /// <param name="expectedUser"></param>
+        /// <returns>The list of characters added</returns>
+        private async Task<List<Character>> InsertTestCharacters(DbContextOptions options, Guid campaignId, string expectedUser = "A user")
+        {
+            var characters = new List<Character>
+            {
+                new Character
+                {
+                    BaseStrength = 10,
+                    BaseDexterity = 10,
+                    BaseMind = 10,
+                    Class = Micro20ClassType.Cleric,
+                    Race = Micro20RaceType.Dwarf,
+                    Level = 1,
+                    CampaignId = campaignId,
+                    UserId = expectedUser
+                },
+                new Character
+                {
+                    BaseStrength = 10,
+                    BaseDexterity = 10,
+                    BaseMind = 10,
+                    Class = Micro20ClassType.Cleric,
+                    Race = Micro20RaceType.Dwarf,
+                    Level = 1,
+                    CampaignId = null,
+                    UserId = expectedUser
+                }
+            };
+
+            using (var db = new DatabaseContext(options))
+            {
+                db.Characters.AddRange(characters);
+                int changes = await db.SaveChangesAsync();
+                Assert.Equal(2, changes);
+            }
+
+            return characters;
         }
     }
 }

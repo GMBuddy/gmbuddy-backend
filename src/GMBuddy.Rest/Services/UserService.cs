@@ -1,11 +1,18 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using GMBuddy.Exceptions;
 using Microsoft.AspNetCore.Http;
 
 namespace GMBuddy.Rest.Services
 {
     public interface IUserService
     {
+        /// <summary>
+        /// Gets the user ID of the currently signed in user
+        /// </summary>
+        /// <exception cref="UnauthorizedException"></exception>
+        /// <returns></returns>
         string GetUserId();
     }
 
@@ -20,7 +27,14 @@ namespace GMBuddy.Rest.Services
 
         public string GetUserId()
         {
-            return context.HttpContext.User.Claims.Single(c => c.Type == JwtRegisteredClaimNames.Sub).Value;
+            try
+            {
+                return context.HttpContext.User.Claims.Single(c => c.Type == JwtRegisteredClaimNames.Sub).Value;
+            }
+            catch (Exception e) when (e is NullReferenceException || e is InvalidOperationException)
+            {
+                throw new UnauthorizedException("User ID could not be retrieved", e);
+            }
         }
     }
 }
