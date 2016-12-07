@@ -106,7 +106,7 @@ namespace GMBuddy.Games.Micro20.GameService
                 character.CopperPieces = model.CopperPieces ?? character.CopperPieces;
                 character.SilverPieces = model.SilverPieces ?? character.SilverPieces;
                 character.GoldPieces = model.GoldPieces ?? character.GoldPieces;
-                character.Platinum = model.PlatinumPieces ?? character.PlatinumPieces;
+                character.PlatinumPieces = model.PlatinumPieces ?? character.PlatinumPieces;
 
 
                 int changes = await db.SaveChangesAsync();
@@ -178,7 +178,7 @@ namespace GMBuddy.Games.Micro20.GameService
         /// <exception cref="ValidationException">If shouldValidate = true and the given model is invalid</exception>
         /// <exception cref="DataNotCreatedException">If the item was not added to the database</exception>
         /// <returns>The item's ID</returns>
-        public async Task<Guid> CreateItem(NewCharacter model, bool shouldValidate = false)
+        public async Task<Guid> CreateItem(NewItem model, bool shouldValidate = false)
         {
             if (model == null)
             {
@@ -214,7 +214,7 @@ namespace GMBuddy.Games.Micro20.GameService
         /// <exception cref="ArgumentNullException">If model is empty</exception>
         /// <exception cref="ValidationException">If shouldValidate = true and model is invalid</exception>
         /// <returns>True if the any properties were changed, false otherwise</returns>
-        public async Task<bool> ModifyItem(CharacterModification model, bool shouldValidate = false)
+        public async Task<bool> ModifyItem(ItemModification model, bool shouldValidate = false)
         {
             if (model == null)
             {
@@ -304,11 +304,6 @@ namespace GMBuddy.Games.Micro20.GameService
         /// <returns></returns>
         public async Task<Item> GetItem(Guid itemId)
         {
-            if (string.IsNullOrWhiteSpace(itemId))
-            {
-                throw new ArgumentNullException(nameof(itemId), "Item ID invalid");
-            }
-
             using (var db = new DatabaseContext(options))
             {
                 var item = await db.Items.SingleOrDefaultAsync(i => i.ItemId == itemId);
@@ -330,7 +325,7 @@ namespace GMBuddy.Games.Micro20.GameService
         /// <exception cref="ValidationException">If shouldValidate = true and the given model is invalid</exception>
         /// <exception cref="DataNotCreatedException">If the spell was not added to the database</exception>
         /// <returns>The spell's ID</returns>
-        public async Task<Guid> CreateSpell(NewCharacter model, bool shouldValidate = false)
+        public async Task<Guid> CreateSpell(NewSpell model, bool shouldValidate = false)
         {
             if (model == null)
             {
@@ -380,16 +375,16 @@ namespace GMBuddy.Games.Micro20.GameService
 
             using (var db = new DatabaseContext(options))
             {
-                var spell = await db.Spell.SingleOrDefaultAsync(s => s.SpellId == model.SpellId);
+                var spell = await db.Spells.SingleOrDefaultAsync(s => s.SpellId == model.SpellId);
                 if (spell == null)
                 {
                     throw new DataNotFoundException("Could not find the spell given by spellId");
                 }
 
                 // update properties only if they are not null
-                item.Name = model.Name ?? item.Name;
-                item.School = model.School ?? item.School;
-                item.Level = model.Level ?? item.Level;
+                spell.Name = model.Name ?? spell.Name;
+                spell.School = model.School ?? spell.School;
+                spell.Level = model.Level ?? spell.Level;
 
                 int changes = await db.SaveChangesAsync();
                 return changes == 1;
@@ -400,7 +395,7 @@ namespace GMBuddy.Games.Micro20.GameService
         /// Gets a list of all the spells in the database
         /// </summary>
         /// <returns></returns>
-        public async Task<IEnumerable<Item>> ListSpells()
+        public async Task<IEnumerable<Spell>> ListSpells()
         {
             using (var db = new DatabaseContext(options))
             {
@@ -417,13 +412,8 @@ namespace GMBuddy.Games.Micro20.GameService
         /// <exception cref="ArgumentException">If spellId is null or empty</exception>
         /// <exception cref="DataNotFoundException">If the given spell can not be found</exception>
         /// <returns></returns>
-        public async Task<Item> GetSpell(Guid spellId)
+        public async Task<Spell> GetSpell(Guid spellId)
         {
-            if (string.IsNullOrWhiteSpace(spellId))
-            {
-                throw new ArgumentNullException(nameof(spellId), "Spell ID invalid");
-            }
-
             using (var db = new DatabaseContext(options))
             {
                 var spell = await db.Spells.SingleOrDefaultAsync(s => s.SpellId == spellId);

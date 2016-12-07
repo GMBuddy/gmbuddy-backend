@@ -12,6 +12,6 @@ namespace GMBuddy.Games.Micro20.InputModels
 
         public string School { get; set; }
 
-        public string Level { get; set; }
+        public int? Level { get; set; }
     }
 }

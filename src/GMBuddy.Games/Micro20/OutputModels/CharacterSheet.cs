@@ -100,7 +100,7 @@ namespace GMBuddy.Games.Micro20.OutputModels
         {
             get
             {
-                int rank = c.level;
+                int rank = c.Level;
                 if(c.Class == Micro20ClassType.Fighter)
                         rank += 3;
                 if(c.Race == Micro20RaceType.Human)
@@ -113,7 +113,7 @@ namespace GMBuddy.Games.Micro20.OutputModels
         {
             get
             {
-                int rank = c.level;
+                int rank = c.Level;
                 if(c.Class == Micro20ClassType.Rogue)
                         rank += 3;
                 if(c.Race == Micro20RaceType.Human)
@@ -126,7 +126,7 @@ namespace GMBuddy.Games.Micro20.OutputModels
         {
             get
             {
-                int rank = c.level;
+                int rank = c.Level;
                 if(c.Class == Micro20ClassType.Magi)
                         rank += 3;
                 if(c.Race == Micro20RaceType.Human)
@@ -139,7 +139,7 @@ namespace GMBuddy.Games.Micro20.OutputModels
         {
             get
             {
-                int rank = c.level;
+                int rank = c.Level;
                 if(c.Class == Micro20ClassType.Cleric)
                         rank += 3;
                 if(c.Race == Micro20RaceType.Human)

@@ -80,7 +80,7 @@ namespace GMBuddy.Rest.Micro20.Controllers
             {
                 return BadRequest(ModelState);
             }
-            await games.ModifySpell(model, userId);
+            await games.ModifySpell(model);
             return NoContent();
         }
     }

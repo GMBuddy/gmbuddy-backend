@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using GMBuddy.Games.Micro20.InputModels;
+using System.Collections.Generic;
 
 namespace GMBuddy.Games.Micro20.Models
 {
@@ -46,6 +47,13 @@ namespace GMBuddy.Games.Micro20.Models
             BaseCommunication = model.Communication;
             Race = model.Race;
             Class = model.Class;
+            Level = model.Level;
+            Experience = model.Experience;
+            Items = model.Items;
+            CopperPieces = model.CopperPieces;
+            SilverPieces = model.SilverPieces;
+            GoldPieces = model.GoldPieces;
+            PlatinumPieces = model.PlatinumPieces;
         }
 
         [Key]
@@ -107,23 +115,23 @@ namespace GMBuddy.Games.Micro20.Models
         public Micro20ClassType Class { get; set; }
 
         [Range(1, int.MaxValue)]
-        public int Level { get; set; } = 1;
+        public int Level { get; set; }
 
         [Range(0, int.MaxValue)]
-        public int Experience { get; set; } = 0;
+        public int Experience { get; set; }
 
         public ICollection<Item> Items { get; set; }
 
         [Range(0, int.MaxValue)]
-        public int CopperPieces { get; set; } = 0;
+        public int CopperPieces { get; set; }
 
         [Range(0, int.MaxValue)]
-        public int SilverPieces { get; set; } = 0;
+        public int SilverPieces { get; set; }
 
         [Range(0, int.MaxValue)]
-        public int GoldPieces { get; set; } = 0;
+        public int GoldPieces { get; set; }
 
         [Range(0, int.MaxValue)]
-        public int PlatinumPieces { get; set; } = 0;
+        public int PlatinumPieces { get; set; }
     }
 }

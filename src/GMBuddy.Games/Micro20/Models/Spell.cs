@@ -1,12 +1,25 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using GMBuddy.Games.Micro20.InputModels;
 
 namespace GMBuddy.Games.Micro20.Models
 {
     public class Spell
     {
+        public Spell()
+        {
+            
+        }
+
+        public Spell(NewSpell model)
+        {
+            Name = model.Name;
+            School = model.School;
+            Level = model.Level;
+        }
+     
         [Key]
-        public Guid SpellID { get; set; }
+        public Guid SpellId { get; set; }
 
         [Required]
         public string Name { get; set; }

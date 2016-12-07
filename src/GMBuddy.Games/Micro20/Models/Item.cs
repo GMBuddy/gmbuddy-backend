@@ -1,19 +1,36 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using GMBuddy.Games.Micro20.InputModels;
 
 namespace GMBuddy.Games.Micro20.Models
 {
+    public enum Micro20ItemType
+    {
+        Equipment,
+        Weapon,
+        Armor
+    }
+
     public class Item
     {
-        public enum Micro20ItemType
+        public Item()
         {
-            Equipment,
-            Weapon,
-            Armor
+            
+        }
+
+        public Item(NewItem model)
+        {
+            Name = model.Name;
+            Cost = model.Cost;
+            Description = model.Description;
+            ItemType = model.ItemType;
+            WeaponDamage = model.WeaponDamage;
+            WeaponRange = model.WeaponRange;
+            ArmorBonus = model.ArmorBonus;
         }
 
         [Key]
-        public Guid ItemID { get; set; }
+        public Guid ItemId { get; set; }
 
         [Required]
         public string Name { get; set; }

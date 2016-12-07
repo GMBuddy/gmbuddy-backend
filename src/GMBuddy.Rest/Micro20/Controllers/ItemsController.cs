@@ -14,7 +14,7 @@ namespace GMBuddy.Rest.Micro20.Controllers
     public class ItemsController : Controller
     {
         private readonly GameService games;
-        private readonly ILogger<CharactersController> logger;
+        private readonly ILogger<ItemsController> logger;
         private readonly IUserService users;
 
         public ItemsController(GameService games, ILoggerFactory loggerFactory, IUserService users)
@@ -80,7 +80,7 @@ namespace GMBuddy.Rest.Micro20.Controllers
             {
                 return BadRequest(ModelState);
             }
-            await games.ModifyItem(model, userId);
+            await games.ModifyItem(model);
             return NoContent();
         }
     }

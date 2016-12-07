@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using GMBuddy.Games.Micro20.Models;
+using System.Collections.Generic;
 
 namespace GMBuddy.Games.Micro20.InputModels
 {
@@ -47,5 +48,25 @@ namespace GMBuddy.Games.Micro20.InputModels
 
         [EnumDataType(typeof(Micro20ClassType))]
         public Micro20ClassType Class { get; set; }
+
+        [Range(1, int.MaxValue)]
+        public int Level { get; set; } = 1;
+
+        [Range(0, int.MaxValue)]
+        public int Experience { get; set; } = 0;
+
+        public ICollection<Item> Items { get; set; }
+
+        [Range(0, int.MaxValue)]
+        public int CopperPieces { get; set; } = 0;
+
+        [Range(0, int.MaxValue)]
+        public int SilverPieces { get; set; } = 0;
+
+        [Range(0, int.MaxValue)]
+        public int GoldPieces { get; set; } = 0;
+
+        [Range(0, int.MaxValue)]
+        public int PlatinumPieces { get; set; } = 0;
     }
 }

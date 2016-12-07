@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using GMBuddy.Games.Micro20.Models;
 
 namespace GMBuddy.Games.Micro20.InputModels
 {
@@ -50,15 +52,15 @@ namespace GMBuddy.Games.Micro20.InputModels
         public ICollection<Item> Items { get; set; }
 
         [Range(0, int.MaxValue)]
-        public int CopperPieces { get; set; }
+        public int? CopperPieces { get; set; }
 
         [Range(0, int.MaxValue)]
-        public int SilverPieces { get; set; }
+        public int? SilverPieces { get; set; }
 
         [Range(0, int.MaxValue)]
-        public int GoldPieces { get; set; }
+        public int? GoldPieces { get; set; }
 
         [Range(0, int.MaxValue)]
-        public int PlatinumPieces { get; set; }
+        public int? PlatinumPieces { get; set; }
     }
 }
