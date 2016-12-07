@@ -86,8 +86,10 @@ namespace GMBuddy.Games.Micro20.GameService
                     throw new DataNotFoundException($"Could not find campaign {campaignId}");
                 }
 
-                // only update the name if it is set, valid, and coming from the GM
-                if (!string.IsNullOrWhiteSpace(model.Name) && userId == campaign.GmUserId)
+                // only update the name if it is set, valid, coming from the GM, and different than the current name
+                if (!string.IsNullOrWhiteSpace(model.Name) 
+                    && userId == campaign.GmUserId 
+                    && campaign.Name != model.Name)
                 {
                     campaign.Name = model.Name;
                     int changes = await db.SaveChangesAsync();
@@ -107,7 +109,15 @@ namespace GMBuddy.Games.Micro20.GameService
                 await ModifyCampaignBasic(campaignId, userId, model);
             }
 
-            return new CampaignView(campaign);
+            // reload the updated campaign, the existing reference isnt updated
+            using (var db = new DatabaseContext(options))
+            {
+                campaign = await db.Campaigns
+                    .Include(c => c.Characters)
+                    .SingleAsync(c => c.CampaignId == campaignId);
+
+                return new CampaignView(campaign);
+            }
         }
 
         /// <summary>

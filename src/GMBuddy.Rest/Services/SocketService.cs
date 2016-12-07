@@ -40,18 +40,11 @@ namespace GMBuddy.Rest.Services
         public const string UpdatedCharacter = "character/FETCH";
         public const string UpdatedCampaign = "campaign/FETCH";
 
-        private class SocketData
+        private class EmitData
         {
-            private object Data { get; set; }
-            private Guid CampaignId { get; set; }
-            private string Action { get; set; }
-
-            public SocketData(object data, Guid campaignId, string action)
-            {
-                Data = data;
-                CampaignId = campaignId;
-                Action = action;
-            }
+            public object Data { get; set; }
+            public Guid CampaignId { get; set; }
+            public string Action { get; set; }
         }
 
         public SocketService(ILoggerFactory loggerFactory, IUserService userService)
@@ -75,7 +68,13 @@ namespace GMBuddy.Rest.Services
             }
 
             // ASP.NET Core automatically camelCases JSON responses, but we have to do so manually
-            string encodedData = JsonConvert.SerializeObject(new SocketData(sheet, sheet.Details.CampaignId.Value, UpdatedCharacter), new JsonSerializerSettings
+            var data = new EmitData
+            {
+                Action = UpdatedCharacter,
+                CampaignId = sheet.Details.CampaignId.Value,
+                Data = sheet
+            };
+            string encodedData = JsonConvert.SerializeObject(data, new JsonSerializerSettings
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             });
@@ -100,7 +99,13 @@ namespace GMBuddy.Rest.Services
             }
 
             // ASP.NET Core automatically camelCases JSON responses, but we have to do so manually
-            string encodedData = JsonConvert.SerializeObject(new SocketData(campaign, campaign.CampaignId, UpdatedCampaign), new JsonSerializerSettings
+            var data = new EmitData
+            {
+                Action = UpdatedCampaign,
+                CampaignId = campaign.CampaignId,
+                Data = campaign
+            };
+            string encodedData = JsonConvert.SerializeObject(data, new JsonSerializerSettings
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             });
