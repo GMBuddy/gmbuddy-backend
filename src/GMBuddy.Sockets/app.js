@@ -1,4 +1,4 @@
-const express = require('express');
+﻿const express = require('express');
 const socketio = require('socket.io');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
@@ -12,6 +12,7 @@ const eventHub = new events.EventEmitter();
 app.use(morgan('combined'));
 app.use(express.static('static'));
 app.use(bodyParser.json());
+io.set('origins', '*:*');
 
 app.put('/leave', (req, res) => {
     eventHub.emit('leave', {
@@ -85,7 +86,7 @@ io.on('connection', (socket) => {
         auth: {
             bearer: token
         },
-        json: true,
+        json: true
     }, (err, response, body) => {
         if (err || response.statusCode != 200) {
             // dont let unauthenticated hooligans connect to MY socket service!
@@ -94,7 +95,7 @@ io.on('connection', (socket) => {
             socket.disconnect(true);
             return;
         }
-        
+
         console.log(`Joining campaign ${campaignId}`);
         socket.join(campaignId, (err) => {
             if (err) {
