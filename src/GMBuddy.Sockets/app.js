@@ -88,7 +88,7 @@ io.on('connection', (socket) => {
         },
         json: true
     }, (err, response, body) => {
-        if (err || response.statusCode != 200) {
+        if (err || response.statusCode !== 200) {
             // dont let unauthenticated hooligans connect to MY socket service!
             console.error(`Error fetching campaign ${campaignId}`);
             console.error(err);
