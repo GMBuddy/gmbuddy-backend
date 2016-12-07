@@ -17,6 +17,14 @@ namespace GMBuddy.Games.Micro20.OutputModels
         public int Dexterity => c.BaseDexterity;
 
         public int Mind => c.BaseMind;
+
+        public int Physical => c.BasePhysical;
+
+        public int Subterfuge => c.BaseSubterfuge;
+
+        public int Knowledge => c.BaseKnowledge;
+
+        public int Communication => c.BaseCommunication;
     }
 
     /// <summary>
@@ -87,6 +95,58 @@ namespace GMBuddy.Games.Micro20.OutputModels
                 }
             }
         }
+
+        public int Physcial
+        {
+            get
+            {
+                int rank = c.level;
+                if(c.Class == Micro20ClassType.Fighter)
+                        rank += 3;
+                if(c.Race == Micro20RaceType.Human)
+                        rank += 2;
+                return rank;
+            }
+        }
+
+        public int Subterfuge
+        {
+            get
+            {
+                int rank = c.level;
+                if(c.Class == Micro20ClassType.Rogue)
+                        rank += 3;
+                if(c.Race == Micro20RaceType.Human)
+                        rank += 2;
+                return rank;
+            }
+        }
+
+        public int Knowledge
+        {
+            get
+            {
+                int rank = c.level;
+                if(c.Class == Micro20ClassType.Magi)
+                        rank += 3;
+                if(c.Race == Micro20RaceType.Human)
+                        rank += 2;
+                return rank;
+            }
+        }
+
+        public int Communication
+        {
+            get
+            {
+                int rank = c.level;
+                if(c.Class == Micro20ClassType.Cleric)
+                        rank += 3;
+                if(c.Race == Micro20RaceType.Human)
+                        rank += 2;
+                return rank;
+            }
+        }
     }
 
     public class Details
@@ -119,6 +179,8 @@ namespace GMBuddy.Games.Micro20.OutputModels
         public Micro20ClassType Class => c.Class;
 
         public int Level => c.Level;
+
+        public int Experience => c.Experience;
     }
 
     public class CharacterSheet

@@ -97,7 +97,17 @@ namespace GMBuddy.Games.Micro20.GameService
                 character.BaseStrength = model.Strength ?? character.BaseStrength;
                 character.BaseDexterity = model.Dexterity ?? character.BaseDexterity;
                 character.BaseMind = model.Mind ?? character.BaseMind;
-                character.Level = model.Level ?? character.Level;
+                character.Experience = model.Experience ?? character.Experience;
+                if(character.Experience >= 10 * character.Level){
+                    character.Experience -= 10 * character.Level;
+                    character.Level++;                 
+                }
+                character.Items = model.Items ?? character.Items; //is this how the front end team wants items to be modified, or should there be seperate methods for adding and removing an item from a character?
+                character.CopperPieces = model.CopperPieces ?? character.CopperPieces;
+                character.SilverPieces = model.SilverPieces ?? character.SilverPieces;
+                character.GoldPieces = model.GoldPieces ?? character.GoldPieces;
+                character.Platinum = model.PlatinumPieces ?? character.PlatinumPieces;
+
 
                 int changes = await db.SaveChangesAsync();
                 return changes == 1;
@@ -156,6 +166,273 @@ namespace GMBuddy.Games.Micro20.GameService
                 }
 
                 return new CharacterSheet(character); ;
+            }
+        }
+
+        /// <summary>
+        /// Creates a new item associated with all campaigns and characters
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="shouldValidate">Whether to explicitly validate the given model</param>
+        /// <exception cref="ArgumentNullException">If model is empty</exception>
+        /// <exception cref="ValidationException">If shouldValidate = true and the given model is invalid</exception>
+        /// <exception cref="DataNotCreatedException">If the item was not added to the database</exception>
+        /// <returns>The item's ID</returns>
+        public async Task<Guid> CreateItem(NewCharacter model, bool shouldValidate = false)
+        {
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model), "Item must not be null");
+            }
+
+            if (shouldValidate)
+            {
+                Validator.ValidateObject(model, new ValidationContext(model), true);
+            }
+
+            using (var db = new DatabaseContext(options))
+            {
+                var item = new Item(model);
+
+                db.Items.Add(item);
+
+                int changes = await db.SaveChangesAsync();
+                if (changes != 1)
+                {
+                    throw new DataNotCreatedException("Could not add item to database");
+                }
+
+                return item.ItemId;
+            }
+        }
+
+        /// <summary>
+        /// Modifies an item with the given ItemModification fields
+        /// </summary>
+        /// <param name="model">The parameters to update</param>
+        /// <param name="shouldValidate">If shouldValidate = true and the given model isnt valid</param>
+        /// <exception cref="ArgumentNullException">If model is empty</exception>
+        /// <exception cref="ValidationException">If shouldValidate = true and model is invalid</exception>
+        /// <returns>True if the any properties were changed, false otherwise</returns>
+        public async Task<bool> ModifyItem(CharacterModification model, bool shouldValidate = false)
+        {
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model), "The modifications must not be null");
+            }
+
+            if (shouldValidate)
+            {
+                Validator.ValidateObject(model, new ValidationContext(model), true);
+            }
+
+            using (var db = new DatabaseContext(options))
+            {
+                var item = await db.Items.SingleOrDefaultAsync(i => i.ItemId == model.ItemId);
+                if (item == null)
+                {
+                    throw new DataNotFoundException("Could not find the character given by itemId");
+                }
+
+                // update properties only if they are not null
+                item.Name = model.Name ?? item.Name;
+                item.Cost = model.Cost ?? item.Cost;
+                item.Description = model.Description ?? item.Description;
+                if(item.ItemType == Micro20ItemType.Weapon){
+                    item.WeaponDamage = model.WeaponDamage ?? item.WeaponDamage;
+                    item.WeaponRange = model.WeaponRange ?? item.WeaponRange;
+                }
+                else if(item.ItemType == Micro20ItemType.Armor){
+                    item.ArmorBonus = model.ArmorBonus ?? item.ArmorBonus;
+                }
+
+                int changes = await db.SaveChangesAsync();
+                return changes == 1;
+            }
+        }
+
+        /// <summary>
+        /// Gets a list of all the items in the database
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<Item>> ListItems()
+        {
+            using (var db = new DatabaseContext(options))
+            {
+                var items = await db.Items
+                    .ToListAsync();
+                return items;
+            }
+        }
+
+        /// <summary>
+        /// Gets a list of all the weapons in the database
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<Item>> ListWeapons()
+        {
+            using (var db = new DatabaseContext(options))
+            {
+                var items = await db.Items
+                    .Where(i => i.ItemType == Micro20ItemType.Equipment)
+                    .ToListAsync();
+                return items;
+            }
+        }
+
+        /// <summary>
+        /// Gets a list of all the equipment in the database
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<Item>> ListEquipment()
+        {
+            using (var db = new DatabaseContext(options))
+            {
+                var items = await db.Items
+                    .Where(i => i.ItemType == Micro20ItemType.Equipment)
+                    .ToListAsync();
+                return items;
+            }
+        }
+
+        /// <summary>
+        /// Gets the model of a specific item
+        /// </summary>
+        /// <param name="itemId"></param>
+        /// <exception cref="ArgumentException">If characterId is null or empty</exception>
+        /// <exception cref="DataNotFoundException">If the given character can not be found</exception>
+        /// <returns></returns>
+        public async Task<Item> GetItem(Guid itemId)
+        {
+            if (string.IsNullOrWhiteSpace(itemId))
+            {
+                throw new ArgumentNullException(nameof(itemId), "Item ID invalid");
+            }
+
+            using (var db = new DatabaseContext(options))
+            {
+                var item = await db.Items.SingleOrDefaultAsync(i => i.ItemId == itemId);
+                if (item == null)
+                {
+                    throw new DataNotFoundException("Item could not be found");
+                }
+
+                return item;
+            }
+        }
+
+        /// <summary>
+        /// Creates a new spell associated with all campaigns and characters
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="shouldValidate">Whether to explicitly validate the given model</param>
+        /// <exception cref="ArgumentNullException">If model is empty</exception>
+        /// <exception cref="ValidationException">If shouldValidate = true and the given model is invalid</exception>
+        /// <exception cref="DataNotCreatedException">If the spell was not added to the database</exception>
+        /// <returns>The spell's ID</returns>
+        public async Task<Guid> CreateSpell(NewCharacter model, bool shouldValidate = false)
+        {
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model), "Spell must not be null");
+            }
+
+            if (shouldValidate)
+            {
+                Validator.ValidateObject(model, new ValidationContext(model), true);
+            }
+
+            using (var db = new DatabaseContext(options))
+            {
+                var spell = new Spell(model);
+
+                db.Spells.Add(spell);
+
+                int changes = await db.SaveChangesAsync();
+                if (changes != 1)
+                {
+                    throw new DataNotCreatedException("Could not add spell to database");
+                }
+
+                return spell.SpellId;
+            }
+        }
+
+        /// <summary>
+        /// Modifies a spell with the given SpellModification fields
+        /// </summary>
+        /// <param name="model">The parameters to update</param>
+        /// <param name="shouldValidate">If shouldValidate = true and the given model isnt valid</param>
+        /// <exception cref="ArgumentNullException">If model is empty</exception>
+        /// <exception cref="ValidationException">If shouldValidate = true and model is invalid</exception>
+        /// <returns>True if the any properties were changed, false otherwise</returns>
+        public async Task<bool> ModifySpell(SpellModification model, bool shouldValidate = false)
+        {
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model), "The modifications must not be null");
+            }
+
+            if (shouldValidate)
+            {
+                Validator.ValidateObject(model, new ValidationContext(model), true);
+            }
+
+            using (var db = new DatabaseContext(options))
+            {
+                var spell = await db.Spell.SingleOrDefaultAsync(s => s.SpellId == model.SpellId);
+                if (spell == null)
+                {
+                    throw new DataNotFoundException("Could not find the spell given by spellId");
+                }
+
+                // update properties only if they are not null
+                item.Name = model.Name ?? item.Name;
+                item.School = model.School ?? item.School;
+                item.Level = model.Level ?? item.Level;
+
+                int changes = await db.SaveChangesAsync();
+                return changes == 1;
+            }
+        }
+
+        /// <summary>
+        /// Gets a list of all the spells in the database
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<Item>> ListSpells()
+        {
+            using (var db = new DatabaseContext(options))
+            {
+                var spells = await db.Spells
+                    .ToListAsync();
+                return spells;
+            }
+        }
+
+        /// <summary>
+        /// Gets the model of a specific spell
+        /// </summary>
+        /// <param name="spellId"></param>
+        /// <exception cref="ArgumentException">If spellId is null or empty</exception>
+        /// <exception cref="DataNotFoundException">If the given spell can not be found</exception>
+        /// <returns></returns>
+        public async Task<Item> GetSpell(Guid spellId)
+        {
+            if (string.IsNullOrWhiteSpace(spellId))
+            {
+                throw new ArgumentNullException(nameof(spellId), "Spell ID invalid");
+            }
+
+            using (var db = new DatabaseContext(options))
+            {
+                var spell = await db.Spells.SingleOrDefaultAsync(s => s.SpellId == spellId);
+                if (spell == null)
+                {
+                    throw new DataNotFoundException("Spell could not be found");
+                }
+
+                return spell;
             }
         }
     }
