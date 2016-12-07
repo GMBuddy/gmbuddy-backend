@@ -96,7 +96,7 @@ namespace GMBuddy.Rest.Services
         {
             if (campaign == null)
             {
-                throw new ArgumentException("Character must not be null", nameof(campaign));
+                throw new ArgumentException("Campaign must not be null", nameof(campaign));
             }
 
             // ASP.NET Core automatically camelCases JSON responses, but we have to do so manually
@@ -121,7 +121,7 @@ namespace GMBuddy.Rest.Services
         {
             if (string.IsNullOrEmpty(campaignId))
             {
-                logger.LogWarning("Can not join null campaign");
+                logger.LogWarning("Can not leave null campaign");
                 return;
             }
 
