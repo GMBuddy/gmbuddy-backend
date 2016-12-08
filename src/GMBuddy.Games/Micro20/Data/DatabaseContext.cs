@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using GMBuddy.Games.Micro20.Models;
+﻿using GMBuddy.Games.Micro20.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace GMBuddy.Games.Micro20.Data
 {
@@ -22,6 +19,7 @@ namespace GMBuddy.Games.Micro20.Data
             if (!builder.IsConfigured)
             {
                 builder.UseSqlite($"Filename={Utils.GetDatabasePath("micro20")}");
+                builder.UseLoggerFactory(new LoggerFactory().AddConsole().AddDebug());
             }
         }
 

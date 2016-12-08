@@ -16,11 +16,13 @@ namespace GMBuddy.Rest.Micro20.Controllers
         private readonly GameService games;
         private readonly ILogger<CharactersController> logger;
         private readonly IUserService users;
+        private readonly ISocketService sockets;
 
-        public CharactersController(GameService games, ILoggerFactory loggerFactory, IUserService users)
+        public CharactersController(GameService games, ILoggerFactory loggerFactory, IUserService users, ISocketService sockets)
         {
             this.games = games;
             this.users = users;
+            this.sockets = sockets;
             logger = loggerFactory.CreateLogger<CharactersController>();
         }
 
@@ -33,9 +35,10 @@ namespace GMBuddy.Rest.Micro20.Controllers
                 var result = await games.ListCharacters(userId);
                 return Json(result);
             }
-            catch (ArgumentNullException)
+            catch (Exception e) when (e is ArgumentNullException || e is UnauthorizedException)
             {
-                return Unauthorized();
+                logger.LogInformation(0, e, "Could not list characters");
+                return Forbid();
             }
         }
 
@@ -55,7 +58,7 @@ namespace GMBuddy.Rest.Micro20.Controllers
             }
             catch (DataNotCreatedException e)
             {
-                logger.LogInformation("Could not create character");
+                logger.LogWarning(0, e, "Could not create character");
                 return BadRequest(new { Error = e.Message });
             }
         }
@@ -70,20 +73,20 @@ namespace GMBuddy.Rest.Micro20.Controllers
                 var sheet = await games.GetCharacter(characterId, userId);
                 return Json(sheet);
             }
-            catch (DataNotFoundException)
+            catch (DataNotFoundException e)
             {
-                logger.LogInformation($"Could not find character {characterId}");
+                logger.LogInformation(0, e, $"Could not find character {characterId}");
                 return NotFound();
             }
-            catch (UnauthorizedException)
+            catch (UnauthorizedException e)
             {
-                logger.LogInformation($"User {userId} tried to modify {characterId} but was not authorized to do so");
-                return Unauthorized();
+                logger.LogInformation(0, e, $"User {userId} tried to modify {characterId} but was not authorized to do so");
+                return Forbid();
             }
         }
 
-        [HttpPut("{CharacterId}")]
-        public async Task<IActionResult> ModifyCharacter(CharacterModification model)
+        [HttpPut("{characterId}")]
+        public async Task<IActionResult> ModifyCharacter(Guid characterId, CharacterModification model, bool updateSockets = true)
         {
             if (!ModelState.IsValid)
             {
@@ -94,13 +97,25 @@ namespace GMBuddy.Rest.Micro20.Controllers
 
             try
             {
-                await games.ModifyCharacter(model, userId);
+                bool changed = await games.ModifyCharacter(characterId, model, userId);
+
+                if (updateSockets && changed)
+                {
+                    var sheet = await games.GetCharacter(characterId, userId);
+                    await sockets.SendCharacter(sheet);
+                }
+
                 return NoContent();
             }
-            catch (UnauthorizedException)
+            catch (UnauthorizedException e)
             {
-                logger.LogInformation($"User {userId} tried to modify {model.CharacterId} but was not authorized to do so");
-                return Unauthorized();
+                logger.LogInformation(0, e, $"User {userId} tried to modify {characterId} but was not authorized to do so");
+                return Forbid();
+            }
+            catch (DataNotFoundException e)
+            {
+                logger.LogInformation(0, e, $"Could not modify non-existent character {characterId}");
+                return NotFound();
             }
         }
     }

@@ -1,0 +1,17 @@
+{
+  "name": "gmbuddy.sockets",
+  "version": "0.0.1",
+  "description": "GMBuddy.Sockets",
+  "main": "app.js",
+  "author": {
+    "name": "jackp"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "cors": "^2.8.1",
+    "express": "^4.14.0",
+    "morgan": "^1.7.0",
+    "request": "^2.79.0",
+    "socket.io": "^1.5.1"
+  }
+}

@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Socket.IO Test page</title>
+</head>
+<body>
+    <script src="socket.io-client.js"></script>
+    <script>
+            const sio = io('http://localhost:4000?campaignId=8376c168-4885-49d5-8590-ea8c9627210d&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjNTIzYWY5Mi1iMTIyLTQyOGYtOWU4Yy1iZGY0NjJhMzM4MTkiLCJlbWFpbCI6InVzZXJAZ21idWRkeS5jb20iLCJqdGkiOiJmOTg3YTMxNC0xNTViLTRkZjQtOTFjNC0zZmY3NjEzNDc0NGYiLCJnaXZlbl9uYW1lIjoiSmFjayIsImZhbWlseV9uYW1lIjoiSG9ydG9uIiwibmJmIjoxNDgwMjgyMjk4LCJleHAiOjE0ODA3MTQyOTgsImlzcyI6IkdNQnVkZHlJZGVudGl0eSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCJ9.Ku5SveoK19A_WrDzdeuWhRVmjA0oUa48mFbggDGzSeI');
+            sio.on('connect', () => { console.log('connected'); });
+
+            sio.on('character/FETCH', (data) => console.log(data));
+            sio.on('campaign/FETCH', (data) => console.log(data));
+            sio.on('error', (message) => console.error(message));
+    </script>
+</body>
+</html>

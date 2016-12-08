@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using GMBuddy.Exceptions;
 using GMBuddy.Games.Micro20.GameService;
+using GMBuddy.Games.Micro20.InputModels;
 using GMBuddy.Rest.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -15,12 +16,14 @@ namespace GMBuddy.Rest.Micro20.Controllers
         private readonly ILogger<CampaignsController> logger;
         private readonly GameService games;
         private readonly IUserService users;
+        private readonly ISocketService sockets;
 
-        public CampaignsController(ILoggerFactory loggerFactory, GameService games, IUserService users)
+        public CampaignsController(ILoggerFactory loggerFactory, GameService games, IUserService users, ISocketService sockets)
         {
             logger = loggerFactory.CreateLogger<CampaignsController>();
             this.users = users;
             this.games = games;
+            this.sockets = sockets;
         }
 
         [HttpGet("")]
@@ -43,7 +46,28 @@ namespace GMBuddy.Rest.Micro20.Controllers
             }
             catch (UnauthorizedException)
             {
-                return Unauthorized();
+                return Forbid();
+            }
+        }
+
+        [HttpPut("{campaignId}")]
+        public async Task<IActionResult> ModifyCampaign(Guid campaignId, CampaignModification model, bool sendUpdate = true)
+        {
+            try
+            {
+                var campaign = await games.ModifyCampaign(campaignId, users.GetUserId(), model);
+
+                if (sendUpdate)
+                {
+                    await sockets.SendCampaign(campaign);
+                }
+
+                return Json(campaign);
+            }
+            catch (DataNotFoundException e)
+            {
+                logger.LogInformation(0, e, "Campaign or characters could not be found");
+                return NotFound();
             }
         }
 

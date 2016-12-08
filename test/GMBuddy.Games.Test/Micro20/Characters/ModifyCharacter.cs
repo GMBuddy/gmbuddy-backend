@@ -23,11 +23,7 @@ namespace GMBuddy.Games.Test.Micro20.Characters
             // Arrange
             var options = DatabaseSetup.CreateContextOptions();
             const string userId = "The Best ID";
-            var campaign = new Campaign
-            {
-                GmUserId = userId,
-                Name = "A campaign"
-            };
+            const string hairColor = "Brown";
             var character = new Character
             {
                 BaseStrength = 10,
@@ -42,10 +38,9 @@ namespace GMBuddy.Games.Test.Micro20.Characters
             Type eType = null;
             using (var db = new DatabaseContext(options))
             {
-                db.Campaigns.Add(campaign);
                 db.Characters.Add(character);
                 int changes = await db.SaveChangesAsync();
-                Assert.Equal(2, changes);
+                Assert.Equal(1, changes);
             }
 
             // Act
@@ -53,12 +48,12 @@ namespace GMBuddy.Games.Test.Micro20.Characters
 
             try
             {
-                var m1 = new CharacterModification { CharacterId = character.CharacterId, Dexterity = 12 };
-                result = await games.ModifyCharacter(m1, userId, true);
+                var m1 = new CharacterModification { Dexterity = 12 };
+                result = await games.ModifyCharacter(character.CharacterId, m1, userId, true);
                 Assert.True(result);
-
-                var m2 = new CharacterModification { CharacterId = character.CharacterId, CampaignId = campaign.CampaignId };
-                result = await games.ModifyCharacter(m2, userId, true);
+                
+                var m2 = new CharacterModification { HairColor = hairColor };
+                result = await games.ModifyCharacter(character.CharacterId, m2, userId, true);
                 Assert.True(result);
             }
             catch (Exception e) when (e is DataNotFoundException || e is ValidationException)
@@ -74,7 +69,7 @@ namespace GMBuddy.Games.Test.Micro20.Characters
                 Assert.Equal(1, db.Characters.Count());
 
                 var dbCharacter = await db.Characters.SingleAsync();
-                Assert.Equal(campaign.CampaignId, dbCharacter.CampaignId);
+                Assert.Equal(hairColor, dbCharacter.HairColor);
                 Assert.Equal(10, dbCharacter.BaseStrength);
                 Assert.Equal(12, dbCharacter.BaseDexterity);
                 Assert.Equal(10, dbCharacter.BaseMind);

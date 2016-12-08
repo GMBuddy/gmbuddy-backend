@@ -5,9 +5,6 @@ namespace GMBuddy.Games.Micro20.InputModels
 {
     public class CharacterModification
     {
-        [Required]
-        public Guid? CharacterId { get; set; }
-        
         public string Name { get; set; }
 
         public string Height { get; set; }
@@ -17,8 +14,6 @@ namespace GMBuddy.Games.Micro20.InputModels
         public string HairColor { get; set; }
 
         public string EyeColor { get; set; }
-
-        public Guid? CampaignId { get; set; }
 
         [Range(3, 18)]
         public int? Strength { get; set; }
