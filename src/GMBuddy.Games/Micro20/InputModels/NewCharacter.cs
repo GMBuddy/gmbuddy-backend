@@ -31,16 +31,16 @@ namespace GMBuddy.Games.Micro20.InputModels
         [Range(3, 18)]
         public int Mind { get; set; }
 
-        [Range(1,23)] //assuming a level 20 cap
+        [Range(0,100)] //assuming a level 20 cap
         public int Physical { get; set; }
 
-        [Range(1,23)] //assuming a level 20 cap
+        [Range(0,100)] //assuming a level 20 cap
         public int Subterfuge { get; set; }
 
-        [Range(1,23)] //assuming a level 20 cap
+        [Range(0,100)] //assuming a level 20 cap
         public int Knowledge { get; set; }
 
-        [Range(1,23)] //assuming a level 20 cap
+        [Range(0,100)] //assuming a level 20 cap
         public int Communication { get; set; }
 
         [EnumDataType(typeof(Micro20RaceType))]
@@ -54,7 +54,7 @@ namespace GMBuddy.Games.Micro20.InputModels
 
         [Range(0, int.MaxValue)]
         public int Experience { get; set; } = 0;
-        
+
         internal ICollection<Item> Items { get; set; }
 
         internal ICollection<Spell> Spells { get; set; }

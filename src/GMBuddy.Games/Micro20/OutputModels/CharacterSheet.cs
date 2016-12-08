@@ -115,7 +115,7 @@ namespace GMBuddy.Games.Micro20.OutputModels
                 if(c.Class == Micro20ClassType.Fighter)
                         rank += 3;
                 if(c.Race == Micro20RaceType.Human)
-                        rank += 2;
+                        rank += 1;
                 return rank;
             }
         }
@@ -128,7 +128,7 @@ namespace GMBuddy.Games.Micro20.OutputModels
                 if(c.Class == Micro20ClassType.Rogue)
                         rank += 3;
                 if(c.Race == Micro20RaceType.Human)
-                        rank += 2;
+                        rank += 1;
                 return rank;
             }
         }
@@ -141,7 +141,7 @@ namespace GMBuddy.Games.Micro20.OutputModels
                 if(c.Class == Micro20ClassType.Magi)
                         rank += 3;
                 if(c.Race == Micro20RaceType.Human)
-                        rank += 2;
+                        rank += 1;
                 return rank;
             }
         }
@@ -154,7 +154,7 @@ namespace GMBuddy.Games.Micro20.OutputModels
                 if(c.Class == Micro20ClassType.Cleric)
                         rank += 3;
                 if(c.Race == Micro20RaceType.Human)
-                        rank += 2;
+                        rank += 1;
                 return rank;
             }
         }

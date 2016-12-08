@@ -97,16 +97,16 @@ namespace GMBuddy.Games.Micro20.Models
         [Range(3, 18)]
         public int BaseMind { get; set; }
 
-        [Range(1, 22)]
+        [Range(0, 100)]
         public int BasePhysical { get; set; }
 
-        [Range(1, 22)]
+        [Range(0, 100)]
         public int BaseSubterfuge { get; set; }
 
-        [Range(1, 22)]
+        [Range(0, 100)]
         public int BaseKnowledge { get; set; }
 
-        [Range(1, 22)]
+        [Range(0, 100)]
         public int BaseCommunication { get; set; }
 
         [EnumDataType(typeof(Micro20RaceType))]
