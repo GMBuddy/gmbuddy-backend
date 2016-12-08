@@ -25,6 +25,8 @@
       "version": "1.0.1",
       "type": "platform"
     },
+    "StrongGrid": "0.16.0",
+    "System.Net.Http": "4.3.0", 
     "System.IdentityModel.Tokens.Jwt": "5.0.0"
   },
 
