@@ -16,5 +16,7 @@ namespace GMBuddy.Games.Micro20.InputModels
 
         [Required, Range(3, 18)]
         public int Level { get; set; }
+
+        public string Description { get; set; }
     }
 }

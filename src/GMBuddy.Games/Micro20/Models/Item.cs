@@ -42,7 +42,7 @@ namespace GMBuddy.Games.Micro20.Models
         public string Description { get; set; }
 
         [Required, EnumDataType(typeof(Micro20ItemType))]
-        public Micro20ItemType ItemType { get; set; }
+        public Micro20ItemType? ItemType { get; set; } //nullable so it is actually required and not defaulting to 0 if null
 
         public string WeaponDamage { get; set; } //ItemType.Weapon should have Damage
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using GMBuddy.Games.Micro20.Models;
+using System.Collections.Generic;
 
 namespace GMBuddy.Games.Micro20.OutputModels
 {
@@ -181,6 +182,16 @@ namespace GMBuddy.Games.Micro20.OutputModels
         public int Level => c.Level;
 
         public int Experience => c.Experience;
+
+        public ICollection<Item> Items => c.Items;
+
+        public int CopperPieces => c.CopperPieces;
+        
+        public int SilverPieces => c.SilverPieces;
+
+        public int GoldPieces => c.GoldPieces;
+
+        public int PlatinumPieces => c.PlatinumPieces;
     }
 
     public class CharacterSheet
