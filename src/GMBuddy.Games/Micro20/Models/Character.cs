@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using GMBuddy.Games.Micro20.InputModels;
+using System.Collections.Generic;
 
 namespace GMBuddy.Games.Micro20.Models
 {
@@ -40,8 +41,20 @@ namespace GMBuddy.Games.Micro20.Models
             BaseStrength = model.Strength;
             BaseDexterity = model.Dexterity;
             BaseMind = model.Mind;
+            BasePhysical = model.Physical;
+            BaseSubterfuge = model.Subterfuge;
+            BaseKnowledge = model.Knowledge;
+            BaseCommunication = model.Communication;
             Race = model.Race;
             Class = model.Class;
+            Level = model.Level;
+            Experience = model.Experience;
+            Items = model.Items;
+            Spells = model.Spells;
+            CopperPieces = model.CopperPieces;
+            SilverPieces = model.SilverPieces;
+            GoldPieces = model.GoldPieces;
+            PlatinumPieces = model.PlatinumPieces;
         }
 
         [Key]
@@ -84,6 +97,18 @@ namespace GMBuddy.Games.Micro20.Models
         [Range(3, 18)]
         public int BaseMind { get; set; }
 
+        [Range(0, 100)]
+        public int BasePhysical { get; set; }
+
+        [Range(0, 100)]
+        public int BaseSubterfuge { get; set; }
+
+        [Range(0, 100)]
+        public int BaseKnowledge { get; set; }
+
+        [Range(0, 100)]
+        public int BaseCommunication { get; set; }
+
         [EnumDataType(typeof(Micro20RaceType))]
         public Micro20RaceType Race { get; set; }
 
@@ -91,6 +116,25 @@ namespace GMBuddy.Games.Micro20.Models
         public Micro20ClassType Class { get; set; }
 
         [Range(1, int.MaxValue)]
-        public int Level { get; set; } = 1;
+        public int Level { get; set; }
+
+        [Range(0, int.MaxValue)]
+        public int Experience { get; set; }
+
+        internal ICollection<Item> Items { get; set; }
+
+        internal ICollection<Spell> Spells { get; set; }
+
+        [Range(0, int.MaxValue)]
+        public int CopperPieces { get; set; }
+
+        [Range(0, int.MaxValue)]
+        public int SilverPieces { get; set; }
+
+        [Range(0, int.MaxValue)]
+        public int GoldPieces { get; set; }
+
+        [Range(0, int.MaxValue)]
+        public int PlatinumPieces { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using GMBuddy.Games.Micro20.Models;
+using System.Collections.Generic;
 
 namespace GMBuddy.Games.Micro20.OutputModels
 {
@@ -17,6 +18,24 @@ namespace GMBuddy.Games.Micro20.OutputModels
         public int Dexterity => c.BaseDexterity;
 
         public int Mind => c.BaseMind;
+    }
+
+    public class Skills
+    {
+        private readonly Character c;
+
+        public Skills(Character c)
+        {
+            this.c = c;
+        }
+
+        public int Physical => c.BasePhysical;
+
+        public int Subterfuge => c.BaseSubterfuge;
+
+        public int Knowledge => c.BaseKnowledge;
+
+        public int Communication => c.BaseCommunication;
     }
 
     /// <summary>
@@ -87,6 +106,58 @@ namespace GMBuddy.Games.Micro20.OutputModels
                 }
             }
         }
+
+        public int Physcial
+        {
+            get
+            {
+                int rank = c.Level;
+                if(c.Class == Micro20ClassType.Fighter)
+                        rank += 3;
+                if(c.Race == Micro20RaceType.Human)
+                        rank += 1;
+                return rank;
+            }
+        }
+
+        public int Subterfuge
+        {
+            get
+            {
+                int rank = c.Level;
+                if(c.Class == Micro20ClassType.Rogue)
+                        rank += 3;
+                if(c.Race == Micro20RaceType.Human)
+                        rank += 1;
+                return rank;
+            }
+        }
+
+        public int Knowledge
+        {
+            get
+            {
+                int rank = c.Level;
+                if(c.Class == Micro20ClassType.Magi)
+                        rank += 3;
+                if(c.Race == Micro20RaceType.Human)
+                        rank += 1;
+                return rank;
+            }
+        }
+
+        public int Communication
+        {
+            get
+            {
+                int rank = c.Level;
+                if(c.Class == Micro20ClassType.Cleric)
+                        rank += 3;
+                if(c.Race == Micro20RaceType.Human)
+                        rank += 1;
+                return rank;
+            }
+        }
     }
 
     public class Details
@@ -119,6 +190,20 @@ namespace GMBuddy.Games.Micro20.OutputModels
         public Micro20ClassType Class => c.Class;
 
         public int Level => c.Level;
+
+        public int Experience => c.Experience;
+
+        internal ICollection<Item> Items => c.Items;
+
+        internal ICollection<Spell> Spells => c.Spells;
+
+        public int CopperPieces => c.CopperPieces;
+        
+        public int SilverPieces => c.SilverPieces;
+
+        public int GoldPieces => c.GoldPieces;
+
+        public int PlatinumPieces => c.PlatinumPieces;
     }
 
     public class CharacterSheet
@@ -135,5 +220,6 @@ namespace GMBuddy.Games.Micro20.OutputModels
         public BaseStats BaseStats => new BaseStats(c);
 
         public Modifiers Modifiers => new Modifiers(c);
+        public Skills Skills => new Skills(c);
     }
 }
