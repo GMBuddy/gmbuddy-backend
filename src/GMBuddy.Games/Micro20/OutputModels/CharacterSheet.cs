@@ -18,6 +18,16 @@ namespace GMBuddy.Games.Micro20.OutputModels
         public int Dexterity => c.BaseDexterity;
 
         public int Mind => c.BaseMind;
+    }
+
+    public class Skills
+    {
+        private readonly Character c;
+
+        public Skills(Character c)
+        {
+            this.c = c;
+        }
 
         public int Physical => c.BasePhysical;
 
@@ -183,7 +193,9 @@ namespace GMBuddy.Games.Micro20.OutputModels
 
         public int Experience => c.Experience;
 
-        public ICollection<Item> Items => c.Items;
+        internal ICollection<Item> Items => c.Items;
+
+        internal ICollection<Spell> Spells => c.Spells;
 
         public int CopperPieces => c.CopperPieces;
         
@@ -208,5 +220,6 @@ namespace GMBuddy.Games.Micro20.OutputModels
         public BaseStats BaseStats => new BaseStats(c);
 
         public Modifiers Modifiers => new Modifiers(c);
+        public Skills Skills => new Skills(c);
     }
 }

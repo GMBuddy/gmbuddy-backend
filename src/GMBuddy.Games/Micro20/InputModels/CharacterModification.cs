@@ -31,16 +31,16 @@ namespace GMBuddy.Games.Micro20.InputModels
         [Range(3, 18)]
         public int? Mind { get; set; }
 
-        [Range(1,23)] //assuming a level 20 cap
+        [Range(0,100)] //assuming a level 20 cap
         public int? Physical { get; set; }
 
-        [Range(1,23)] //assuming a level 20 cap
+        [Range(0,100)] //assuming a level 20 cap
         public int? Subterfuge { get; set; }
 
-        [Range(1,23)] //assuming a level 20 cap
+        [Range(0,100)] //assuming a level 20 cap
         public int? Knowledge { get; set; }
 
-        [Range(1,23)] //assuming a level 20 cap
+        [Range(0,100)] //assuming a level 20 cap
         public int? Communication { get; set; }
 
         [Range(1, int.MaxValue)]
@@ -49,8 +49,10 @@ namespace GMBuddy.Games.Micro20.InputModels
         [Range(1, int.MaxValue)]
         public int? Experience { get; set;} //when modifying a character, if experience is ever equal or greater than 10xlevel, player advances a level, then experience resets (extra exp rolls over)
 
-        public ICollection<Item> Items { get; set; }
+        internal ICollection<Item> Items { get; set; }
 
+        internal ICollection<Spell> Spells { get; set; }
+ 
         [Range(0, int.MaxValue)]
         public int? CopperPieces { get; set; }
 

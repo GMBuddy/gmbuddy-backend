@@ -103,6 +103,7 @@ namespace GMBuddy.Games.Micro20.GameService
                     character.Level++;                 
                 }
                 character.Items = model.Items ?? character.Items; //is this how the front end team wants items to be modified, or should there be seperate methods for adding and removing an item from a character?
+                character.Spells = model.Spells ?? character.Spells;
                 character.CopperPieces = model.CopperPieces ?? character.CopperPieces;
                 character.SilverPieces = model.SilverPieces ?? character.SilverPieces;
                 character.GoldPieces = model.GoldPieces ?? character.GoldPieces;
@@ -231,7 +232,7 @@ namespace GMBuddy.Games.Micro20.GameService
                 var item = await db.Items.SingleOrDefaultAsync(i => i.ItemId == model.ItemId);
                 if (item == null)
                 {
-                    throw new DataNotFoundException("Could not find the character given by itemId");
+                    throw new DataNotFoundException("Could not find the item given by itemId");
                 }
 
                 // update properties only if they are not null
@@ -273,10 +274,25 @@ namespace GMBuddy.Games.Micro20.GameService
         {
             using (var db = new DatabaseContext(options))
             {
-                var items = await db.Items
-                    .Where(i => i.ItemType == Micro20ItemType.Equipment)
+                var weapons = await db.Items
+                    .Where(i => i.ItemType == Micro20ItemType.Weapon)
                     .ToListAsync();
-                return items;
+                return weapons;
+            }
+        }
+
+        /// <summary>
+        /// Gets a list of all the armor in the database
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<Item>> ListArmor()
+        {
+            using (var db = new DatabaseContext(options))
+            {
+                var armor = await db.Items
+                    .Where(i => i.ItemType == Micro20ItemType.Armor)
+                    .ToListAsync();
+                return armor;
             }
         }
 
@@ -288,10 +304,10 @@ namespace GMBuddy.Games.Micro20.GameService
         {
             using (var db = new DatabaseContext(options))
             {
-                var items = await db.Items
+                var equipment = await db.Items
                     .Where(i => i.ItemType == Micro20ItemType.Equipment)
                     .ToListAsync();
-                return items;
+                return equipment;
             }
         }
 
@@ -299,8 +315,7 @@ namespace GMBuddy.Games.Micro20.GameService
         /// Gets the model of a specific item
         /// </summary>
         /// <param name="itemId"></param>
-        /// <exception cref="ArgumentException">If characterId is null or empty</exception>
-        /// <exception cref="DataNotFoundException">If the given character can not be found</exception>
+        /// <exception cref="DataNotFoundException">If the given item can not be found</exception>
         /// <returns></returns>
         public async Task<Item> GetItem(Guid itemId)
         {
@@ -322,7 +337,6 @@ namespace GMBuddy.Games.Micro20.GameService
         /// <param name="model"></param>
         /// <param name="shouldValidate">Whether to explicitly validate the given model</param>
         /// <exception cref="ArgumentNullException">If model is empty</exception>
-        /// <exception cref="ValidationException">If shouldValidate = true and the given model is invalid</exception>
         /// <exception cref="DataNotCreatedException">If the spell was not added to the database</exception>
         /// <returns>The spell's ID</returns>
         public async Task<Guid> CreateSpell(NewSpell model, bool shouldValidate = false)

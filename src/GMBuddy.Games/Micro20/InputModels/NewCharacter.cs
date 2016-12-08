@@ -54,8 +54,10 @@ namespace GMBuddy.Games.Micro20.InputModels
 
         [Range(0, int.MaxValue)]
         public int Experience { get; set; } = 0;
+        
+        internal ICollection<Item> Items { get; set; }
 
-        public ICollection<Item> Items { get; set; }
+        internal ICollection<Spell> Spells { get; set; }
 
         [Range(0, int.MaxValue)]
         public int CopperPieces { get; set; } = 0;

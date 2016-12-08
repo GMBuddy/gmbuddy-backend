@@ -50,6 +50,7 @@ namespace GMBuddy.Games.Micro20.Models
             Level = model.Level;
             Experience = model.Experience;
             Items = model.Items;
+            Spells = model.Spells;
             CopperPieces = model.CopperPieces;
             SilverPieces = model.SilverPieces;
             GoldPieces = model.GoldPieces;
@@ -120,7 +121,9 @@ namespace GMBuddy.Games.Micro20.Models
         [Range(0, int.MaxValue)]
         public int Experience { get; set; }
 
-        public ICollection<Item> Items { get; set; }
+        internal ICollection<Item> Items { get; set; }
+
+        internal ICollection<Spell> Spells { get; set; }
 
         [Range(0, int.MaxValue)]
         public int CopperPieces { get; set; }
