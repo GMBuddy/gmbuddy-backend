@@ -1,4 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.IO;
+using GMBuddy.Games.Micro20.Data;
 using GMBuddy.Games.Micro20.GameService;
 using GMBuddy.Rest.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -98,6 +100,8 @@ namespace GMBuddy.Rest
             });
 
             app.UseMvc();
+
+            DatabaseInitializer.Init(loggerFactory, Path.Combine(Directory.GetCurrentDirectory(), "Static"));
         }
     }
 }

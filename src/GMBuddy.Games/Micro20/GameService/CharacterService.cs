@@ -98,7 +98,8 @@ namespace GMBuddy.Games.Micro20.GameService
                 character.BaseDexterity = model.Dexterity ?? character.BaseDexterity;
                 character.BaseMind = model.Mind ?? character.BaseMind;
                 character.Experience = model.Experience ?? character.Experience;
-                if(character.Experience >= 10 * character.Level){
+                if (character.Experience >= 10 * character.Level)
+                {
                     character.Experience -= 10 * character.Level;
                     character.Level++;                 
                 }
@@ -239,11 +240,13 @@ namespace GMBuddy.Games.Micro20.GameService
                 item.Name = model.Name ?? item.Name;
                 item.Cost = model.Cost ?? item.Cost;
                 item.Description = model.Description ?? item.Description;
-                if(item.ItemType == Micro20ItemType.Weapon){
+                if (item.ItemType == Micro20ItemType.Weapon)
+                {
                     item.WeaponDamage = model.WeaponDamage ?? item.WeaponDamage;
                     item.WeaponRange = model.WeaponRange ?? item.WeaponRange;
                 }
-                else if(item.ItemType == Micro20ItemType.Armor){
+                else if (item.ItemType == Micro20ItemType.Armor)
+                {
                     item.ArmorBonus = model.ArmorBonus ?? item.ArmorBonus;
                 }
 
@@ -260,9 +263,7 @@ namespace GMBuddy.Games.Micro20.GameService
         {
             using (var db = new DatabaseContext(options))
             {
-                var items = await db.Items
-                    .ToListAsync();
-                return items;
+                return await db.Items.ToListAsync();
             }
         }
 

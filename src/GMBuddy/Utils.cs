@@ -15,6 +15,7 @@ namespace GMBuddy
         /// On Windows, %LOCALAPPDATA%\GMBuddy\Databases\dbName.sqlite is returned.
         /// </returns>
         /// <exception cref="ArgumentException">Throws an ArgumentException if gameType is null or empty</exception>
+        [Obsolete("Use GetDataDirectory instead")]
         public static string GetDatabasePath(string dbName)
         {
             if (string.IsNullOrEmpty(dbName))
@@ -29,6 +30,20 @@ namespace GMBuddy
                 : Path.Combine(Environment.GetEnvironmentVariable("LOCALAPPDATA"), "GMBuddy", "Databases", fileName);
 
             return path;
+        }
+
+        /// <summary>
+        /// Gets an OS-specific path to a directory for storing various files
+        /// </summary>
+        /// <returns>
+        /// On *nix platforms, $HOME/.gmbuddy is returned.
+        /// On Windows, %LOCALAPPDATA%\GMBuddy is returned.
+        /// </returns>
+        public static string GetDataDirectory()
+        {
+            return RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                ? Path.Combine(Environment.GetEnvironmentVariable("LOCALAPPDATA"), "GMBuddy")
+                : Path.Combine(Environment.GetEnvironmentVariable("HOME"), ".gmbuddy");
         }
     }
 }

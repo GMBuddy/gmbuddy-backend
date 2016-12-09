@@ -1,0 +1,122 @@
+﻿Name,School,Level,Description
+Arcane Mark:,Arcane,0,Inscribes a permanent personal rune (visible or invisible).
+Detect Magic:,Arcane,0,Detects spells and magic items within 60 ft. for up to 1 min./level or until concentration ends.
+Ghost Sound:,Arcane,0,Figment sounds for 1 round/level.
+Light:,Arcane,0,Object shines like a torch for 10 min./level.
+Mage Hand:,Arcane,0,5-pound telekinesis. Lasts until concentration ends.
+Prestidigitation:,Arcane,0,Performs minor tricks for 1 hour.
+Read Magic:,Arcane,0,Read scrolls and spellbooks for 10 min./level.
+Feather Fall:,Arcane,1,Objects or creatures fall slowly for 1 round/level or until landing.
+Floating Disk:,Arcane,1,Creates 3-ft.-diameter horizontal disk that holds 100 lb./level. Lasts for 1 hour/level.
+Mage Armor,Arcane,1,Gives subject +4 armor bonus for 1 hour/level.
+Magic Missile:,Arcane,1,1d4+1 damage; +1 missile per two levels above 1st (max 5).
+Sleep:,Arcane,1,Puts 4 HD of creatures into magical slumber for 1 min./level.
+Shocking Grasp:,Arcane,1,Touch delivers 1d6/level electricity damage (max 5d6).
+Acid Arrow:,Arcane,2,Ranged touch attack; 2d4 damage for 1 round +1 round/three levels.
+Flaming Sphere:,Arcane,2,"Creates rolling ball of fire, 2d6 damage, lasts 1 round/level."
+Invisibility:,Arcane,2,Subject is invisible for 1 min./level or until it attacks.
+Knock:,Arcane,2,Opens locked or magically sealed door.
+Levitate:,Arcane,2,Subject moves up and down at your direction for 1 min./level.
+Spider Climb:,Arcane,2,Grants ability to walk on walls and ceilings for 10 min./level.
+Clairaudience/Clairvoyance:,Arcane,3,Hear or see at a distance for 1 min./level.
+Dispel Magic:,Arcane,3,Cancels magical spells and effects.
+Fireball:,Arcane,3,"1d6 damage per level, 20-ft. radius."
+Fly:,Arcane,3,Subject flies at speed of 60 ft. for 1 min./level.
+Lightning Bolt:,Arcane,3,Electricity deals 1d6/level damage.
+Vampiric Touch:,Arcane,3,Touch deals 1d6/two levels damage; caster gains damage as hp which last for 1 hour.
+Animate Dead:,Arcane,4,Creates level X2 HD of undead skeletons or zombies.
+Arcane Eye:,Arcane,4,Invisible floating eye moves 30 ft./round for 1 min./level.
+Black Tentacles:,Arcane,4,Tentacles grapple all within 20 ft. spread for 1 round/level.
+Dimension Door,Arcane,4,Teleports you short distance.
+Polymorph:,Arcane,4,Gives one willing subject a new form for 1 min./level.
+Stoneskin:,Arcane,4,Ignore 10 points of damage per attack. Lasts for 10 min./level or until discharged.
+Cloudkill:,Arcane,5,"Kills 3 HD or less; 4-6 HD save or die, 6+ HD take STR damage. Lasts for 1 min./level."
+Contact Other Plane:,Arcane,5,Lets you ask one question of extraplanar entity. Lasts until concentration ends.
+Feeblemind:,Arcane,5,Subject’s MIND score drops to 1.
+Passwall:,Arcane,5,Creates passage through wood or stone wall for 1 hour/level.
+Permanency:,Arcane,5,Makes certain spells permanent.
+Teleport:,Arcane,5,Instantly transports you as far as 100 miles/level.
+Antimagic Field:,Arcane,6,Negates magic within 10 ft. for 10 min./level.
+Chain Lightning:,Arcane,6,1d6/level damage; 1 secondary bolt/level each deals half damage.
+Contingency:,Arcane,6,Sets trigger condition for another spell. Lasts for 1 day/level or until discharged.
+Disintegrate:,Arcane,6,Destroys one creature or object.
+Geas:,Arcane,6,"Commands any creature, binding it to a specific task. Lasts for 1 day/level or until discharged."
+True Seeing:,Arcane,6,Lets you see all things as they really are for 1 min./level.
+Delayed Blast Fireball:,Arcane,7,1d6/level fire damage; you can postpone blast for 5 rounds.
+Ethereal Jaunt:,Arcane,7,You become ethereal for 1 round/level.
+Finger of Death:,Arcane,7,Kills one subject.
+Plane Shift:,Arcane,7,As many as eight subjects travel to another plane.
+Power Word Blind:,Arcane,7,Blinds creature with 200 hp or less for 1d4+1 minutes (permanent if creature has less than 50 hp).
+Spell Turning:,Arcane,7,Reflect 1d4+6 spell levels back at caster for 10 min./level or until expended.
+Clone:,Arcane,8,Duplicate awakens when original dies.
+Horrid Wilting:,Arcane,8,Deals 1d6/level damage within 30 ft.
+Incendiary Cloud:,Arcane,8,Cloud deals 4d6 fire damage/round for 1 round/level.
+Irresistible Dance:,Arcane,8,Forces subject to dance for 1d4+1 rounds.
+Power Word Stun:,Arcane,8,Stuns creature with 150 hp or less for 2d4 rounds.
+Trap the Soul:,Arcane,8,Imprisons subject within gem.
+Astral Projection:,Arcane,9,Projects you and companions onto Astral Plane.
+Etherealness:,Arcane,9,Travel to Ethereal Plane with companions for 1 min./level.
+Gate:,Arcane,9,Connects two planes for travel or summoning. Open for 1 round/level.
+Meteor Swarm:,Arcane,9,Four exploding spheres each deal 6d6 fire damage.
+Power Word Kill:,Arcane,9,Kills one creature with 100 hp or less.
+Soul Bind:,Arcane,9,Traps newly dead soul to prevent resurrection.
+Create Water,Divine,0,Creates 2 gallons/level of pure water.
+Guidance:,Divine,0,"Grants +1 on one attack roll, saving throw, or skill check. Lasts for 1 min. or until discharged."
+Light:,Divine,0,Object shines like a torch for 10 min./level.
+Purify Food and Drink:,Divine,0,Purifies 1 cu. ft./level of food or water.
+Resistance:,Divine,0,Subject gains +1 on saving throws for 1 minute.
+Virtue:,Divine,0,Subject gains 1 temporary hp for 1 minute.
+Bless:,Divine,1,Allies gain +1 on attack rolls and communication + MIND checks against fear for 1 min./level.
+Bless Water,Divine,1,Makes holy water.
+Cure Light Wounds:,Divine,1,Cures 1d8 damage +1/level (max +5).
+Divine Favor,Divine,1,You gain +1 per three levels on attack and damage rolls for 1 minute.
+Magic Stone:,Divine,1,"Three stones gain +1 on attack, deal 1d6 +1 damage. Lasts for 30 minutes or until discharged."
+Shield of Faith:,Divine,1,Aura grants +2 or higher AC bonus for 1 min./level.
+Aid:,Divine,2,"Grants +1 on attack rolls and saves against fear, 1d8 temporary hp +1/level (max +10)."
+Cure Moderate Wounds:,Divine,2,Cures 2d8 damage +1/level (max +10).
+Delay Poison:,Divine,2,Stops poison from harming subject for 1 ?
+Gentle Repose:,Divine,2,Preserves one corpse.
+Remove Paralysis:,Divine,2,Frees one or more creatures from paralysis or slow effect.
+"Restoration, Lesser",Divine,2,Dispels magical ability penalty or repairs 1d4 ability damage.
+Create Food and Water,Divine,3,Feeds three humans (or one horse)/level.
+Cure Serious Wounds:,Divine,3,Cures 3d8 damage +1/level (max +15).
+Prayer,Divine,3,"Allies get a +1 bonus on most rolls, enemies take a –1 penalty for 1 round/level."
+Remove Disease:,Divine,3,Cures all diseases affecting subject.
+Searing Light:,Divine,3,"Ray deals 1d8/two levels damage, or 1d8/level against undead."
+Speak with Dead:,Divine,3,Corpse answers one question/two levels. Lasts for 1 min./level.
+Cure Critical Wounds:,Divine,4,Cures 4d8 damage +1/level (max +20).
+Discern Lies:,Divine,4,Reveals deliberate falsehoods for 1 round/level or until concentration ends.
+Freedom of Movement:,Divine,4,Subject moves normally despite impediments for 10 min./level.
+Neutralize Poison:,Divine,4,"Immunizes subject against poison for 10 min./level, detoxifies venom in or on subject."
+Restoration:,Divine,4,Restores level and ability score drains.
+Tongues:,Divine,4,Speak any language for 10 min./level.
+Atonement:,Divine,5,Removes burden of misdeeds from subject.
+Commune:,Divine,5,Deity answers one yes-or-no question/level. Lasts for 1 round/level.
+"Cure Light Wounds, Mass:",Divine,5,Cures 1d8 damage +1/level for many creatures.
+Flame Strike:,Divine,5,Smite foes with divine fire (1d6/level damage).
+Raise Dead:,Divine,5,Restores life to subject who died as long as one day/level ago.
+True Seeing:,Divine,5,Lets you see all things as they really are for 1 min./level.
+Banishment:,Divine,6,Banishes 2 HD/level of extraplanar creatures.
+"Cure Moderate Wounds, Mass:",Divine,6,Cures 2d8 damage +1/level for many creatures.
+Harm:,Divine,6,Deals 10 points/level damage to target.
+Heal:,Divine,6,"Cures 10 points/level of damage, all diseases and mental conditions."
+Heroes’ Feast:,Divine,6,Food for one creature/level cures disease and grants +1 combat bonus for 12 hours. Lasts for 1 hour.
+Quest:,Divine,6,"Commands any creature, binding it to a specific task."
+"Cure Serious Wounds, Mass:",Divine,7,Cures 3d8 damage +1/level for many creatures.
+Destruction:,Divine,7,Kills subject and destroys remains.
+Ethereal Jaunt:,Divine,7,You become ethereal for 1 round/level.
+Regenerate:,Divine,7,"Subject’s severed limbs grow back, cures 4d8 damage +1/level (max +35)."
+"Restoration, Greater",Divine,7,"As restoration, plus restores all levels and ability scores."
+Resurrection:,Divine,7,Fully restores a dead subject from a small portion of the corpse.
+Antimagic Field:,Divine,8,Negates magic within 10 ft. for 10 min./level.
+"Cure Critical Wounds, Mass:",Divine,8,Cures 4d8 damage +1/level for many creatures.
+Dimensional Lock:,Divine,8,Teleportation and interplanar travel blocked for 1 day/level.
+Discern Location:,Divine,8,Reveals exact loc of creat or object.
+Fire Storm:,Divine,8,Deals 1d6/level fire damage.
+Holy Aura:,Divine,8,"Grants +4 to AC, +4 resistance, and SR 25 against evil spells for 1 round/level."
+Astral Projection:,Divine,9,Projects you and companions onto Astral Plane.
+Etherealness:,Divine,9,Travel to Ethereal Plane with companions for 1 min./level.
+Gate:,Divine,9,Connects two planes for travel or summoning. Open for 1 round/level.
+"Heal, Mass:",Divine,9,"As heal, but with several subjects."
+Implosion:,Divine,9,Kills one creature/round for 4 rounds or until concentration ends.
+Soul Bind:,Divine,9,Traps newly dead soul to prevent resurrection.
